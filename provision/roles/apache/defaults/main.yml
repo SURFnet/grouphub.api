@@ -1,0 +1,10 @@
+---
+Timeout: 10
+KeepAlive: "On"
+MaxKeepAliveRequests: 3
+KeepAliveTimeout: 3
+StartServers: 3
+MinSpareServers: 3
+MaxSpareServers: 10
+MaxClients: 50
+MaxRequestsPerChild: 5000

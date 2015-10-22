@@ -1,0 +1,43 @@
+<?php
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="User")
+ */
+class User
+{
+    /**
+     * @ORM\Column(type="integer", length=11, name="UserId")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=256, name="UserFirstName")
+     */
+    protected $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=256, name="UserLastName")
+     */
+    protected $lastName;
+
+    /**
+     * @ORM\Column(type="string", length=256, name="UserLoginName")
+     */
+    protected $loginName;
+
+    /**
+     * @ORM\Column(type="datetime", name="UserTimestamp")
+     */
+    protected $timeStamp;
+
+    /**
+     * @ORM\Column(type="string", length=256, name="Reference")
+     */
+    protected $reference;
+}

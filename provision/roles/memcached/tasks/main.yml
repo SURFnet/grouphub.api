@@ -1,0 +1,13 @@
+---
+# Install PHP5
+- name: Install Memcached
+  action: apt pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - memcached
+
+- name: Configure 128 megs of RAM
+  lineinfile: dest=/etc/memcached.conf line="-m 128" regexp="^-m [0-9]+" state=present backup=yes
+  register: result
+
+- service: name=memcached state=restarted enabled=yes
+  when: result|changed

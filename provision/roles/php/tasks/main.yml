@@ -1,0 +1,32 @@
+---
+# Install PHP5
+- name: Install PHP
+  action: apt pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - php5
+    - php5-common
+    - php5-cli
+    - php5-dev
+    - php-pear
+    - php5-sqlite
+    - php5-curl
+    - php5-tidy
+    - php-console-table
+    - php5-imagick
+    - php5-gd
+    - php5-mysql
+    - php5-curl
+    - php5-memcache
+    - php5-redis
+    - php5-mcrypt
+    - php5-xsl
+    - php5-xhprof
+
+- name: Configure php.ini
+  lineinfile: dest=/etc/php5/cli/php.ini line="{{ item.line }}" regexp="{{ item.regexp }}" backup=yes
+  with_items:
+    - { line: "date.timezone={{ timezone }}", regexp: "date.timezone" }
+    - { line: "max_execution_time = 0", regexp: "max_execution_time" }
+
+- include: xdebug.yml
+  when: enable_xdebug

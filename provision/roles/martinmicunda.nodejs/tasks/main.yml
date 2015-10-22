@@ -1,0 +1,40 @@
+---
+- name: Ensure the system can use the HTTPS transport for APT
+  stat: path=/usr/lib/apt/methods/https
+  register: apt_https_transport
+  tags: nodejs
+
+- name: Install HTTPS transport for APT
+  apt: pkg=apt-transport-https state=installed
+  when: not apt_https_transport.stat.exists
+  tags: nodejs
+
+- name: Import the NodeSource GPG key into apt
+  apt_key: >
+    url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state=present
+  tags: nodejs
+
+- name: Add NodeSource deb repository
+  apt_repository: >
+    repo='deb https://deb.nodesource.com/node {{ ansible_distribution_release }} main'
+    state=present
+  tags: nodejs
+
+- name: Install latest Node.js and NPM
+  apt: >
+    pkg=nodejs
+    state=latest
+    update_cache=yes
+    cache_valid_time={{ apt_cache_valid_time }}
+  when: nodejs_version == "latest"
+  tags: nodejs
+
+- name: Install specific verion of Node.js and NPM
+  apt: >
+    pkg=nodejs={{ nodejs_version }}-1chl1~{{ ansible_distribution_release }}1
+    state=present
+    update_cache=yes
+    cache_valid_time={{ apt_cache_valid_time }}
+  when: nodejs_version != "latest"
+  tags: nodejs

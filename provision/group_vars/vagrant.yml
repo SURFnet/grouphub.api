@@ -1,0 +1,13 @@
+---
+# file: group_vars/all
+web_group: dialout
+web_user: vagrant
+timezone: "Europe/Amsterdam"
+xdebug: true,
+apache_servername: "dev.grouphub.org"
+basedir: "/vagrant"
+sshkey: true
+docroot: "/vagrant/web"
+projectdir: "/vagrant"
+remote_user: vagrant
+sitename: grouphub

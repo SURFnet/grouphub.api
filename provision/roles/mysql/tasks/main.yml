@@ -1,0 +1,30 @@
+---
+# Install some base packages
+- name: Install MySQL
+  action: apt pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - mysql-common
+    - mysql-client
+    - mysql-server
+    - python-selinux
+    - python-mysqldb
+
+- mysql_user: name=root host={{ item }} password={{ mysql_root_password }} priv=*.*:ALL,GRANT
+  with_items:
+    - "%"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- service: name=mysql state=stopped
+
+- template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
+- template: src=_my.cnf.j2 dest=~/.my.cnf mode=0600
+#- template: src=_my.cnf.j2 dest=/home/{{ ansible_ssh_user }}/.my.cnf mode=0600 owner={{ ansible_ssh_user }}
+
+- file: path={{ item }} state=absent
+  with_items:
+    - /var/lib/mysql/ib_logfile0
+    - /var/lib/mysql/ib_logfile1
+
+- service: name=mysql state=started enabled=yes

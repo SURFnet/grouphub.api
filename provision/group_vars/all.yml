@@ -1,0 +1,6 @@
+---
+# file: group_vars/all
+basedir: "/var/www"
+web_group: www-data
+web_user: www-data
+timezone: "Europe/Amsterdam"

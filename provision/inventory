@@ -1,0 +1,9 @@
+[production-webservers]
+127.0.0.1
+
+[production-dbservers]
+127.0.0.1
+
+[production:children]
+production-webservers
+production-dbservers

@@ -1,0 +1,107 @@
+---
+# file: provision.yml
+- hosts: all
+  vars:
+    sitename: grouphub
+    apache_servername: "dev.grouphub.org"
+    apache_serveralias: "grouphub.local"
+    timezone: "Europe/Amsterdam"
+    sshkey: true
+
+  roles:
+    - { role: franklinkim.timezone }
+    - { role: geerlingguy.ntp, ntp_timezone: "{{ timezone }}" }
+    - { role: apache }
+    - { role: php, enable_xdebug: false }
+    - { role: mysql, mysql_root_password: "root", mysql_bind_address: "127.0.0.1" }
+    - { role: franklinkim.redis }
+    - { role: nbz4live.php-fpm,
+        php_fpm_pools: [
+          {
+            name: "{{ sitename }}",
+            user: "{{ web_user }}",
+            group: "{{ web_group }}",
+            listen: "/var/run/php-fpm.sock",
+            listen.mode: "0666",
+            listen.owner: "{{ web_user }}",
+            listen.group: "{{ web_group }}",
+          }
+        ],
+        php_fpm_ini: [
+          { option: "date.timezone", section: "PHP", value: "{{ timezone }}" },
+          { option: "memory_limit", section: "PHP", value: "256M" },
+          { option: "opcache.memory_consumption", section: "PHP", value: "128" },
+          { option: "opcache.interned_strings_buffer", section: "PHP", value: "8" },
+          { option: "opcache.max_accelerated_files", section: "PHP", value: "4000" },
+          { option: "opcache.revalidate_freq", section: "PHP", value: "60" },
+          { option: "opcache.fast_shutdown", section: "PHP", value: "1" }
+        ]
+      }
+
+  pre_tasks:
+    - name: Add contrib and non-free repos
+      apt_repository: repo='{{ item }}' state=present update_cache=yes
+      with_items:
+        - deb http://ftp.nl.debian.org/debian/ wheezy main contrib non-free
+        - deb-src http://ftp.nl.debian.org/debian/ wheezy main contrib non-free
+        - deb http://security.debian.org/ wheezy/updates main contrib non-free
+        - deb-src http://security.debian.org/ wheezy/updates main contrib non-free
+        - deb http://ftp.nl.debian.org/debian/ wheezy-updates main contrib non-free
+        - deb-src http://ftp.nl.debian.org/debian/ wheezy-updates main contrib non-free
+
+    - name: APT | Add Common repositories
+      apt_repository: repo="{{ item }}" state=present update_cache=yes
+      with_items:
+        - deb http://packages.dotdeb.org wheezy-php55 all
+        - deb-src http://packages.dotdeb.org wheezy-php55 all
+
+    - name: APT | Install DotDeb key
+      apt_key: url=http://www.dotdeb.org/dotdeb.gpg
+
+    - name: Perform system update
+      action: apt upgrade=safe state=latest update_cache=yes
+
+  tasks:
+    - name: Install common packages
+      action: apt pkg={{ item }} state=installed update_cache=yes
+      with_items:
+        - curl
+        - vim
+        - debconf-utils
+        - exim4
+        - exim4-daemon-light
+        - wget
+        - zip
+        - unzip
+        - git
+
+    - name: Configure Exim4
+      replace: dest=/etc/exim4/update-exim4.conf.conf replace="dc_eximconfig_configtype='internet'" regexp="^dc_eximconfig_configtype.*$" backup=yes
+    - service: name=exim4 state=restarted enabled=yes
+      
+    - name: Copy SSH Pub key
+      action: authorized_key user={{ ansible_ssh_user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      when: sshkey
+
+    - name: Configure virtualhost
+      template: src="files/vhost.j2" dest="/etc/apache2/sites-available/{{ sitename }}"
+
+    - name: Enable fastcgi module
+      command: a2enmod fastcgi
+
+    - name: Disable php5 module
+      action: apache2_module state=absent name=php5
+
+    - name: Enable virtualhost
+      command: a2ensite {{ sitename }}
+
+    - name: Disable default website
+      command: a2dissite default
+
+    - service: name=apache2 state=restarted enabled=yes
+    
+    - name: Configure XHProf
+      lineinfile: dest=/etc/php5/mods-available/xhprof.ini line="{{ item }}" backup=yes
+      with_items:
+        - xhprof.output_dir="{{ projectdir }}/xhprof"
+      notify: restart php-fpm

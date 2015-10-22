@@ -1,0 +1,41 @@
+---
+# Install Apache
+- name: Install Apache
+  action: apt pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - apache2-mpm-prefork
+    - libapache2-mod-fastcgi
+
+- name: Enable rewrite module
+  command: a2enmod rewrite
+    creates=/etc/apache2/mods-enabled/rewrite.load
+  notify: restart apache
+
+- name: Enable expires module
+  command: a2enmod expires
+    creates=/etc/apache2/mods-enabled/expires.load
+  notify: restart apache
+
+- name: Enable headers module
+  command: a2enmod headers
+    creates=/etc/apache2/mods-enabled/headers.load
+  notify: restart apache
+
+- name: Enable actions module
+  command: a2enmod actions
+    creates=/etc/apache2/mods-enabled/actions.load
+  notify: restart apache
+
+- name: Configure Apache
+  replace: dest=/etc/apache2/apache2.conf replace="{{ item.line }}" regexp="{{ item.regexp }}" backup=yes
+  with_items:
+    - { line: "Timeout {{ Timeout }}", regexp: "^Timeout.*$" }
+    - { line: "KeepAlive {{ KeepAlive }}", regexp: "^KeepAlive.*$" }
+    - { line: "MaxKeepAliveRequests {{ MaxKeepAliveRequests }}", regexp: "^MaxKeepAliveRequests.*$" }
+    - { line: "KeepAliveTimeout {{ KeepAliveTimeout }}", regexp: "^KeepAliveTimeout.*$" }
+    - { line: '\1StartServers    {{ StartServers }}', regexp: "^([^#]+)StartServers.*$" }
+    - { line: '\1MinSpareServers {{ MinSpareServers }}', regexp: "^([^#]+)MinSpareServers.*$" }
+    - { line: '\1MaxSpareServers {{ MaxSpareServers }}', regexp: "^([^#]+)MaxSpareServers.*$" }
+    - { line: '\1MaxClients      {{ MaxClients }}', regexp: "^([^#]+)MaxClients.*$" }
+    - { line: '\1MaxRequestsPerChild {{ MaxRequestsPerChild }}', regexp: "^([^#]+)MaxRequestsPerChild.*$" }
+  notify: restart apache

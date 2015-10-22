@@ -1,0 +1,27 @@
+<VirtualHost *:80>
+    ServerName {{ apache_servername }}
+    {% if apache_serveralias %}
+    ServerAlias {{ apache_serveralias }}
+    {% endif %}
+
+    DocumentRoot {{ docroot }}
+
+    <IfModule mod_fastcgi.c>
+        AddType application/x-httpd-php .php .phtml .inc
+        Action application/x-httpd-php /php-fcgi virtual
+        Alias /php-fcgi /usr/lib/cgi-bin/php-fcgi
+        FastCgiExternalServer /usr/lib/cgi-bin/php-fcgi -socket /var/run/php-fpm.sock -pass-header Authorization
+    </IfModule>
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    <Directory {{ docroot }}>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+</VirtualHost>

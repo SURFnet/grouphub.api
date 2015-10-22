@@ -1,0 +1,7 @@
+---
+# Install Drush
+- name: Installing drush {{ drush_version }} (https://github.com/drush-ops/drush)
+  git: repo=https://github.com/drush-ops/drush.git version={{ drush_version }} dest=/usr/local/drush
+
+- name: Create symlink to drush in path
+  file: src=/usr/local/drush/drush path=/usr/local/bin/drush state=link
