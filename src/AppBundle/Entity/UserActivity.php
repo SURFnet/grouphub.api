@@ -13,25 +13,27 @@ class UserActivity
 {
     /**
      * @var int $id
+     * @orm\Id()
      * @orm\Column(name="UserActivityId", type="integer", length=11)
+     * @orm\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string $timestamp
-     * @orm\Column(name="UserActivityTimestamp", type="datetime")
+     * @orm\Column(name="UserActivityTimestamp", type="datetime", nullable=true)
      */
     protected $timestamp;
 
     /**
      * @var string $title
-     * @orm\Column(name="UserActivityTitle", type="string", length=256)
+     * @orm\Column(name="UserActivityTitle", type="string", length=256, nullable=true)
      */
     protected $title;
 
     /**
      * @var string $description
-     * @orm\Column(name="UserActivityDescription", type="string", length=256)
+     * @orm\Column(name="UserActivityDescription", type="string", length=256, nullable=true)
      */
     protected $description;
 
@@ -43,7 +45,7 @@ class UserActivity
 
     /**
      * @var string $url
-     * @orm\Column(name="UserActivityUrl", type=string, length=1024)
+     * @orm\Column(name="UserActivityUrl", type=string, length=1024, nullable=true)
      */
     protected $url;
 

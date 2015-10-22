@@ -13,25 +13,27 @@ class UserAnnotation
 {
     /**
      * @var int
-     * @orm\Column(name="AnnotationAttribute", type="integer", length=11)
+     * @orm\Id()
+     * @orm\Column(name="AnnotationId", type="integer", length=11, nullable=false)
+     * @orm\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @orm\Column(name="AnnotationAttribute", type="string", length=256)
+     * @orm\Column(name="AnnotationAttribute", type="string", length=256, nullable=true)
      */
     protected $attribute;
 
     /**
      * @var string
-     * @orm\Column(name="AnnotationValue", type="string", length=4096)
+     * @orm\Column(name="AnnotationValue", type="string", length=4096, nullable=true)
      */
     protected $value;
 
     /**
      * @var string
-     * @orm\Column(name="AnnotationType", type="string", length=128)
+     * @orm\Column(name="AnnotationType", type="string", length=128, nullable=true)
      */
     protected $type;
 

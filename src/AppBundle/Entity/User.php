@@ -11,32 +11,39 @@ use Doctrine\ORM\Mapping as orm;
 class User
 {
     /**
+     * @var int
+     * @orm\Id()
      * @orm\Column(type="integer", length=11, name="UserId")
      * @orm\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @orm\Column(type="string", length=256, name="UserFirstName")
+     * @var string
+     * @orm\Column(type="string", length=256, name="UserFirstName", nullable=true)
      */
     protected $firstName;
 
     /**
-     * @orm\Column(type="string", length=256, name="UserLastName")
+     * @var string
+     * @orm\Column(type="string", length=256, name="UserLastName", nullable=true)
      */
     protected $lastName;
 
     /**
-     * @orm\Column(type="string", length=256, name="UserLoginName")
+     * @var string
+     * @orm\Column(type="string", length=256, name="UserLoginName", nullable=true)
      */
     protected $loginName;
 
     /**
-     * @orm\Column(type="datetime", name="UserTimestamp")
+     * @var string
+     * @orm\Column(type="datetime", name="UserTimestamp", nullable=true)
      */
     protected $timeStamp;
 
     /**
+     * @var string
      * @orm\Column(type="string", length=256, name="Reference")
      */
     protected $reference;
