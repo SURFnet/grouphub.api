@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as orm;
 class UserActivity
 {
     /**
-     * @var int $id
+     * @var int
      * @orm\Id()
      * @orm\Column(name="UserActivityId", type="integer", length=11)
      * @orm\GeneratedValue(strategy="AUTO")
@@ -20,43 +20,43 @@ class UserActivity
     protected $id;
 
     /**
-     * @var string $timestamp
+     * @var string
      * @orm\Column(name="UserActivityTimestamp", type="datetime", nullable=true)
      */
     protected $timestamp;
 
     /**
-     * @var string $title
+     * @var string
      * @orm\Column(name="UserActivityTitle", type="string", length=256, nullable=true)
      */
     protected $title;
 
     /**
-     * @var string $description
+     * @var string
      * @orm\Column(name="UserActivityDescription", type="string", length=256, nullable=true)
      */
     protected $description;
 
     /**
-     * @var int $priority
+     * @var int
      * @orm\Column(name="UserActivityPriority", type="smallint", length=6)
      */
     protected $priority;
 
     /**
-     * @var string $url
-     * @orm\Column(name="UserActivityUrl", type=string, length=1024, nullable=true)
+     * @var string
+     * @orm\Column(name="UserActivityUrl", type="string", length=1024, nullable=true)
      */
     protected $url;
 
     /**
-     * @var int $userId
+     * @var int
      * @orm\Column(name="UserId", type="integer", length=11)
      */
     protected $userId;
 
     /**
-     * @var int $userGroupId
+     * @var int
      * @orm\Column(name="UserGroupId", type="integer", length=11)
      */
     protected $userGroupId;

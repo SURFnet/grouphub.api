@@ -24,4 +24,52 @@ class UserGroupInGroup
      * @orm\Column(name="UserGroupId", type="integer", length=11, nullable=false)
      */
     protected $userGroupId;
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return UserGroupInGroup
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set userGroupId
+     *
+     * @param integer $userGroupId
+     *
+     * @return UserGroupInGroup
+     */
+    public function setUserGroupId($userGroupId)
+    {
+        $this->userGroupId = $userGroupId;
+
+        return $this;
+    }
+
+    /**
+     * Get userGroupId
+     *
+     * @return integer
+     */
+    public function getUserGroupId()
+    {
+        return $this->userGroupId;
+    }
 }
