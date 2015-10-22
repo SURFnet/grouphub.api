@@ -8,3 +8,4 @@
 app/config/parameters.yml
 .vagrant
 .idea
+*.php~
