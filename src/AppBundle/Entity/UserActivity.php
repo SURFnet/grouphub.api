@@ -1,63 +1,72 @@
 <?php
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Class UserActivity
  * @package AppBundle\Entity
- * @orm\Entity
- * @orm\Table(name="UserActivity")
+ * @ORM\Entity
+ * @ORM\Table(name="UserActivity")
+ * @ExclusionPolicy("all")
  */
 class UserActivity
 {
     /**
      * @var int
-     * @orm\Id()
-     * @orm\Column(name="UserActivityId", type="integer", length=11)
-     * @orm\GeneratedValue(strategy="AUTO")
+     * @ORM\Id()
+     * @ORM\Column(name="UserActivityId", type="integer", length=11)
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose()
      */
     protected $id;
 
     /**
      * @var string
-     * @orm\Column(name="UserActivityTimestamp", type="datetime", nullable=true)
+     * @ORM\Column(name="UserActivityTimestamp", type="datetime", nullable=true)
+     * @Expose()
      */
     protected $timestamp;
 
     /**
      * @var string
-     * @orm\Column(name="UserActivityTitle", type="string", length=256, nullable=true)
+     * @ORM\Column(name="UserActivityTitle", type="string", length=256, nullable=true)
+     * @Expose()
      */
     protected $title;
 
     /**
      * @var string
-     * @orm\Column(name="UserActivityDescription", type="string", length=256, nullable=true)
+     * @ORM\Column(name="UserActivityDescription", type="string", length=256, nullable=true)
+     * @Expose()
      */
     protected $description;
 
     /**
      * @var int
-     * @orm\Column(name="UserActivityPriority", type="smallint", length=6)
+     * @ORM\Column(name="UserActivityPriority", type="smallint", length=6)
+     * @Expose()
      */
     protected $priority;
 
     /**
      * @var string
-     * @orm\Column(name="UserActivityUrl", type="string", length=1024, nullable=true)
+     * @ORM\Column(name="UserActivityUrl", type="string", length=1024, nullable=true)
+     * @Expose()
      */
     protected $url;
 
     /**
      * @var int
-     * @orm\Column(name="UserId", type="integer", length=11)
+     * @ORM\Column(name="UserId", type="integer", length=11)
      */
     protected $userId;
 
     /**
      * @var int
-     * @orm\Column(name="UserGroupId", type="integer", length=11)
+     * @ORM\Column(name="UserGroupId", type="integer", length=11)
      */
     protected $userGroupId;
 

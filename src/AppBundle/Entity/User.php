@@ -1,50 +1,59 @@
 <?php
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 
 /**
- * @orm\Entity
- * @orm\Table(name="User")
+ * @ORM\Entity
+ * @ORM\Table(name="User")
+ * @ExclusionPolicy("all")
  */
 class User
 {
     /**
      * @var int
-     * @orm\Id()
-     * @orm\Column(type="integer", length=11, name="UserId")
-     * @orm\GeneratedValue(strategy="AUTO")
+     * @ORM\Id()
+     * @ORM\Column(type="integer", length=11, name="UserId")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Expose()
      */
     protected $id;
 
     /**
      * @var string
-     * @orm\Column(type="string", length=256, name="UserFirstName", nullable=true)
+     * @ORM\Column(type="string", length=256, name="UserFirstName", nullable=true)
+     * @Expose()
      */
     protected $firstName;
 
     /**
      * @var string
-     * @orm\Column(type="string", length=256, name="UserLastName", nullable=true)
+     * @ORM\Column(type="string", length=256, name="UserLastName", nullable=true)
+     * @Expose()
      */
     protected $lastName;
 
     /**
      * @var string
-     * @orm\Column(type="string", length=256, name="UserLoginName", nullable=true)
+     * @ORM\Column(type="string", length=256, name="UserLoginName", nullable=true)
+     * @Expose()
      */
     protected $loginName;
 
     /**
      * @var string
-     * @orm\Column(type="datetime", name="UserTimestamp", nullable=true)
+     * @ORM\Column(type="datetime", name="UserTimestamp", nullable=true)
+     * @Expose()
      */
     protected $timeStamp;
 
     /**
      * @var string
-     * @orm\Column(type="string", length=256, name="Reference")
+     * @ORM\Column(type="string", length=256, name="Reference")
      */
     protected $reference;
 
