@@ -12,7 +12,7 @@
     - { role: franklinkim.timezone }
     - { role: geerlingguy.ntp, ntp_timezone: "{{ timezone }}" }
     - { role: apache }
-    - { role: php, enable_xdebug: false }
+    - { role: php, enable_xdebug: true }
     - { role: mysql, mysql_root_password: "root", mysql_bind_address: "127.0.0.1" }
     - { role: franklinkim.redis }
     - { role: nbz4live.php-fpm,
