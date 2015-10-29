@@ -1,30 +1,31 @@
 <?php
+
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\User;
-use AppBundle\Form\UserType;
-
+use AppBundle\Entity\UserGroup;
+use AppBundle\Form\UserGroupType;
+use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Rest controller for users.
- *
+ * Class GroupController
  * @package AppBundle\Controller
  */
-class UserController extends FOSRestController
+class GroupController extends FOSRestController
 {
     /**
-     * List all users from the database. Does not support paging!
+     * List all groups from the database. Does not support paging!
      *
      * @ApiDoc(
      *  resource = true,
-     *  output="ArrayCollection<AppBundle\Entity\User>",
+     *  output="ArrayCollection<AppBundle\Entity\UserGroup>",
      *  statusCodes = {
      *      200 = "Returned when successul",
      *      500 = "Returned when there is an internal server error"
@@ -33,32 +34,32 @@ class UserController extends FOSRestController
      *
      * @return array
      */
-    public function getUsersAction()
+    public function getGroupsAction()
     {
         $list = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
+            ->getRepository('AppBundle:UserGroup')
             ->findAll();
 
         return $this->view($list);
     }
 
     /**
-     * Retrieve a single user from database by user ID.
+     * Retrieve a single group from database by group ID.
      *
      * @ApiDoc(
-     *   output = "AppBundle\Entity\User",
+     *   output = "AppBundle\Entity\UserGroup",
      *   resource = true,
      *   requirements = {
      *      {
      *          "name" = "id",
      *          "dataType" = "integer",
      *          "requirement" = "\d+",
-     *          "description" = "UserID"
+     *          "description" = "GroupID"
      *      }
      *   },
      *   statusCodes = {
      *     200 = "Returned when successful",
-     *     404 = "Returned when the user is not found"
+     *     404 = "Returned when the group is not found"
      *   }
      * )
      *
@@ -67,32 +68,32 @@ class UserController extends FOSRestController
      *
      * @return array
      *
-     * @throws NotFoundHttpException when user not exist
+     * @throws NotFoundHttpException when group not exist
      */
-    public function getUserAction(Request $request, $id)
+    public function getGroupAction(Request $request, $id)
     {
-        $user = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
+        $group = $this->getDoctrine()
+            ->getRepository('AppBundle:UserGroup')
             ->find($id);
 
-        if (!$user) {
+        if (!$group) {
             throw new NotFoundHttpException(
-                'User with id: ' . $id . ' not found'
+                'Group with id: ' . $id . ' not found'
             );
         }
 
-        return $this->view([$user]);
+        return $this->view([$group]);
     }
 
     /**
-     * Creates a new user from the submitted JSON data.
+     * Creates a new group from the submitted JSON data.
      *
      * @ApiDoc(
-     *   input = "AppBundle\Entity\User",
+     *   input = "AppBundle\Entity\UserGroup",
      *   resource = true,
      *   statusCodes = {
      *     200 = "Returned when successful",
-     *     404 = "Returned when the user is invalid"
+     *     406 = "Returned when the group is invalid"
      *   }
      * )
      *
@@ -100,30 +101,35 @@ class UserController extends FOSRestController
      *
      * @return array
      */
-    public function postUsersAction(Request $request)
+    public function postGroupsAction(Request $request)
     {
-        $user = new User();
+        $group = new UserGroup();
 
-        $form = $this->createForm(new UserType(), $user);
+        $form = $this->createForm(new UserGroupType(), $group);
         $form->submit($request);
 
         if ($form->isValid()) {
 
             // Created timestamp.
-            $user->setTimeStamp(new \DateTime());
+            $group->setTimeStamp(new \DateTime());
 
-            $em = $this->getDoctrine()
-                ->getManager();
+            try {
+                $em = $this->getDoctrine()
+                    ->getManager();
 
-            $em->persist($user);
-            $em->flush();
+                $em->persist($group);
+                $em->flush();
 
-            return $this->routeRedirectView(
-                'get_user',
-                array(
-                    'id' => $user->getId()
-                )
-            );
+                return $this->routeRedirectView(
+                    'get_group',
+                    array(
+                        'id' => $group->getId()
+                    )
+                );
+            }
+            catch (DBALException $e) {
+                throw new NotAcceptableHttpException($e->getMessage());
+            }
         }
         return $form->getErrors();
     }
@@ -154,7 +160,7 @@ class UserController extends FOSRestController
      *
      * @return array
      *
-     * @throws NotFoundHttpException when user not exist
+     * @throws NotFoundHttpException when note not exist
      */
     public function putUserAction(Request $request, $id) {
 
@@ -213,7 +219,7 @@ class UserController extends FOSRestController
 
      * @return array
      *
-     * @throws NotFoundHttpException when user not exist
+     * @throws NotFoundHttpException when note not exist
      */
     public function deleteUserAction(Request $request, $id) {
 

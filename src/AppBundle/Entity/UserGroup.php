@@ -1,69 +1,101 @@
 <?php
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Class UserGroup
  * @package AppBundle\Entity
- * @orm\Entity
- * @orm\Table(name="UserGroup")
+ * @ORM\Entity
+ * @ORM\Table(name="UserGroup")
+ * @ExclusionPolicy("all")
  */
 class UserGroup
 {
     /**
      * @var int
-     * @orm\Id()
-     * @orm\Column(name="UserGroupId", type="integer", length=11)
-     * @orm\GeneratedValue(strategy="AUTO")
+     * @ORM\Id()
+     * @ORM\Column(name="UserGroupId", type="integer", length=11)
+     * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Expose()
      */
     protected $id;
 
     /**
      * @var string
-     * @orm\Column(name="UserGroupName", type="string", length=256, nullable=true)
+     * @ORM\Column(name="UserGroupName", type="string", length=256, nullable=true)
+     *
+     * @Expose()
      */
     protected $name;
 
     /**
      * @var string
-     * @orm\Column(name="UserGroupDescription", type="string", length=4096, nullable=true)
+     * @ORM\Column(name="UserGroupDescription", type="string", length=4096, nullable=true)
+     *
+     * @Expose()
      */
     protected $description;
 
     /**
      * @var string
-     * @orm\Column(name="UserGroupType", type="string", length=128, nullable=true)
+     * @ORM\Column(name="UserGroupType", type="string", length=128, nullable=true)
+     *
+     * @Expose()
      */
     protected $type;
 
     /**
      * @var int
-     * @orm\Column(name="UserGroupTimestamp", type="datetime", nullable=true)
+     * @ORM\Column(name="UserGroupTimestamp", type="datetime", nullable=true)
+     *
+     * @Expose()
      */
     protected $timestamp;
 
     /**
      * @var int
-     * @orm\Column(name="UserGroupActive", type="smallint", length=6, nullable=true)
+     * @ORM\Column(
+     *  name="UserGroupActive",
+     *  type="smallint",
+     *  length=6,
+     *  nullable=true,
+     *  options = { "default" = 1 }
+     * )
+     *
+     * @Expose()
      */
     protected $active;
 
     /**
      * @var string
-     * @orm\Column(name="Reference", type="string", length=128)
+     * @ORM\Column(name="Reference", type="string", length=128, unique=true)
+     *
+     * @Expose()
      */
     protected $reference;
 
     /**
      * @var int
-     * @orm\Column(name="UserId", type="integer", length=11)
+     * @ORM\Column(name="UserId", type="integer", length=11)
+     *
+     * @Expose()
      */
-    protected $userId;
+    protected $ownerId;
 
     /**
      * @var int
-     * @orm\Column(name="ParentGroupId", type="integer", length=11)
+     * @ORM\Column(
+     *  name="ParentGroupId",
+     *  type="integer",
+     *  length=11,
+     *  options={ "default" = 0 }
+     * )
+     *
+     * @Expose()
      */
     protected $parent;
 
@@ -86,17 +118,17 @@ class UserGroup
     /**
      * @return int
      */
-    public function getUserId()
+    public function getOwnerId()
     {
-        return $this->userId;
+        return $this->ownerId;
     }
 
     /**
      * @param int $userId
      */
-    public function setUserId($userId)
+    public function setOwnerId($userId)
     {
-        $this->userId = $userId;
+        $this->ownerId = $userId;
     }
 
     /**

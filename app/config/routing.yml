@@ -9,6 +9,10 @@ user:
     resource: "@AppBundle/Controller/UserController.php"
     type:     rest
 
+group:
+    resource: "@AppBundle/Controller/GroupController.php"
+    type:     rest
+
 NelmioApiDocBundle:
   resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
   prefix:   /api/doc
