@@ -42,4 +42,6 @@ After starting and provisioning your vagrant box you can go to:
 <http://dev.grouphub.org/app_dev.php>
 
 ## API Documentation
-API Documentation is found at <http://dev.grouphub.org/app_dev.php/api/doc>
+API Documentation can be found at [api.md](https://github.com/mroest/grouphub.api/blob/master/docs/api.md)
+Or when you have the vagrant box running you can go to <http://dev.grouphub.org/app_dev.php/api/doc> to see the
+runtime documentation version.
