@@ -1,6 +1,6 @@
 ---
 # file: group_vars/all
-web_group: dialout
+web_group: vagrant
 web_user: vagrant
 timezone: "Europe/Amsterdam"
 xdebug: true,
