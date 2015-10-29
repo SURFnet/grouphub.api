@@ -99,7 +99,7 @@ fos_http_cache:
             # the controls section values are used in a call to Response::setCache();
             -
                 match:
-                    path: ^/notes
+                    path: ^/users
                     methods: [GET, HEAD]
                 headers:
                     cache_control: { public: true, max_age: 15, s_maxage: 30 }

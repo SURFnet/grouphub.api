@@ -9,3 +9,5 @@ app/config/parameters.yml
 .vagrant
 .idea
 *.php~
+code.tar.gz
+orig/*

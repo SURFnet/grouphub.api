@@ -55,7 +55,15 @@ class User
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=256, name="Reference")
+     *
+     * @ORM\Column(
+     *  type="string",
+     *  length=256,
+     *  name="Reference",
+     *  unique=true
+     * )
+     *
+     * @Expose()
      */
     protected $reference;
 

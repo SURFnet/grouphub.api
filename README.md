@@ -1,6 +1,9 @@
 # GroupHub API
 REST API based on Symfony and FOSRest bundle.
 
+Description of what this API is can be found at:
+<https://wiki.surfnet.nl/display/P3GFeI2015/3.+Management+laag>
+
 # Host machine requirements
 
  - Virtualbox
@@ -9,7 +12,7 @@ REST API based on Symfony and FOSRest bundle.
  - composer
 
 ## SSH public key
-While provisioning the ansible script will copy your SSH pub key from `(~/.ssh/id_rsa.pub)` to the vagrant box.
+While provisioning the Ansible script will copy your SSH pub key from `(~/.ssh/id_rsa.pub)` to the vagrant box.
 Make sure your key lives at that location before you initialize the vagrant box.
 
 ## Vagrant plugins
@@ -34,7 +37,7 @@ You can do this with the symfony console command at the vagrant box
 If you want to imoprt the structure manually there is a SQL dump available.
 SQL dump is found at: [create_user.sql](https://github.com/mroest/grouphub.api/blob/master/docs/create_user.sql)
 
-# Gettings started
+# Getting started
 After starting and provisioning your vagrant box you can go to:
 <http://dev.grouphub.org/app_dev.php>
 

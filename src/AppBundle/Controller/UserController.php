@@ -21,17 +21,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class UserController extends FOSRestController
 {
     /**
-     * Get list of users
+     * List all users from the database. Does not support paging!
      *
      * @ApiDoc(
      *  resource = true,
+     *   output="ArrayCollection",
      *  statusCodes = {
      *      200 = "Returned when successul",
      *      500 = "Returned when there is an internal server error"
      *   }
      * )
-     *
-     * @Annotations\View()
      *
      * @return array
      */
@@ -49,21 +48,27 @@ class UserController extends FOSRestController
     }
 
     /**
-     * Get a single user.
+     * Retrieve a single user from database by user ID.
      *
      * @ApiDoc(
      *   output = "AppBundle\Entity\User",
      *   resource = true,
+     *   requirements = {
+     *      {
+     *          "name" = "id",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "UserID"
+     *      }
+     *   },
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     404 = "Returned when the user is not found"
      *   }
      * )
      *
-     * @Annotations\View(templateVar="user")
-     *
      * @param Request $request the request object
-     * @param int     $id      the user id
+     * @param int     $id      the User id
      *
      * @return array
      *
@@ -88,7 +93,6 @@ class UserController extends FOSRestController
      * Creates a new user from the submitted JSON data.
      *
      * @ApiDoc(
-     *   output = "AppBundle\Entity\User",
      *   input = "AppBundle\Entity\User",
      *   resource = true,
      *   statusCodes = {
@@ -96,8 +100,6 @@ class UserController extends FOSRestController
      *     404 = "Returned when the user is invalid"
      *   }
      * )
-     *
-     * @Annotations\View(templateVar="user")
      *
      * @param Request $request the request object
      *
@@ -137,14 +139,20 @@ class UserController extends FOSRestController
      * @ApiDoc(
      *   output = "AppBundle\Entity\User",
      *   resource = true,
+     *   requirements = {
+     *      {
+     *          "name" = "id",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "UserID"
+     *      }
+     *   },
      *   description="Update a user. Make sure to include all properties!",
      *   statusCodes = {
      *     200 = "Returned when successful",
      *     404 = "Returned when the user is not found"
      *   }
      * )
-     *
-     * @Annotations\View(templateVar="user")
      *
      * @param Request $request the request object
      * @param int     $id      the user id
@@ -184,5 +192,49 @@ class UserController extends FOSRestController
         }
 
         return $form->getErrors();
+    }
+
+    /**
+     * Delete user from the database by user ID.
+     *
+     * @ApiDoc(
+     *   resource = true,
+     *   requirements = {
+     *      {
+     *          "name" = "id",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "UserID"
+     *      }
+     *   },
+     *   statusCodes = {
+     *     200 = "Returned when successful",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+
+     * @param Request $request
+     * @param int $id User ID
+
+     * @return array
+     *
+     * @throws NotFoundHttpException when note not exist
+     */
+    public function deleteUserAction(Request $request, $id) {
+
+        $user = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->find($id);
+
+        if (!$user) {
+            throw new NotFoundHttpException(
+                'User with id: ' . $id . ' not found'
+            );
+        }
+
+        $em = $this->getDoctrine()
+            ->getManager();
+        $em->remove($user);
+        $em->flush();
     }
 }
