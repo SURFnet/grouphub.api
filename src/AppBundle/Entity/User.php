@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
@@ -39,8 +40,9 @@ class User
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=256, name="UserLoginName", nullable=true)
+     * @ORM\Column(type="string", length=256, name="UserLoginName", nullable=false)
      * @Expose()
+     * @Required()
      */
     protected $loginName;
 

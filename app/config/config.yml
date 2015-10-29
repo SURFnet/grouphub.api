@@ -73,13 +73,13 @@ fos_rest:
             json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1', 'application/json;version=1.2']
         view_response_listener: 'force'
         formats:
-            xml:  true
+            xml:  false
             json: true
         templating_formats:
-            html: true
+            html: false
     format_listener:
         rules:
-            - { path: ^/, priorities: [ html, json, xml ], fallback_format: ~, prefer_extension: true }
+            - { path: ^/, priorities: [ json ], fallback_format: json, prefer_extension: true }
         media_type:
             version_regex: '/(v|version)=(?P<version>[0-9\.]+)/'
     exception:
