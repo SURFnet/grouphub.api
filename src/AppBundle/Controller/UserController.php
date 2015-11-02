@@ -215,17 +215,15 @@ class UserController extends FOSRestController
      */
     public function deleteUserAction(Request $request, $id) {
 
-        $user = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
-            ->find($id);
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
 
         if (!$user) {
             throw new NotFoundHttpException('User with id: ' . $id . ' not found');
         }
 
-        $em = $this->getDoctrine()
-            ->getManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();
+        return $this->routeRedirectView('get_users');
     }
 }

@@ -64,7 +64,7 @@ class GroupController extends FOSRestController
      * )
      *
      * @param Request $request the request object
-     * @param int     $id      the User id
+     * @param int     $id      the Group id
      *
      * @return array
      *
@@ -72,14 +72,10 @@ class GroupController extends FOSRestController
      */
     public function getGroupAction(Request $request, $id)
     {
-        $group = $this->getDoctrine()
-            ->getRepository('AppBundle:UserGroup')
-            ->find($id);
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
 
         if (!$group) {
-            throw new NotFoundHttpException(
-                'Group with id: ' . $id . ' not found'
-            );
+            throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
         }
 
         return $this->view([$group]);
@@ -114,18 +110,12 @@ class GroupController extends FOSRestController
             $group->setTimeStamp(new \DateTime());
 
             try {
-                $em = $this->getDoctrine()
-                    ->getManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $em->persist($group);
                 $em->flush();
 
-                return $this->routeRedirectView(
-                    'get_group',
-                    array(
-                        'id' => $group->getId()
-                    )
-                );
+                return $this->routeRedirectView('get_group', array('id' => $group->getId()));
             }
             catch (DBALException $e) {
                 throw new NotAcceptableHttpException($e->getMessage());
@@ -162,41 +152,37 @@ class GroupController extends FOSRestController
      *
      * @throws NotFoundHttpException when note not exist
      */
-    public function putUserAction(Request $request, $id) {
+    public function putGroupAction(Request $request, $id) {
 
-        $user = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
-            ->find($id);
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
 
-        if (!$user) {
-            throw new NotFoundHttpException(
-                'User with id: ' . $id . ' not found'
-            );
+        if (!$group) {
+            throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
         }
 
-        $form = $this->createForm(new UserType(), $user);
+        $form = $this->createForm(new UserGroupType(), $group);
         $form->submit($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()
-                ->getManager();
 
-            $em->persist($user);
-            $em->flush();
+            try {
+                $em = $this->getDoctrine()->getManager();
 
-            return $this->routeRedirectView(
-                'get_user',
-                array(
-                    'id' => $user->getId()
-                )
-            );
+                $em->persist($group);
+                $em->flush();
+
+                return $this->routeRedirectView('get_group', array('id' => $group->getId()));
+            }
+            catch(DBALException $e) {
+                throw new NotAcceptableHttpException($e->getMessage());
+            }
         }
 
         return $form->getErrors();
     }
 
     /**
-     * Delete user from the database by user ID.
+     * Delete group from the database by group ID.
      *
      * @ApiDoc(
      *   resource = true,
@@ -205,7 +191,7 @@ class GroupController extends FOSRestController
      *          "name" = "id",
      *          "dataType" = "integer",
      *          "requirement" = "\d+",
-     *          "description" = "UserID"
+     *          "description" = "GroupID"
      *      }
      *   },
      *   statusCodes = {
@@ -215,27 +201,23 @@ class GroupController extends FOSRestController
      * )
 
      * @param Request $request
-     * @param int $id User ID
+     * @param int $id Group ID
 
      * @return array
      *
      * @throws NotFoundHttpException when note not exist
      */
-    public function deleteUserAction(Request $request, $id) {
+    public function deleteGroupAction(Request $request, $id) {
 
-        $user = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
-            ->find($id);
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
 
-        if (!$user) {
-            throw new NotFoundHttpException(
-                'User with id: ' . $id . ' not found'
-            );
+        if (!$group) {
+            throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
         }
 
-        $em = $this->getDoctrine()
-            ->getManager();
-        $em->remove($user);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($group);
         $em->flush();
+        return $this->routeRedirectView('get_groups');
     }
 }
