@@ -35,6 +35,16 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
+    public function getCacheDir()
+    {
+        // Put the cache in shared mem for the vagrant machine. (performance!)
+        if ($this->environment === 'dev') {
+            return '/dev/shm/grouphub.api/cache/' .  $this->environment;
+        }
+
+        return parent::getCacheDir();
+    }
+
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');

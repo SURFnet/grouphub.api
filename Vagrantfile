@@ -31,6 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |v|
     v.customize [
       "modifyvm", :id,
+      "--paravirtprovider", "kvm",
       "--cpus", config_values[:cpus],
       "--memory", config_values[:memory],
       "--name", "grouphub"
