@@ -4,12 +4,14 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 
+use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -97,8 +99,8 @@ class UserController extends FOSRestController
      * )
      *
      * @param Request $request the request object
-     *
      * @return array
+     * @throws NotAcceptableHttpException
      */
     public function postUsersAction(Request $request)
     {
@@ -112,18 +114,17 @@ class UserController extends FOSRestController
             // Created timestamp.
             $user->setTimeStamp(new \DateTime());
 
-            $em = $this->getDoctrine()
-                ->getManager();
+            try {
+                $em = $this->getDoctrine()->getManager();
 
-            $em->persist($user);
-            $em->flush();
+                $em->persist($user);
+                $em->flush();
 
-            return $this->routeRedirectView(
-                'get_user',
-                array(
-                    'id' => $user->getId()
-                )
-            );
+                return $this->routeRedirectView('get_user', array('id' => $user->getId()));
+            }
+            catch (DBALException $e) {
+                throw new NotAcceptableHttpException($e->getMessage());
+            }
         }
         return $form->getErrors();
     }
@@ -163,27 +164,24 @@ class UserController extends FOSRestController
             ->find($id);
 
         if (!$user) {
-            throw new NotFoundHttpException(
-                'User with id: ' . $id . ' not found'
-            );
+            throw new NotFoundHttpException('User with id: ' . $id . ' not found');
         }
 
         $form = $this->createForm(new UserType(), $user);
         $form->submit($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()
-                ->getManager();
+            try {
+                $em = $this->getDoctrine()->getManager();
 
-            $em->persist($user);
-            $em->flush();
+                $em->persist($user);
+                $em->flush();
 
-            return $this->routeRedirectView(
-                'get_user',
-                array(
-                    'id' => $user->getId()
-                )
-            );
+                return $this->routeRedirectView('get_user', array('id' => $user->getId()));
+            }
+            catch (DBALException $e) {
+                throw new NotAcceptableHttpException($e->getMessage());
+            }
         }
 
         return $form->getErrors();
@@ -222,9 +220,7 @@ class UserController extends FOSRestController
             ->find($id);
 
         if (!$user) {
-            throw new NotFoundHttpException(
-                'User with id: ' . $id . ' not found'
-            );
+            throw new NotFoundHttpException('User with id: ' . $id . ' not found');
         }
 
         $em = $this->getDoctrine()
