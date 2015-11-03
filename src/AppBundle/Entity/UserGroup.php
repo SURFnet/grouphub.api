@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
@@ -19,7 +20,7 @@ class UserGroup
      * @ORM\Id()
      * @ORM\Column(name="UserGroupId", type="integer", length=11)
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
+     * @Required()
      * @Expose()
      */
     protected $id;
@@ -27,7 +28,7 @@ class UserGroup
     /**
      * @var string
      * @ORM\Column(name="UserGroupName", type="string", length=256, nullable=true)
-     *
+     * @Required()
      * @Expose()
      */
     protected $name;
@@ -35,7 +36,7 @@ class UserGroup
     /**
      * @var string
      * @ORM\Column(name="UserGroupDescription", type="string", length=4096, nullable=true)
-     *
+     * @Required()
      * @Expose()
      */
     protected $description;
@@ -43,7 +44,7 @@ class UserGroup
     /**
      * @var string
      * @ORM\Column(name="UserGroupType", type="string", length=128, nullable=true)
-     *
+     * @Required()
      * @Expose()
      */
     protected $type;
@@ -51,7 +52,6 @@ class UserGroup
     /**
      * @var int
      * @ORM\Column(name="UserGroupTimestamp", type="datetime", nullable=true)
-     *
      * @Expose()
      */
     protected $timestamp;
@@ -65,7 +65,7 @@ class UserGroup
      *  nullable=true,
      *  options = { "default" = 1 }
      * )
-     *
+     * @Required()
      * @Expose()
      */
     protected $active;
@@ -73,7 +73,7 @@ class UserGroup
     /**
      * @var string
      * @ORM\Column(name="Reference", type="string", length=128, unique=true)
-     *
+     * @Required()
      * @Expose()
      */
     protected $reference;
@@ -81,7 +81,7 @@ class UserGroup
     /**
      * @var int
      * @ORM\Column(name="UserId", type="integer", length=11)
-     *
+     * @Required()
      * @Expose()
      */
     protected $ownerId;
@@ -94,7 +94,7 @@ class UserGroup
      *  length=11,
      *  options={ "default" = 0 }
      * )
-     *
+     * @Required()
      * @Expose()
      */
     protected $parent;

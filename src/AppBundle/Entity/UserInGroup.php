@@ -1,35 +1,59 @@
 <?php
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\Common\Annotations\Annotation\Required;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use Doctrine\ORM\Mapping as ORM;
 
 
 /**
  * Class UserInGroup
  * @package AppBundle\Entity
- * @orm\Entity
- * @orm\Table(name="UserInGroup")
+ * @ORM\Entity
+ * @ORM\Table(name="UserInGroup")
+ * @ExclusionPolicy("all")
  */
 class UserInGroup
 {
     /**
      * @var int
-     * @orm\Id()
-     * @orm\Column(name="UserId", type="integer", length=11, nullable=false)
+     * @ORM\Id()
+     * @ORM\Column(
+     *     name="UserId",
+     *     type="integer",
+     *     length=11,
+     *     nullable=false
+     * )
+     * @Required()
+     * @Expose()
      */
     protected $userId;
 
     /**
      * @var int
-     * @orm\Id()
-     * @orm\Column(name="UserGroupId", type="integer", length=11, nullable=false)
-     *
+     * @ORM\Id()
+     * @ORM\Column(
+     *     name="UserGroupId",
+     *     type="integer",
+     *     length=11,
+     *     nullable=false
+     * )
+     * @Required()
+     * @Expose()
      */
     protected $groupId;
 
     /**
-     * @var int
-     * @orm\Column(name="UserInGroupRole", type="string", length=128, nullable=true)
+     * @var string
+     * @ORM\Column(
+     *     name="UserInGroupRole",
+     *     type="string",
+     *     length=128,
+     *     nullable=true
+     * )
+     * @Required()
+     * @Expose()
      */
     protected $role;
 

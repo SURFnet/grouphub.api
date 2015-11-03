@@ -83,14 +83,14 @@ class UserController extends FOSRestController
             );
         }
 
-        return $this->view([$user]);
+        return $this->view($user);
     }
 
     /**
      * Creates a new user from the submitted JSON data.
      *
      * @ApiDoc(
-     *   input = "AppBundle\Entity\User",
+     *   input = "AppBundle\Form\UserType",
      *   resource = true,
      *   statusCodes = {
      *     200 = "Returned when successful",
@@ -133,7 +133,7 @@ class UserController extends FOSRestController
      * Update a single user as a whole. Mind that a PUT requires all user properties included in the JSON object
      *
      * @ApiDoc(
-     *   output = "AppBundle\Entity\User",
+     *   input = "AppBundle\Form\UserType",
      *   resource = true,
      *   requirements = {
      *      {
