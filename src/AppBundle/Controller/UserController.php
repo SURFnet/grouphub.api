@@ -28,7 +28,7 @@ class UserController extends FOSRestController
      *  resource = true,
      *  output="ArrayCollection<AppBundle\Entity\User>",
      *  statusCodes = {
-     *      200 = "Returned when successul",
+     *      200 = "Returned when successful",
      *      500 = "Returned when there is an internal server error"
      *   }
      * )
