@@ -23,7 +23,11 @@ Make sure you have the following vagrant plugins installed.
     vagrant-vbguest >=(0.10.1)
 
 # Installation
-Run `vagrant up` in order to get the vagrant machine running
+- Run `vagrant up` in order to get the vagrant machine running
+- Run `composer install` in order to load/install all required dependencies.
+
+The `composer install` command will ask you about your database credentials. Make sure you have an empty MySQL database
+and MySQL user/pass available. The command will write the app/config/parameters.yml that is required by the Symfony framework.
 
 ## Database import
 To get you going you need to create the database structure.
