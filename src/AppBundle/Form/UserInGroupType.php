@@ -11,12 +11,9 @@ class UserInGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $notBlank = [ "constraints" => new NotBlank() ];
-
         $builder
-            ->add('userId', 'integer', $notBlank)
-            ->add('groupId', 'integer', $notBlank)
-            ->add('role', 'text', [ "required" => true ]);
+            ->add('userId', 'integer', [ "constraints" => new NotBlank() ])
+            ->add('role', 'text');
     }
 
     public function configureOptions(OptionsResolver $resolver)
