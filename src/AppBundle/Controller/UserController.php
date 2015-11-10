@@ -2,6 +2,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Event\UserEvent;
 use AppBundle\Form\UserType;
 
 use Doctrine\DBAL\DBALException;
@@ -120,6 +121,7 @@ class UserController extends FOSRestController
                 $em->persist($user);
                 $em->flush();
 
+                $this->get('event_dispatcher')->dispatch('app.event.user.add', new UserEvent($user));
                 return $this->routeRedirectView('get_user', array('id' => $user->getId()));
             }
             catch (DBALException $e) {
@@ -159,6 +161,7 @@ class UserController extends FOSRestController
      */
     public function putUserAction(Request $request, $id) {
 
+        /** @var User $user */
         $user = $this->getDoctrine()
             ->getRepository('AppBundle:User')
             ->find($id);
@@ -176,6 +179,8 @@ class UserController extends FOSRestController
 
                 $em->persist($user);
                 $em->flush();
+
+                $this->get('event_dispatcher')->dispatch('app.event.user.update', new UserEvent($user));
 
                 return $this->routeRedirectView('get_user', array('id' => $user->getId()));
             }
@@ -215,6 +220,7 @@ class UserController extends FOSRestController
      */
     public function deleteUserAction(Request $request, $id) {
 
+        /** @var User $user */
         $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
 
         if (!$user) {
@@ -224,6 +230,9 @@ class UserController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();
+
+        $this->get('event_dispatcher')->dispatch('app.event.user.delete', new UserEvent($user));
+
         return $this->routeRedirectView('get_users');
     }
 }

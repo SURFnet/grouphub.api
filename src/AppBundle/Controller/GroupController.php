@@ -10,9 +10,7 @@ use AppBundle\Form\UserInGroupUpdateType;
 use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
-
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -465,5 +463,53 @@ class GroupController extends FOSRestController
             ->findBy(['groupId' => $groupId]);
 
         return $this->view($rows);
+    }
+
+    /**
+     * Remove a group from a group.
+     *
+     * @ApiDoc(
+     *  resource = true,
+     *  requirements = {
+     *      {
+     *          "name" = "groupId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "GroupID"
+     *      },
+     *      {
+     *          "name" = "groupInGroupId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "The group that is in this group."
+     *      }
+     *  },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      404 = "Returned when the group is not found.",
+     *      500 = "Returned when there is a internal error."
+     *  }
+     * )
+     *
+     * @param Request   $request          Request Object
+     * @param int       $groupId          Group ID
+     * @param int       $groupInGroupId   User ID
+     * @return array
+     */
+    public function deleteGroupGroupsAction(Request $request, $groupId, $groupInGroupId)
+    {
+        $rows = $this->getDoctrine()
+            ->getRepository('AppBundle:UserGroupInGroup')
+            ->findBy([ 'groupId' => $groupId, 'groupInGroupId' => $groupInGroupId ]);
+
+        if (count($rows) !== 1) {
+            throw new NotFoundHttpException('Group with id ' . $groupId . ' in groupInGroupId with id ' . $groupInGroupId . ' not found.');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($rows[0]);
+        $em->flush();
+
+        return $this->routeRedirectView('get_groups');
     }
 }

@@ -1,0 +1,16 @@
+services:
+  app.event.user.add:
+    class: AppBundle\EventListener\UserEventListener
+    arguments: ["@service_container"]
+    tags:
+      - { name: kernel.event_listener, event: app.event.user.add, method: userAdd }
+  app.event.user.update:
+    class: AppBundle\EventListener\UserEventListener
+    arguments: ["@service_container"]
+    tags:
+      - { name: kernel.event_listener, event: app.event.user.update, method: userUpdate }
+  app.event.user.delete:
+    class: AppBundle\EventListener\UserEventListener
+    arguments: ["@service_container"]
+    tags:
+      - { name: kernel.event_listener, event: app.event.user.delete, method: userDelete }

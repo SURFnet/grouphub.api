@@ -25,7 +25,7 @@ class UserActivity
 
     /**
      * @var string
-     * @ORM\Column(name="UserActivityTimestamp", type="datetime", nullable=true)
+     * @ORM\Column(name="UserActivityTimestamp", type="datetime", nullable=false)
      * @Expose()
      */
     protected $timestamp;
@@ -60,13 +60,15 @@ class UserActivity
 
     /**
      * @var int
-     * @ORM\Column(name="UserId", type="integer", length=11)
+     * @ORM\Column(name="UserId", type="integer", length=11, nullable=true)
+     * @Expose()
      */
     protected $userId;
 
     /**
      * @var int
-     * @ORM\Column(name="UserGroupId", type="integer", length=11)
+     * @ORM\Column(name="UserGroupId", type="integer", length=11, nullable=true)
+     * @Expose()
      */
     protected $userGroupId;
 
@@ -175,7 +177,7 @@ class UserActivity
     }
 
     /**
-     * @param int $timestamp
+     * @param \DateTime $timestamp
      */
     public function setTimestamp($timestamp)
     {
