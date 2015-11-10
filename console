@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+ssh vagrant@33.34.33.22 "php /vagrant/app/console $@"
