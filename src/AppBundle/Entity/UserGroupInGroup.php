@@ -1,29 +1,49 @@
 <?php
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Class UserGroupInGroup
  * @package AppBundle\Entity
- * @orm\Entity
- * @orm\Table(name="UserGroupInGroup")
+ *
+ * @ORM\Entity
+ * @ORM\Table(
+ *     name="UserGroupInGroup"
+ * )
+ *
+ * @ExclusionPolicy("all")
  */
 class UserGroupInGroup
 {
     /**
      * @var int
-     * @orm\Id()
-     * @orm\Column(name="UserGroupInGroupId", type="integer", length=11, nullable=false)
+     * @ORM\Id()
+     * @ORM\Column(
+     *     name="UserGroupInGroupId",
+     *     type="integer",
+     *     length=11,
+     *     nullable=false
+     * )
+     * @Expose()
      */
-    protected $id;
+    protected $groupInGroupId;
 
     /**
      * @var int
-     * @orm\Id()
-     * @orm\Column(name="UserGroupId", type="integer", length=11, nullable=false)
+     * @ORM\Id()
+     * @ORM\Column(
+     *     name="UserGroupId",
+     *     type="integer",
+     *     length=11,
+     *     nullable=false
+     * )
+     *
+     * @Expose()
      */
-    protected $userGroupId;
+    protected $groupId;
 
     /**
      * Set id
@@ -32,10 +52,9 @@ class UserGroupInGroup
      *
      * @return UserGroupInGroup
      */
-    public function setId($id)
+    public function setGroupId($id)
     {
-        $this->id = $id;
-
+        $this->groupId = $id;
         return $this;
     }
 
@@ -44,9 +63,9 @@ class UserGroupInGroup
      *
      * @return integer
      */
-    public function getId()
+    public function getGroupId()
     {
-        return $this->id;
+        return $this->groupId;
     }
 
     /**
@@ -56,10 +75,9 @@ class UserGroupInGroup
      *
      * @return UserGroupInGroup
      */
-    public function setUserGroupId($userGroupId)
+    public function setGroupInGroupId($userGroupId)
     {
-        $this->userGroupId = $userGroupId;
-
+        $this->groupInGroupId = $userGroupId;
         return $this;
     }
 
@@ -68,8 +86,8 @@ class UserGroupInGroup
      *
      * @return integer
      */
-    public function getUserGroupId()
+    public function getGroupInGroupId()
     {
-        return $this->userGroupId;
+        return $this->groupInGroupId;
     }
 }

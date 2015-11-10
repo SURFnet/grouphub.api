@@ -158,8 +158,8 @@ class GroupController extends FOSRestController
      *
      * @throws NotFoundHttpException when note not exist
      */
-    public function putGroupAction(Request $request, $id) {
-
+    public function putGroupAction(Request $request, $id)
+    {
         $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
@@ -213,7 +213,8 @@ class GroupController extends FOSRestController
      *
      * @throws NotFoundHttpException when note not exist
      */
-    public function deleteGroupAction(Request $request, $id) {
+    public function deleteGroupAction(Request $request, $id)
+    {
 
         $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
         if ($group === null) {
@@ -245,7 +246,8 @@ class GroupController extends FOSRestController
      * @return array
      * @throws NotFoundHttpException when note not exist
      */
-    public function getGroupUsersAction(Request $request, $id) {
+    public function getGroupUsersAction(Request $request, $id)
+    {
 
         if ($this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id) === null) {
             throw new NotFoundHttpException('Group with id ' . $id . ' does not exists.');
@@ -287,7 +289,8 @@ class GroupController extends FOSRestController
      * @throws NotFoundHttpException when note not exist
      * @throws NotAcceptableHttpException when <input> is not valid.
      */
-    public function postGroupUsersAction(Request $request, $id) {
+    public function postGroupUsersAction(Request $request, $id)
+    {
 
         $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
         if ($group === null) {
@@ -346,7 +349,8 @@ class GroupController extends FOSRestController
      * @param int $userId User ID
      * @return array
      */
-    public function putGroupUsersAction(Request $request, $groupId, $userId) {
+    public function putGroupUsersAction(Request $request, $groupId, $userId)
+    {
 
         $userInGroup = $this->getDoctrine()
             ->getRepository('AppBundle:UserInGroup')
@@ -374,5 +378,92 @@ class GroupController extends FOSRestController
             }
         }
         return $form->getErrors();
+    }
+
+    /**
+     * Remove a user from a group.
+     *
+     * @ApiDoc(
+     *  resource = true,
+     *  requirements = {
+     *      {
+     *          "name" = "groupId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "GroupID"
+     *      },
+     *      {
+     *          "name" = "userId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "UserID"
+     *      }
+     *  },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      404 = "Returned when the group or user is not found.",
+     *      500 = "Returned when there is a internal error."
+     *  }
+     * )
+     *
+     * @param Request $request  Request Object
+     * @param int $groupId      Group ID
+     * @param int $userId       User ID
+     * @return array
+     */
+    public function deleteGroupUsersAction(Request $request, $groupId, $userId)
+    {
+        $rows = $this->getDoctrine()
+            ->getRepository('AppBundle:UserInGroup')
+            ->findBy([ "userId" => $userId, "groupId" => $groupId]);
+
+        if (count($rows) !== 1) {
+            throw new NotFoundHttpException('User with id ' . $userId . ' in group with id ' . $groupId . ' not found.');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($rows[0]);
+        $em->flush();
+        return $this->routeRedirectView('get_groups');
+    }
+
+    /**
+     * List child groups in a Group.
+     *
+     * @ApiDoc(
+     *  resource = true,
+     *  output="ArrayCollection<AppBundle\Entity\Group>",
+     *  requirements = {
+     *      {
+     *          "name" = "id",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "GroupID"
+     *      }
+     *  },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      404 = "Returned when the group is not found.",
+     *      500 = "Returned when there is an internal server error"
+     *   }
+     * )
+     *
+     * @param Request $request Request object
+     * @param int $groupId Group ID
+     * @return array
+     */
+    public function getGroupGroupsAction(Request $request, $groupId)
+    {
+
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($groupId);
+        if ($group === null) {
+            throw new NotFoundHttpException('Group with id: ' . $groupId . ' not found');
+        }
+
+        $rows = $this->getDoctrine()
+            ->getRepository('AppBundle:UserGroupInGroup')
+            ->findBy(['groupId' => $groupId]);
+
+        return $this->view($rows);
     }
 }
