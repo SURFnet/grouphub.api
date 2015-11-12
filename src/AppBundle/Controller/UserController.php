@@ -121,7 +121,7 @@ class UserController extends FOSRestController
                 $em->persist($user);
                 $em->flush();
 
-                $this->get('event_dispatcher')->dispatch('app.event.user.add', new UserEvent($user));
+                $this->fireEvent('app.event.user.add', new UserEvent($user));
                 return $this->routeRedirectView('get_user', array('id' => $user->getId()));
             }
             catch (DBALException $e) {
@@ -180,7 +180,7 @@ class UserController extends FOSRestController
                 $em->persist($user);
                 $em->flush();
 
-                $this->get('event_dispatcher')->dispatch('app.event.user.update', new UserEvent($user));
+                $this->fireEvent('app.event.user.update', new UserEvent($user));
 
                 return $this->routeRedirectView('get_user', array('id' => $user->getId()));
             }
@@ -231,8 +231,19 @@ class UserController extends FOSRestController
         $em->remove($user);
         $em->flush();
 
-        $this->get('event_dispatcher')->dispatch('app.event.user.delete', new UserEvent($user));
+        $this->fireEvent('app.event.user.delete', new UserEvent($user));
 
         return $this->routeRedirectView('get_users');
+    }
+
+    /**
+     * Fire UserEvent.
+     *
+     * @param string $event Event id
+     * @param UserEvent $eventObject
+     */
+    private function fireEvent($event, UserEvent $eventObject)
+    {
+        $this->get('event_dispatcher')->dispatch($event, $eventObject);
     }
 }

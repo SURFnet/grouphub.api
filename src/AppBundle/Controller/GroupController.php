@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\UserGroup;
 use AppBundle\Entity\UserInGroup;
+use AppBundle\Event\GroupEvent;
 use AppBundle\Form\UserGroupType;
 use AppBundle\Form\UserInGroupType;
 use AppBundle\Form\UserInGroupUpdateType;
@@ -511,5 +512,16 @@ class GroupController extends FOSRestController
         $em->flush();
 
         return $this->routeRedirectView('get_groups');
+    }
+
+    /**
+     * Fire UserEvent.
+     *
+     * @param string $event Event id
+     * @param GroupEvent $eventObject
+     */
+    private function fireEvent($event, GroupEvent $eventObject)
+    {
+        $this->get('event_dispatcher')->dispatch($event, $eventObject);
     }
 }
