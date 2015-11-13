@@ -126,6 +126,11 @@ pre {
   line-height:1.2em;
 }
 
+div.content ul, div.content ol {
+  line-height: 1.4em;
+  color: #333333;
+}
+
 table.fullwidth {
   width: 100%;
 }
@@ -1176,11 +1181,627 @@ form .request-content {
             </li>
                     <li class="resource">
                 <div class="heading">
+                                            <h2>/groups/{groupId}/groups</h2>
+                                    </div>
+                <ul class="endpoints">
+                    <li class="endpoint">
+                        <ul class="operations">
+                                                            <li class="get operation" id="get--groups-{groupId}-groups.{_format}">
+    <div class="heading toggler" data-href="#get--groups-{groupId}-groups.{_format}">
+        <h3>
+            <span class="http_method">
+                <i>GET</i>
+            </span>
+
+            
+                        
+            <span class="path">
+                /groups/{groupId}/groups.{_format}
+            </span>
+                   </h3>
+        <ul class="options">
+                            <li>List child groups in a Group.</li>
+                    </ul>
+    </div>
+
+    <div class="content" style="display: none;">
+        <ul class="tabs">
+                            <li class="selected" data-pane="content">Documentation</li>
+                <li data-pane="sandbox">Sandbox</li>
+                    </ul>
+
+        <div class="panes">
+            <div class="pane content selected">
+                            <h4>Documentation</h4>
+                <div><p>List child groups in a Group.</p>
+</div>
+            
+            
+                            <h4>Requirements</h4>
+                <table class="fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Requirement</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                                    <tr>
+                                <td>id</td>
+                                <td>\d+</td>
+                                <td>integer</td>
+                                <td>GroupID</td>
+                            </tr>
+                                                    <tr>
+                                <td>_format</td>
+                                <td>json</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>groupId</td>
+                                <td></td>
+                                <td>int</td>
+                                <td>Group ID</td>
+                            </tr>
+                                            </tbody>
+                </table>
+            
+            
+            
+            
+                            <h4>Status Codes</h4>
+                <table class="fullwidth">
+                    <thead>
+                    <tr>
+                        <th>Status Code</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_200" target="_blank">200</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when successful</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_404" target="_blank">404</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when the group is not found.</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_500" target="_blank">500</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when there is an internal server error</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                        </tbody>
+                </table>
+            
+            
+            </div>
+
+                            <div class="pane sandbox">
+                                            <form method="" action="/groups/{groupId}/groups.{_format}">
+                            <fieldset class="parameters">
+                                <legend>Input</legend>
+                                                                    <h4>Requirements</h4>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="id" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="GroupID" /> <span class="remove">-</span>
+                                        </p>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="_format" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="" /> <span class="remove">-</span>
+                                        </p>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="groupId" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="Group ID" /> <span class="remove">-</span>
+                                        </p>
+                                                                                                                                    
+                            </fieldset>
+
+                            <fieldset class="headers">
+                                                                                                    <input type="hidden" name="header_method" value="GET" />
+                                
+                                <legend>Headers</legend>
+
+                                
+                                <p class="tuple">
+                                    <input type="text" class="key" placeholder="Key" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                                </p>
+
+                                <button type="button" class="add_header">New header</button>
+                            </fieldset>
+
+                            <fieldset class="request-content">
+                                <legend>Content</legend>
+
+                                <textarea class="content" placeholder="Content set here will override the parameters that do not match the url"></textarea>
+
+                                <p class="tuple">
+                                    <input type="text" class="key content-type" value="Content-Type" disabled="disabled" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" />
+                                    <button  type="button" class="set-content-type">Set header</button> <small>Replaces header if set</small>
+                                </p>
+                            </fieldset>
+
+                            <div class="buttons">
+                                <input type="submit" value="Try!" />
+                            </div>
+                        </form>
+
+                        <script type="text/x-tmpl" class="parameters_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <select class="tuple_type">
+                                                <option value="">Type</option>
+                                                <option value="string">String</option>
+                                                <option value="boolean">Boolean</option>
+                                                <option value="file">File</option>
+                                            </select>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+                        <script type="text/x-tmpl" class="headers_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+
+                        <div class="result">
+                            <h4>Request URL</h4>
+                            <pre class="url"></pre>
+
+                            <h4>Response Headers&nbsp;<small>[<a href="" class="to-expand">Expand</a>]</small>&nbsp;<small class="profiler">[<a href="" class="profiler-link" target="_blank">Profiler</a>]</small></h4>
+                            <pre class="headers to-expand"></pre>
+
+                            <h4>Response Body&nbsp;<small>[<a href="" class="to-raw">Raw</a>]</small></h4>
+                            <pre class="response prettyprint"></pre>
+                        </div>
+                                    </div>
+                    </div>
+    </div>
+</li>
+                                                    </ul>
+                    </li>
+                </ul>
+            </li>
+                    <li class="resource">
+                <div class="heading">
+                                            <h2>/groups/{groupId}/groups/{groupInGroupId}</h2>
+                                    </div>
+                <ul class="endpoints">
+                    <li class="endpoint">
+                        <ul class="operations">
+                                                            <li class="delete operation" id="delete--groups-{groupId}-groups-{groupInGroupId}.{_format}">
+    <div class="heading toggler" data-href="#delete--groups-{groupId}-groups-{groupInGroupId}.{_format}">
+        <h3>
+            <span class="http_method">
+                <i>DELETE</i>
+            </span>
+
+            
+                        
+            <span class="path">
+                /groups/{groupId}/groups/{groupInGroupId}.{_format}
+            </span>
+                   </h3>
+        <ul class="options">
+                            <li>Remove a group from a group.</li>
+                    </ul>
+    </div>
+
+    <div class="content" style="display: none;">
+        <ul class="tabs">
+                            <li class="selected" data-pane="content">Documentation</li>
+                <li data-pane="sandbox">Sandbox</li>
+                    </ul>
+
+        <div class="panes">
+            <div class="pane content selected">
+                            <h4>Documentation</h4>
+                <div><p>Remove a group from a group.</p>
+</div>
+            
+            
+                            <h4>Requirements</h4>
+                <table class="fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Requirement</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                                    <tr>
+                                <td>groupId</td>
+                                <td>\d+</td>
+                                <td>integer</td>
+                                <td>GroupID</td>
+                            </tr>
+                                                    <tr>
+                                <td>groupInGroupId</td>
+                                <td>\d+</td>
+                                <td>integer</td>
+                                <td>The group that is in this group.</td>
+                            </tr>
+                                                    <tr>
+                                <td>_format</td>
+                                <td>json</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                                            </tbody>
+                </table>
+            
+            
+            
+            
+                            <h4>Status Codes</h4>
+                <table class="fullwidth">
+                    <thead>
+                    <tr>
+                        <th>Status Code</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_200" target="_blank">200</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when successful</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_404" target="_blank">404</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when the group is not found.</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_500" target="_blank">500</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when there is a internal error.</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                        </tbody>
+                </table>
+            
+            
+            </div>
+
+                            <div class="pane sandbox">
+                                            <form method="" action="/groups/{groupId}/groups/{groupInGroupId}.{_format}">
+                            <fieldset class="parameters">
+                                <legend>Input</legend>
+                                                                    <h4>Requirements</h4>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="groupId" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="GroupID" /> <span class="remove">-</span>
+                                        </p>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="groupInGroupId" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="The group that is in this group." /> <span class="remove">-</span>
+                                        </p>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="_format" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="" /> <span class="remove">-</span>
+                                        </p>
+                                                                                                                                    
+                            </fieldset>
+
+                            <fieldset class="headers">
+                                                                                                    <input type="hidden" name="header_method" value="DELETE" />
+                                
+                                <legend>Headers</legend>
+
+                                
+                                <p class="tuple">
+                                    <input type="text" class="key" placeholder="Key" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                                </p>
+
+                                <button type="button" class="add_header">New header</button>
+                            </fieldset>
+
+                            <fieldset class="request-content">
+                                <legend>Content</legend>
+
+                                <textarea class="content" placeholder="Content set here will override the parameters that do not match the url"></textarea>
+
+                                <p class="tuple">
+                                    <input type="text" class="key content-type" value="Content-Type" disabled="disabled" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" />
+                                    <button  type="button" class="set-content-type">Set header</button> <small>Replaces header if set</small>
+                                </p>
+                            </fieldset>
+
+                            <div class="buttons">
+                                <input type="submit" value="Try!" />
+                            </div>
+                        </form>
+
+                        <script type="text/x-tmpl" class="parameters_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <select class="tuple_type">
+                                                <option value="">Type</option>
+                                                <option value="string">String</option>
+                                                <option value="boolean">Boolean</option>
+                                                <option value="file">File</option>
+                                            </select>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+                        <script type="text/x-tmpl" class="headers_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+
+                        <div class="result">
+                            <h4>Request URL</h4>
+                            <pre class="url"></pre>
+
+                            <h4>Response Headers&nbsp;<small>[<a href="" class="to-expand">Expand</a>]</small>&nbsp;<small class="profiler">[<a href="" class="profiler-link" target="_blank">Profiler</a>]</small></h4>
+                            <pre class="headers to-expand"></pre>
+
+                            <h4>Response Body&nbsp;<small>[<a href="" class="to-raw">Raw</a>]</small></h4>
+                            <pre class="response prettyprint"></pre>
+                        </div>
+                                    </div>
+                    </div>
+    </div>
+</li>
+                                                    </ul>
+                    </li>
+                </ul>
+            </li>
+                    <li class="resource">
+                <div class="heading">
                                             <h2>/groups/{groupId}/users/{userId}</h2>
                                     </div>
                 <ul class="endpoints">
                     <li class="endpoint">
                         <ul class="operations">
+                                                            <li class="delete operation" id="delete--groups-{groupId}-users-{userId}.{_format}">
+    <div class="heading toggler" data-href="#delete--groups-{groupId}-users-{userId}.{_format}">
+        <h3>
+            <span class="http_method">
+                <i>DELETE</i>
+            </span>
+
+            
+                        
+            <span class="path">
+                /groups/{groupId}/users/{userId}.{_format}
+            </span>
+                   </h3>
+        <ul class="options">
+                            <li>Remove a user from a group.</li>
+                    </ul>
+    </div>
+
+    <div class="content" style="display: none;">
+        <ul class="tabs">
+                            <li class="selected" data-pane="content">Documentation</li>
+                <li data-pane="sandbox">Sandbox</li>
+                    </ul>
+
+        <div class="panes">
+            <div class="pane content selected">
+                            <h4>Documentation</h4>
+                <div><p>Remove a user from a group.</p>
+</div>
+            
+            
+                            <h4>Requirements</h4>
+                <table class="fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Requirement</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                                    <tr>
+                                <td>groupId</td>
+                                <td>\d+</td>
+                                <td>integer</td>
+                                <td>GroupID</td>
+                            </tr>
+                                                    <tr>
+                                <td>userId</td>
+                                <td>\d+</td>
+                                <td>integer</td>
+                                <td>UserID</td>
+                            </tr>
+                                                    <tr>
+                                <td>_format</td>
+                                <td>json</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                                            </tbody>
+                </table>
+            
+            
+            
+            
+                            <h4>Status Codes</h4>
+                <table class="fullwidth">
+                    <thead>
+                    <tr>
+                        <th>Status Code</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_200" target="_blank">200</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when successful</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_404" target="_blank">404</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when the group or user is not found.</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_500" target="_blank">500</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when there is a internal error.</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                        </tbody>
+                </table>
+            
+            
+            </div>
+
+                            <div class="pane sandbox">
+                                            <form method="" action="/groups/{groupId}/users/{userId}.{_format}">
+                            <fieldset class="parameters">
+                                <legend>Input</legend>
+                                                                    <h4>Requirements</h4>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="groupId" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="GroupID" /> <span class="remove">-</span>
+                                        </p>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="userId" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="UserID" /> <span class="remove">-</span>
+                                        </p>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="_format" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="" /> <span class="remove">-</span>
+                                        </p>
+                                                                                                                                    
+                            </fieldset>
+
+                            <fieldset class="headers">
+                                                                                                    <input type="hidden" name="header_method" value="DELETE" />
+                                
+                                <legend>Headers</legend>
+
+                                
+                                <p class="tuple">
+                                    <input type="text" class="key" placeholder="Key" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                                </p>
+
+                                <button type="button" class="add_header">New header</button>
+                            </fieldset>
+
+                            <fieldset class="request-content">
+                                <legend>Content</legend>
+
+                                <textarea class="content" placeholder="Content set here will override the parameters that do not match the url"></textarea>
+
+                                <p class="tuple">
+                                    <input type="text" class="key content-type" value="Content-Type" disabled="disabled" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" />
+                                    <button  type="button" class="set-content-type">Set header</button> <small>Replaces header if set</small>
+                                </p>
+                            </fieldset>
+
+                            <div class="buttons">
+                                <input type="submit" value="Try!" />
+                            </div>
+                        </form>
+
+                        <script type="text/x-tmpl" class="parameters_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <select class="tuple_type">
+                                                <option value="">Type</option>
+                                                <option value="string">String</option>
+                                                <option value="boolean">Boolean</option>
+                                                <option value="file">File</option>
+                                            </select>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+                        <script type="text/x-tmpl" class="headers_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+
+                        <div class="result">
+                            <h4>Request URL</h4>
+                            <pre class="url"></pre>
+
+                            <h4>Response Headers&nbsp;<small>[<a href="" class="to-expand">Expand</a>]</small>&nbsp;<small class="profiler">[<a href="" class="profiler-link" target="_blank">Profiler</a>]</small></h4>
+                            <pre class="headers to-expand"></pre>
+
+                            <h4>Response Body&nbsp;<small>[<a href="" class="to-raw">Raw</a>]</small></h4>
+                            <pre class="response prettyprint"></pre>
+                        </div>
+                                    </div>
+                    </div>
+    </div>
+</li>
                                                             <li class="put operation" id="put--groups-{groupId}-users-{userId}.{_format}">
     <div class="heading toggler" data-href="#put--groups-{groupId}-users-{userId}.{_format}">
         <h3>
@@ -1266,13 +1887,6 @@ form .request-content {
                                 </tr>
                                                                                                                 <tr>
                                     <td>userInGroup[userId]</td>
-                                    <td>integer</td>
-                                    <td>true</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                                                                                                <tr>
-                                    <td>userInGroup[groupId]</td>
                                     <td>integer</td>
                                     <td>true</td>
                                     <td></td>
@@ -1379,17 +1993,6 @@ form .request-content {
                                             </select>
                                             <input type="text" class="value" placeholder="[integer] Value"  value="" /> <span class="remove">-</span>
                                         </p>
-                                                                                                                                                    <p class="tuple" data-dataType="integer" data-format="" data-description="">
-                                            <input type="text" class="key" value="userInGroup[groupId]" placeholder="Key" />
-                                            <span>=</span>
-                                            <select class="tuple_type">
-                                                <option value="">Type</option>
-                                                <option value="string">String</option>
-                                                <option value="boolean">Boolean</option>
-                                                <option value="file">File</option>
-                                            </select>
-                                            <input type="text" class="value" placeholder="[integer] Value"  value="" /> <span class="remove">-</span>
-                                        </p>
                                                                                                                                                     <p class="tuple" data-dataType="string" data-format="" data-description="">
                                             <input type="text" class="key" value="userInGroup[role]" placeholder="Key" />
                                             <span>=</span>
@@ -1486,6 +2089,193 @@ form .request-content {
                 <ul class="endpoints">
                     <li class="endpoint">
                         <ul class="operations">
+                                                            <li class="delete operation" id="delete--groups-{id}.{_format}">
+    <div class="heading toggler" data-href="#delete--groups-{id}.{_format}">
+        <h3>
+            <span class="http_method">
+                <i>DELETE</i>
+            </span>
+
+            
+                        
+            <span class="path">
+                /groups/{id}.{_format}
+            </span>
+                   </h3>
+        <ul class="options">
+                            <li>Delete group from the database by group ID.</li>
+                    </ul>
+    </div>
+
+    <div class="content" style="display: none;">
+        <ul class="tabs">
+                            <li class="selected" data-pane="content">Documentation</li>
+                <li data-pane="sandbox">Sandbox</li>
+                    </ul>
+
+        <div class="panes">
+            <div class="pane content selected">
+                            <h4>Documentation</h4>
+                <div><p>Delete group from the database by group ID.</p>
+</div>
+            
+            
+                            <h4>Requirements</h4>
+                <table class="fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Requirement</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                                    <tr>
+                                <td>id</td>
+                                <td>\d+</td>
+                                <td>integer</td>
+                                <td>GroupID</td>
+                            </tr>
+                                                    <tr>
+                                <td>_format</td>
+                                <td>json</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                                            </tbody>
+                </table>
+            
+            
+            
+            
+                            <h4>Status Codes</h4>
+                <table class="fullwidth">
+                    <thead>
+                    <tr>
+                        <th>Status Code</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_200" target="_blank">200</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when successful</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_404" target="_blank">404</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when the user is not found</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_500" target="_blank">500</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when there is a internal error.</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                        </tbody>
+                </table>
+            
+            
+            </div>
+
+                            <div class="pane sandbox">
+                                            <form method="" action="/groups/{id}.{_format}">
+                            <fieldset class="parameters">
+                                <legend>Input</legend>
+                                                                    <h4>Requirements</h4>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="id" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="GroupID" /> <span class="remove">-</span>
+                                        </p>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="_format" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="" /> <span class="remove">-</span>
+                                        </p>
+                                                                                                                                    
+                            </fieldset>
+
+                            <fieldset class="headers">
+                                                                                                    <input type="hidden" name="header_method" value="DELETE" />
+                                
+                                <legend>Headers</legend>
+
+                                
+                                <p class="tuple">
+                                    <input type="text" class="key" placeholder="Key" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                                </p>
+
+                                <button type="button" class="add_header">New header</button>
+                            </fieldset>
+
+                            <fieldset class="request-content">
+                                <legend>Content</legend>
+
+                                <textarea class="content" placeholder="Content set here will override the parameters that do not match the url"></textarea>
+
+                                <p class="tuple">
+                                    <input type="text" class="key content-type" value="Content-Type" disabled="disabled" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" />
+                                    <button  type="button" class="set-content-type">Set header</button> <small>Replaces header if set</small>
+                                </p>
+                            </fieldset>
+
+                            <div class="buttons">
+                                <input type="submit" value="Try!" />
+                            </div>
+                        </form>
+
+                        <script type="text/x-tmpl" class="parameters_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <select class="tuple_type">
+                                                <option value="">Type</option>
+                                                <option value="string">String</option>
+                                                <option value="boolean">Boolean</option>
+                                                <option value="file">File</option>
+                                            </select>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+                        <script type="text/x-tmpl" class="headers_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+
+                        <div class="result">
+                            <h4>Request URL</h4>
+                            <pre class="url"></pre>
+
+                            <h4>Response Headers&nbsp;<small>[<a href="" class="to-expand">Expand</a>]</small>&nbsp;<small class="profiler">[<a href="" class="profiler-link" target="_blank">Profiler</a>]</small></h4>
+                            <pre class="headers to-expand"></pre>
+
+                            <h4>Response Body&nbsp;<small>[<a href="" class="to-raw">Raw</a>]</small></h4>
+                            <pre class="response prettyprint"></pre>
+                        </div>
+                                    </div>
+                    </div>
+    </div>
+</li>
                                                             <li class="get operation" id="get--groups-{id}.{_format}">
     <div class="heading toggler" data-href="#get--groups-{id}.{_format}">
         <h3>
@@ -2096,193 +2886,6 @@ form .request-content {
                     </div>
     </div>
 </li>
-                                                            <li class="delete operation" id="delete--groups-{id}.{_format}">
-    <div class="heading toggler" data-href="#delete--groups-{id}.{_format}">
-        <h3>
-            <span class="http_method">
-                <i>DELETE</i>
-            </span>
-
-            
-                        
-            <span class="path">
-                /groups/{id}.{_format}
-            </span>
-                   </h3>
-        <ul class="options">
-                            <li>Delete group from the database by group ID.</li>
-                    </ul>
-    </div>
-
-    <div class="content" style="display: none;">
-        <ul class="tabs">
-                            <li class="selected" data-pane="content">Documentation</li>
-                <li data-pane="sandbox">Sandbox</li>
-                    </ul>
-
-        <div class="panes">
-            <div class="pane content selected">
-                            <h4>Documentation</h4>
-                <div><p>Delete group from the database by group ID.</p>
-</div>
-            
-            
-                            <h4>Requirements</h4>
-                <table class="fullwidth">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Requirement</th>
-                            <th>Type</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                                                    <tr>
-                                <td>id</td>
-                                <td>\d+</td>
-                                <td>integer</td>
-                                <td>GroupID</td>
-                            </tr>
-                                                    <tr>
-                                <td>_format</td>
-                                <td>json</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                                            </tbody>
-                </table>
-            
-            
-            
-            
-                            <h4>Status Codes</h4>
-                <table class="fullwidth">
-                    <thead>
-                    <tr>
-                        <th>Status Code</th>
-                        <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                                            <tr>
-                            <td><a href="http://en.wikipedia.org/wiki/HTTP_200" target="_blank">200</a></td>
-                            <td>
-                                <ul>
-                                                                            <li>Returned when successful</li>
-                                                                    </ul>
-                            </td>
-                        </tr>
-                                            <tr>
-                            <td><a href="http://en.wikipedia.org/wiki/HTTP_404" target="_blank">404</a></td>
-                            <td>
-                                <ul>
-                                                                            <li>Returned when the user is not found</li>
-                                                                    </ul>
-                            </td>
-                        </tr>
-                                            <tr>
-                            <td><a href="http://en.wikipedia.org/wiki/HTTP_500" target="_blank">500</a></td>
-                            <td>
-                                <ul>
-                                                                            <li>Returned when there is a internal error.</li>
-                                                                    </ul>
-                            </td>
-                        </tr>
-                                        </tbody>
-                </table>
-            
-            
-            </div>
-
-                            <div class="pane sandbox">
-                                            <form method="" action="/groups/{id}.{_format}">
-                            <fieldset class="parameters">
-                                <legend>Input</legend>
-                                                                    <h4>Requirements</h4>
-                                                                            <p class="tuple">
-                                            <input type="text" class="key" value="id" placeholder="Key" />
-                                            <span>=</span>
-                                            <input type="text" class="value" placeholder="GroupID" /> <span class="remove">-</span>
-                                        </p>
-                                                                            <p class="tuple">
-                                            <input type="text" class="key" value="_format" placeholder="Key" />
-                                            <span>=</span>
-                                            <input type="text" class="value" placeholder="" /> <span class="remove">-</span>
-                                        </p>
-                                                                                                                                    
-                            </fieldset>
-
-                            <fieldset class="headers">
-                                                                                                    <input type="hidden" name="header_method" value="DELETE" />
-                                
-                                <legend>Headers</legend>
-
-                                
-                                <p class="tuple">
-                                    <input type="text" class="key" placeholder="Key" />
-                                    <span>=</span>
-                                    <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
-                                </p>
-
-                                <button type="button" class="add_header">New header</button>
-                            </fieldset>
-
-                            <fieldset class="request-content">
-                                <legend>Content</legend>
-
-                                <textarea class="content" placeholder="Content set here will override the parameters that do not match the url"></textarea>
-
-                                <p class="tuple">
-                                    <input type="text" class="key content-type" value="Content-Type" disabled="disabled" />
-                                    <span>=</span>
-                                    <input type="text" class="value" placeholder="Value" />
-                                    <button  type="button" class="set-content-type">Set header</button> <small>Replaces header if set</small>
-                                </p>
-                            </fieldset>
-
-                            <div class="buttons">
-                                <input type="submit" value="Try!" />
-                            </div>
-                        </form>
-
-                        <script type="text/x-tmpl" class="parameters_tuple_template">
-                        <p class="tuple">
-                            <input type="text" class="key" placeholder="Key" />
-                            <span>=</span>
-                            <select class="tuple_type">
-                                                <option value="">Type</option>
-                                                <option value="string">String</option>
-                                                <option value="boolean">Boolean</option>
-                                                <option value="file">File</option>
-                                            </select>
-                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
-                        </p>
-                        </script>
-
-                        <script type="text/x-tmpl" class="headers_tuple_template">
-                        <p class="tuple">
-                            <input type="text" class="key" placeholder="Key" />
-                            <span>=</span>
-                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
-                        </p>
-                        </script>
-
-
-                        <div class="result">
-                            <h4>Request URL</h4>
-                            <pre class="url"></pre>
-
-                            <h4>Response Headers&nbsp;<small>[<a href="" class="to-expand">Expand</a>]</small>&nbsp;<small class="profiler">[<a href="" class="profiler-link" target="_blank">Profiler</a>]</small></h4>
-                            <pre class="headers to-expand"></pre>
-
-                            <h4>Response Body&nbsp;<small>[<a href="" class="to-raw">Raw</a>]</small></h4>
-                            <pre class="response prettyprint"></pre>
-                        </div>
-                                    </div>
-                    </div>
-    </div>
-</li>
                                                     </ul>
                     </li>
                 </ul>
@@ -2566,13 +3169,6 @@ form .request-content {
                                     <td></td>
                                 </tr>
                                                                                                                 <tr>
-                                    <td>userInGroup[groupId]</td>
-                                    <td>integer</td>
-                                    <td>true</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                                                                                                <tr>
                                     <td>userInGroup[role]</td>
                                     <td>string</td>
                                     <td>true</td>
@@ -2659,17 +3255,6 @@ form .request-content {
                                         </p>
                                                                                                                                                     <p class="tuple" data-dataType="integer" data-format="" data-description="">
                                             <input type="text" class="key" value="userInGroup[userId]" placeholder="Key" />
-                                            <span>=</span>
-                                            <select class="tuple_type">
-                                                <option value="">Type</option>
-                                                <option value="string">String</option>
-                                                <option value="boolean">Boolean</option>
-                                                <option value="file">File</option>
-                                            </select>
-                                            <input type="text" class="value" placeholder="[integer] Value"  value="" /> <span class="remove">-</span>
-                                        </p>
-                                                                                                                                                    <p class="tuple" data-dataType="integer" data-format="" data-description="">
-                                            <input type="text" class="key" value="userInGroup[groupId]" placeholder="Key" />
                                             <span>=</span>
                                             <select class="tuple_type">
                                                 <option value="">Type</option>
@@ -3228,6 +3813,185 @@ form .request-content {
                 <ul class="endpoints">
                     <li class="endpoint">
                         <ul class="operations">
+                                                            <li class="delete operation" id="delete--users-{id}.{_format}">
+    <div class="heading toggler" data-href="#delete--users-{id}.{_format}">
+        <h3>
+            <span class="http_method">
+                <i>DELETE</i>
+            </span>
+
+            
+                        
+            <span class="path">
+                /users/{id}.{_format}
+            </span>
+                   </h3>
+        <ul class="options">
+                            <li>Delete user from the database by user ID.</li>
+                    </ul>
+    </div>
+
+    <div class="content" style="display: none;">
+        <ul class="tabs">
+                            <li class="selected" data-pane="content">Documentation</li>
+                <li data-pane="sandbox">Sandbox</li>
+                    </ul>
+
+        <div class="panes">
+            <div class="pane content selected">
+                            <h4>Documentation</h4>
+                <div><p>Delete user from the database by user ID.</p>
+</div>
+            
+            
+                            <h4>Requirements</h4>
+                <table class="fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Requirement</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                                    <tr>
+                                <td>id</td>
+                                <td>\d+</td>
+                                <td>integer</td>
+                                <td>UserID</td>
+                            </tr>
+                                                    <tr>
+                                <td>_format</td>
+                                <td>json</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                                            </tbody>
+                </table>
+            
+            
+            
+            
+                            <h4>Status Codes</h4>
+                <table class="fullwidth">
+                    <thead>
+                    <tr>
+                        <th>Status Code</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_200" target="_blank">200</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when successful</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                            <tr>
+                            <td><a href="http://en.wikipedia.org/wiki/HTTP_404" target="_blank">404</a></td>
+                            <td>
+                                <ul>
+                                                                            <li>Returned when the user is not found</li>
+                                                                    </ul>
+                            </td>
+                        </tr>
+                                        </tbody>
+                </table>
+            
+            
+            </div>
+
+                            <div class="pane sandbox">
+                                            <form method="" action="/users/{id}.{_format}">
+                            <fieldset class="parameters">
+                                <legend>Input</legend>
+                                                                    <h4>Requirements</h4>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="id" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="UserID" /> <span class="remove">-</span>
+                                        </p>
+                                                                            <p class="tuple">
+                                            <input type="text" class="key" value="_format" placeholder="Key" />
+                                            <span>=</span>
+                                            <input type="text" class="value" placeholder="" /> <span class="remove">-</span>
+                                        </p>
+                                                                                                                                    
+                            </fieldset>
+
+                            <fieldset class="headers">
+                                                                                                    <input type="hidden" name="header_method" value="DELETE" />
+                                
+                                <legend>Headers</legend>
+
+                                
+                                <p class="tuple">
+                                    <input type="text" class="key" placeholder="Key" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                                </p>
+
+                                <button type="button" class="add_header">New header</button>
+                            </fieldset>
+
+                            <fieldset class="request-content">
+                                <legend>Content</legend>
+
+                                <textarea class="content" placeholder="Content set here will override the parameters that do not match the url"></textarea>
+
+                                <p class="tuple">
+                                    <input type="text" class="key content-type" value="Content-Type" disabled="disabled" />
+                                    <span>=</span>
+                                    <input type="text" class="value" placeholder="Value" />
+                                    <button  type="button" class="set-content-type">Set header</button> <small>Replaces header if set</small>
+                                </p>
+                            </fieldset>
+
+                            <div class="buttons">
+                                <input type="submit" value="Try!" />
+                            </div>
+                        </form>
+
+                        <script type="text/x-tmpl" class="parameters_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <select class="tuple_type">
+                                                <option value="">Type</option>
+                                                <option value="string">String</option>
+                                                <option value="boolean">Boolean</option>
+                                                <option value="file">File</option>
+                                            </select>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+                        <script type="text/x-tmpl" class="headers_tuple_template">
+                        <p class="tuple">
+                            <input type="text" class="key" placeholder="Key" />
+                            <span>=</span>
+                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
+                        </p>
+                        </script>
+
+
+                        <div class="result">
+                            <h4>Request URL</h4>
+                            <pre class="url"></pre>
+
+                            <h4>Response Headers&nbsp;<small>[<a href="" class="to-expand">Expand</a>]</small>&nbsp;<small class="profiler">[<a href="" class="profiler-link" target="_blank">Profiler</a>]</small></h4>
+                            <pre class="headers to-expand"></pre>
+
+                            <h4>Response Body&nbsp;<small>[<a href="" class="to-raw">Raw</a>]</small></h4>
+                            <pre class="response prettyprint"></pre>
+                        </div>
+                                    </div>
+                    </div>
+    </div>
+</li>
                                                             <li class="get operation" id="get--users-{id}.{_format}">
     <div class="heading toggler" data-href="#get--users-{id}.{_format}">
         <h3>
@@ -3747,185 +4511,6 @@ form .request-content {
                     </div>
     </div>
 </li>
-                                                            <li class="delete operation" id="delete--users-{id}.{_format}">
-    <div class="heading toggler" data-href="#delete--users-{id}.{_format}">
-        <h3>
-            <span class="http_method">
-                <i>DELETE</i>
-            </span>
-
-            
-                        
-            <span class="path">
-                /users/{id}.{_format}
-            </span>
-                   </h3>
-        <ul class="options">
-                            <li>Delete user from the database by user ID.</li>
-                    </ul>
-    </div>
-
-    <div class="content" style="display: none;">
-        <ul class="tabs">
-                            <li class="selected" data-pane="content">Documentation</li>
-                <li data-pane="sandbox">Sandbox</li>
-                    </ul>
-
-        <div class="panes">
-            <div class="pane content selected">
-                            <h4>Documentation</h4>
-                <div><p>Delete user from the database by user ID.</p>
-</div>
-            
-            
-                            <h4>Requirements</h4>
-                <table class="fullwidth">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Requirement</th>
-                            <th>Type</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                                                    <tr>
-                                <td>id</td>
-                                <td>\d+</td>
-                                <td>integer</td>
-                                <td>UserID</td>
-                            </tr>
-                                                    <tr>
-                                <td>_format</td>
-                                <td>json</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                                            </tbody>
-                </table>
-            
-            
-            
-            
-                            <h4>Status Codes</h4>
-                <table class="fullwidth">
-                    <thead>
-                    <tr>
-                        <th>Status Code</th>
-                        <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                                            <tr>
-                            <td><a href="http://en.wikipedia.org/wiki/HTTP_200" target="_blank">200</a></td>
-                            <td>
-                                <ul>
-                                                                            <li>Returned when successful</li>
-                                                                    </ul>
-                            </td>
-                        </tr>
-                                            <tr>
-                            <td><a href="http://en.wikipedia.org/wiki/HTTP_404" target="_blank">404</a></td>
-                            <td>
-                                <ul>
-                                                                            <li>Returned when the user is not found</li>
-                                                                    </ul>
-                            </td>
-                        </tr>
-                                        </tbody>
-                </table>
-            
-            
-            </div>
-
-                            <div class="pane sandbox">
-                                            <form method="" action="/users/{id}.{_format}">
-                            <fieldset class="parameters">
-                                <legend>Input</legend>
-                                                                    <h4>Requirements</h4>
-                                                                            <p class="tuple">
-                                            <input type="text" class="key" value="id" placeholder="Key" />
-                                            <span>=</span>
-                                            <input type="text" class="value" placeholder="UserID" /> <span class="remove">-</span>
-                                        </p>
-                                                                            <p class="tuple">
-                                            <input type="text" class="key" value="_format" placeholder="Key" />
-                                            <span>=</span>
-                                            <input type="text" class="value" placeholder="" /> <span class="remove">-</span>
-                                        </p>
-                                                                                                                                    
-                            </fieldset>
-
-                            <fieldset class="headers">
-                                                                                                    <input type="hidden" name="header_method" value="DELETE" />
-                                
-                                <legend>Headers</legend>
-
-                                
-                                <p class="tuple">
-                                    <input type="text" class="key" placeholder="Key" />
-                                    <span>=</span>
-                                    <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
-                                </p>
-
-                                <button type="button" class="add_header">New header</button>
-                            </fieldset>
-
-                            <fieldset class="request-content">
-                                <legend>Content</legend>
-
-                                <textarea class="content" placeholder="Content set here will override the parameters that do not match the url"></textarea>
-
-                                <p class="tuple">
-                                    <input type="text" class="key content-type" value="Content-Type" disabled="disabled" />
-                                    <span>=</span>
-                                    <input type="text" class="value" placeholder="Value" />
-                                    <button  type="button" class="set-content-type">Set header</button> <small>Replaces header if set</small>
-                                </p>
-                            </fieldset>
-
-                            <div class="buttons">
-                                <input type="submit" value="Try!" />
-                            </div>
-                        </form>
-
-                        <script type="text/x-tmpl" class="parameters_tuple_template">
-                        <p class="tuple">
-                            <input type="text" class="key" placeholder="Key" />
-                            <span>=</span>
-                            <select class="tuple_type">
-                                                <option value="">Type</option>
-                                                <option value="string">String</option>
-                                                <option value="boolean">Boolean</option>
-                                                <option value="file">File</option>
-                                            </select>
-                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
-                        </p>
-                        </script>
-
-                        <script type="text/x-tmpl" class="headers_tuple_template">
-                        <p class="tuple">
-                            <input type="text" class="key" placeholder="Key" />
-                            <span>=</span>
-                            <input type="text" class="value" placeholder="Value" /> <span class="remove">-</span>
-                        </p>
-                        </script>
-
-
-                        <div class="result">
-                            <h4>Request URL</h4>
-                            <pre class="url"></pre>
-
-                            <h4>Response Headers&nbsp;<small>[<a href="" class="to-expand">Expand</a>]</small>&nbsp;<small class="profiler">[<a href="" class="profiler-link" target="_blank">Profiler</a>]</small></h4>
-                            <pre class="headers to-expand"></pre>
-
-                            <h4>Response Body&nbsp;<small>[<a href="" class="to-raw">Raw</a>]</small></h4>
-                            <pre class="response prettyprint"></pre>
-                        </div>
-                                    </div>
-                    </div>
-    </div>
-</li>
                                                     </ul>
                     </li>
                 </ul>
@@ -3933,7 +4518,7 @@ form .request-content {
                                 </ul>
         </div>
         <p id="colophon">
-            Documentation auto-generated on Thu, 05 Nov 15 10:59:52 +0100
+            Documentation auto-generated on Fri, 13 Nov 15 16:24:08 +0100
         </p>
         <script type="text/javascript">
 
@@ -3962,7 +4547,7 @@ form .request-content {
             };
 
             $(window).load(function() {
-                var id = getHash().substr(1).replace( /([:\.\[\]\{\}])/g, "\\$1");
+                var id = getHash().substr(1).replace( /([:\.\[\]\{\}|])/g, "\\$1");
                 var elem = $('#' + id);
                 if (elem.length) {
                     setTimeout(function() {
@@ -4344,7 +4929,6 @@ form .request-content {
 
 
 
-
                     // retrieve the additional headers to send
                     $('.headers .tuple', $(this)).each(function() {
                         var key, value;
@@ -4384,12 +4968,6 @@ form .request-content {
                     // prepare the api enpoint
                     var endpoint = '';
                     
-                    // Workaround for Firefox bug and a thereby resulting nginx incompatibility
-                    if (method == "LINK") {
-                        method = "POST";
-                        params._method = "LINK";
-                    }
-
                     // prepare final parameters
                     var body = {};
                     if(bodyFormat == 'json' && method != 'GET') {
@@ -4435,6 +5013,7 @@ form .request-content {
                         ajaxOptions.data = formData;
                         ajaxOptions.processData = false;
                         ajaxOptions.contentType = false;
+                        delete(headers['Content-type']);
                     }
 
                     // and trigger the API call
