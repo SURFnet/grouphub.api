@@ -21,18 +21,22 @@ class GroupActivityEventListener extends ActivityEventListener
     public static function getSubscribedEvents()
     {
         return [
-            'app.event.group.add' => 'groupAdd',
-            'app.event.group.delete' => 'groupDelete',
-            'app.event.group.update' => 'groupUpdate',
+            'app.event.group.add'        => 'groupAdd',
+            'app.event.group.delete'     => 'groupDelete',
+            'app.event.group.update'     => 'groupUpdate',
+            'app.event.group.useradd'    => 'groupUserAdd',
+            'app.event.group.userupdate' => 'groupUserUpdate',
+            'app.event.group.userdelete' => 'groupUserDelete',
         ];
     }
 
     public function groupAdd(GroupEvent $event)
     {
+        $name = $event->getGroup()->getName();
         $activity = $this->getActivity(
             $event,
-            'App:Event:User:Add',
-            'User added to the database'
+            'App:Event:Group:Add',
+            'Group ' . $name . ' added to the database'
         );
         $this->saveActivity($activity);
     }
@@ -41,8 +45,8 @@ class GroupActivityEventListener extends ActivityEventListener
     {
         $activity = $this->getActivity(
             $event,
-            'App:Event:User:Update',
-            'User with id ' . $event->getUser()->getId() .
+            'App:Event:Group:Update',
+            'Group with id ' . $event->getGroup()->getId() .
             ' updated'
         );
         $this->saveActivity($activity);
@@ -52,9 +56,42 @@ class GroupActivityEventListener extends ActivityEventListener
     {
         $activity = $this->getActivity(
             $event,
-            'App:Event:User:Delete',
-            'User with id ' . $event->getUser()->getId() .
+            'App:Event:Group:Delete',
+            'Group with id ' . $event->getGroup()->getId() .
             ' deleted from the database.'
+        );
+        $this->saveActivity($activity);
+    }
+
+    public function groupUserAdd(GroupEvent $event)
+    {
+        $activity = $this->getActivity(
+            $event,
+            'App:Event:Group:userAdd',
+            'Added user with id ' . $event->getUser()->getUserId() .
+            ' to group with id ' . $event->getGroup()->getId()
+        );
+        $this->saveActivity($activity);
+    }
+
+    public function groupUserUpdate(GroupEvent $event)
+    {
+        $activity = $this->getActivity(
+            $event,
+            'App:Event:Group:userUpdate',
+            'Updated user with id ' . $event->getUser()->getUserId() .
+            ' to group with id ' . $event->getGroup()->getId()
+        );
+        $this->saveActivity($activity);
+    }
+
+    public function groupUserDelete(GroupEvent $event)
+    {
+        $activity = $this->getActivity(
+            $event,
+            'App:Event:Group:userDelete',
+            'Removed user with id ' . $event->getUser()->getUserId() .
+            ' from group with id ' . $event->getGroup()->getId()
         );
         $this->saveActivity($activity);
     }

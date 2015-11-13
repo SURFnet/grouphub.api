@@ -118,6 +118,8 @@ class GroupController extends FOSRestController
                 $em->persist($group);
                 $em->flush();
 
+                $this->fireEvent('app.event.group.add', new GroupEvent($group));
+
                 return $this->routeRedirectView('get_group', array('id' => $group->getId()));
             }
             catch (DBALException $e) {
@@ -159,6 +161,7 @@ class GroupController extends FOSRestController
      */
     public function putGroupAction(Request $request, $id)
     {
+        /** @var UserGroup $group */
         $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
@@ -174,6 +177,8 @@ class GroupController extends FOSRestController
 
                 $em->persist($group);
                 $em->flush();
+
+                $this->fireEvent('app.event.group.update', new GroupEvent($group));
 
                 return $this->routeRedirectView('get_group', array('id' => $group->getId()));
             }
@@ -214,7 +219,7 @@ class GroupController extends FOSRestController
      */
     public function deleteGroupAction(Request $request, $id)
     {
-
+        /** @var UserGroup $group */
         $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
@@ -223,6 +228,9 @@ class GroupController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $em->remove($group);
         $em->flush();
+
+        $this->fireEvent('app.event.group.delete', new GroupEvent($group));
+
         return $this->routeRedirectView('get_groups');
     }
 
@@ -290,7 +298,7 @@ class GroupController extends FOSRestController
      */
     public function postGroupUsersAction(Request $request, $id)
     {
-
+        /** @var UserGroup $group */
         $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
@@ -306,6 +314,11 @@ class GroupController extends FOSRestController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($userInGroup);
                 $em->flush();
+
+                $event = new GroupEvent($group);
+                $event->setUser($userInGroup);
+                $this->fireEvent('app.event.group.useradd', $event);
+
                 return $this->routeRedirectView('get_group_users', array('id' => $group->getId()));
             }
             catch (DBALException $e) {
@@ -350,7 +363,6 @@ class GroupController extends FOSRestController
      */
     public function putGroupUsersAction(Request $request, $groupId, $userId)
     {
-
         $userInGroup = $this->getDoctrine()
             ->getRepository('AppBundle:UserInGroup')
             ->findBy([ "userId" => $userId, "groupId" => $groupId]);
@@ -370,6 +382,13 @@ class GroupController extends FOSRestController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($userInGroup);
                 $em->flush();
+
+                /** @var UserGroup $group */
+                $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($groupId);
+                $event = new GroupEvent($group);
+                $event->setUser($userInGroup);
+                $this->fireEvent('app.event.group.userupdate', $event);
+
                 return $this->routeRedirectView('get_group_users', array('id' => $groupId));
             }
             catch (DBALException $e) {
@@ -420,9 +439,19 @@ class GroupController extends FOSRestController
             throw new NotFoundHttpException('User with id ' . $userId . ' in group with id ' . $groupId . ' not found.');
         }
 
+        /** @var UserInGroup $userInGroup */
+        $userInGroup = $rows[0];
+
         $em = $this->getDoctrine()->getManager();
-        $em->remove($rows[0]);
+        $em->remove($userInGroup);
         $em->flush();
+
+        /** @var UserGroup $group */
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($groupId);
+        $event = new GroupEvent($group);
+        $event->setUser($userInGroup);
+        $this->fireEvent('app.event.group.userdelete', $event);
+
         return $this->routeRedirectView('get_groups');
     }
 
