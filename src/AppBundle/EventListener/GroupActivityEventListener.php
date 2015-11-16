@@ -21,12 +21,14 @@ class GroupActivityEventListener extends ActivityEventListener
     public static function getSubscribedEvents()
     {
         return [
-            'app.event.group.add'        => 'groupAdd',
-            'app.event.group.delete'     => 'groupDelete',
-            'app.event.group.update'     => 'groupUpdate',
-            'app.event.group.useradd'    => 'groupUserAdd',
-            'app.event.group.userupdate' => 'groupUserUpdate',
-            'app.event.group.userdelete' => 'groupUserDelete',
+            'app.event.group.add'         => 'groupAdd',
+            'app.event.group.delete'      => 'groupDelete',
+            'app.event.group.update'      => 'groupUpdate',
+            'app.event.group.useradd'     => 'groupUserAdd',
+            'app.event.group.userupdate'  => 'groupUserUpdate',
+            'app.event.group.userdelete'  => 'groupUserDelete',
+            'app.event.group.groupadd'    => 'groupGroupAdd',
+            'app.event.group.groupdelete' => 'groupGroupDelete',
         ];
     }
 
@@ -92,6 +94,28 @@ class GroupActivityEventListener extends ActivityEventListener
             'App:Event:Group:userDelete',
             'Removed user with id ' . $event->getUser()->getUserId() .
             ' from group with id ' . $event->getGroup()->getId()
+        );
+        $this->saveActivity($activity);
+    }
+
+    public function groupGroupDelete(GroupEvent $event)
+    {
+        $activity = $this->getActivity(
+            $event,
+            'App:Event:Group:groupDelete',
+            'Removed group with id ' . $event->getGroupInGroup()->getGroupInGroupId() .
+            ' from group with id ' . $event->getGroup()->getId()
+        );
+        $this->saveActivity($activity);
+    }
+
+    public function groupGroupAdd(GroupEvent $event)
+    {
+        $activity = $this->getActivity(
+            $event,
+            'App:Event:Group:groupAdd',
+            'Added group with id ' . $event->getGroupInGroup()->getGroupInGroupId() .
+            ' from to with id ' . $event->getGroup()->getId()
         );
         $this->saveActivity($activity);
     }

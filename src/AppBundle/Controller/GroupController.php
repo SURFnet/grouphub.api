@@ -3,8 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\UserGroup;
+use AppBundle\Entity\UserGroupInGroup;
 use AppBundle\Entity\UserInGroup;
 use AppBundle\Event\GroupEvent;
+use AppBundle\Form\UserGroupInGroupType;
 use AppBundle\Form\UserGroupType;
 use AppBundle\Form\UserInGroupType;
 use AppBundle\Form\UserInGroupUpdateType;
@@ -536,11 +538,81 @@ class GroupController extends FOSRestController
             throw new NotFoundHttpException('Group with id ' . $groupId . ' in groupInGroupId with id ' . $groupInGroupId . ' not found.');
         }
 
+        /** @var UserGroupInGroup $groupInGroup */
+        $groupInGroup = $rows[0];
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($rows[0]);
         $em->flush();
 
+        // Build event object.
+        $group = new UserGroup();
+        $group->setId($groupId);
+
+        $event = new GroupEvent($group);
+        $event->setGroupInGroup($groupInGroup);
+
+        $this->fireEvent('app.event.group.groupdelete', $event);
+
         return $this->routeRedirectView('get_groups');
+    }
+
+    /**
+     * Add a group to a group
+     *
+     * @ApiDoc(
+     *  resource = true,
+     *  input="AppBundle\Entity\UserGroupInGroup",
+     *  requirements = {
+     *      {
+     *          "name" = "id",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "GroupID"
+     *      }
+     *  },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      404 = "Returned when the group is not found.",
+     *      500 = "Returned when there is an internal server error"
+     *   }
+     * )
+     *
+     * @param Request $request Request object
+     * @param int $groupId Group ID
+     * @return array
+     */
+    public function postGroupGroupsAction(Request $request, $groupId) {
+        /** @var UserGroup $group */
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($groupId);
+        if ($group === null) {
+            throw new NotFoundHttpException('Group with id: ' . $groupId . ' not found');
+        }
+
+        $groupInGroup = new UserGroupInGroup();
+        $groupInGroup->setGroupId($groupId);
+
+        $form = $this->createForm(new UserGroupInGroupType(), $groupInGroup);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($groupInGroup);
+                $em->flush();
+
+                $event = new GroupEvent($group);
+                $event->setGroupInGroup($groupInGroup);
+
+                $this->fireEvent('app.event.group.groupadd', $event);
+
+                return $this->routeRedirectView('get_group_users', array('id' => $group->getId()));
+            }
+            catch (DBALException $e) {
+                throw new NotAcceptableHttpException($e->getMessage());
+            }
+        }
+        return $form->getErrors();
     }
 
     /**
