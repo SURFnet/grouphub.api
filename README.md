@@ -36,7 +36,7 @@ You can do this with the symfony console command at the vagrant box
 
 ```sh
 <projectdir>$ vagrant ssh
-<vagrantbox>$ php app/console doctrine:schema:create
+<vagrantbox>$ php app/console doctrine:database:create
 ```
 If you want to imoprt the structure manually there is a SQL dump available.
 SQL dump is found at: [create_user.sql](https://github.com/mroest/grouphub.api/blob/master/docs/create_user.sql)
