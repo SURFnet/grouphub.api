@@ -8,6 +8,7 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Event\GroupEvent;
+use AppBundle\Entity\UserActivity;
 
 /**
  * Class UserEventListener
@@ -30,6 +31,27 @@ class GroupActivityEventListener extends ActivityEventListener
             'app.event.group.groupadd'    => 'groupGroupAdd',
             'app.event.group.groupdelete' => 'groupGroupDelete',
         ];
+    }
+
+    /**
+     * Get the user activity object
+     *
+     * @param GroupEvent $event
+     * @param string $title
+     * @param string|null $description
+     * @return UserActivity
+     */
+    protected function getActivity(GroupEvent $event, $title, $description = null)
+    {
+        $activity = new UserActivity();
+        $activity->setTimestamp(new \DateTime());
+        $activity->setPriority(1);
+        $activity->setUserId($event->getUser()->getUserId());
+        $activity->setUserGroupId($event->getGroup()->getId());
+        $activity->setTitle($title);
+        $activity->setDescription($description);
+
+        return $activity;
     }
 
     public function groupAdd(GroupEvent $event)

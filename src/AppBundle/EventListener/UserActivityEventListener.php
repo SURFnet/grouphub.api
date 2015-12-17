@@ -8,6 +8,7 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Event\UserEvent;
+use AppBundle\Entity\UserActivity;
 
 /**
  * Class UserEventListener
@@ -25,6 +26,26 @@ class UserActivityEventListener extends ActivityEventListener
             'app.event.user.delete' => 'userDelete',
             'app.event.user.update' => 'userUpdate',
         ];
+    }
+
+    /**
+     * Get the user activity object
+     *
+     * @param UserEvent $event
+     * @param string $title
+     * @param string|null $description
+     * @return UserActivity
+     */
+    protected function getActivity(UserEvent $event, $title, $description = null)
+    {
+        $activity = new UserActivity();
+        $activity->setTimestamp(new \DateTime());
+        $activity->setPriority(1);
+        $activity->setUserId($event->getUser()->getId());
+        $activity->setTitle($title);
+        $activity->setDescription($description);
+
+        return $activity;
     }
 
     public function userAdd(UserEvent $event)

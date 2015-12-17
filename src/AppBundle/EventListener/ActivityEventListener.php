@@ -47,27 +47,6 @@ abstract class ActivityEventListener implements EventSubscriberInterface
     }
 
     /**
-     * Get the user activity object
-     *
-     * @param Event $event
-     * @param string $title
-     * @param string|null $description
-     * @return UserActivity
-     */
-    protected function getActivity(Event $event, $title, $description = null)
-    {
-        $activity = new UserActivity();
-        $activity->setTimestamp(new \DateTime());
-        $activity->setPriority(1);
-        $activity->setUserId(NULL);
-        $activity->setUserGroupId($event->getGroup()->getId());
-        $activity->setTitle($title);
-        $activity->setDescription($description);
-
-        return $activity;
-    }
-
-    /**
      * Write activity to database.
      *
      * @param UserActivity $activity
