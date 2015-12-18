@@ -136,7 +136,6 @@ class GroupController extends FOSRestController
      *
      * @ApiDoc(
      *   input = "AppBundle\Form\UserGroupType",
-     *   input = "AppBundle\Form\UserGroupType",
      *   resource = true,
      *   requirements = {
      *      {
@@ -562,10 +561,10 @@ class GroupController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
-     *  input="AppBundle\Entity\UserGroupInGroup",
+     *  input="AppBundle\Form\UserGroupInGroupType",
      *  requirements = {
      *      {
-     *          "name" = "id",
+     *          "name" = "groupId",
      *          "dataType" = "integer",
      *          "requirement" = "\d+",
      *          "description" = "GroupID"
