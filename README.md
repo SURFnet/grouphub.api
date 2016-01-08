@@ -13,7 +13,7 @@ Description of what this API is can be found at:
 
 ## SSH public key
 While provisioning the Ansible script will copy your SSH pub key from `(~/.ssh/id_rsa.pub)` to the vagrant box.
-Make sure your key lives at that location before you initialize the vagrant box.
+Make sure your key lives at that location before you initialize the vagrant box. 
 
 ## Vagrant plugins
 Make sure you have the following vagrant plugins installed.
