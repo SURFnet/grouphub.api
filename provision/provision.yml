@@ -2,9 +2,9 @@
 # file: provision.yml
 - hosts: all
   vars:
-    sitename: grouphub
-    apache_servername: "dev.grouphub.org"
-    apache_serveralias: "grouphub.local"
+    sitename: grouphub.api
+    apache_servername: "dev.api.grouphub.org"
+    apache_serveralias: "grouphub.api.local"
     timezone: "Europe/Amsterdam"
     sshkey: true
 
@@ -78,10 +78,6 @@
     - name: Configure Exim4
       replace: dest=/etc/exim4/update-exim4.conf.conf replace="dc_eximconfig_configtype='internet'" regexp="^dc_eximconfig_configtype.*$" backup=yes
     - service: name=exim4 state=restarted enabled=yes
-      
-    - name: Copy SSH Pub key
-      action: authorized_key user={{ ansible_ssh_user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-      when: sshkey
 
     - name: Configure virtualhost
       template: src="files/vhost.j2" dest="/etc/apache2/sites-available/{{ sitename }}"
@@ -99,7 +95,7 @@
       command: a2dissite default
 
     - service: name=apache2 state=restarted enabled=yes
-    
+
     - name: Configure XHProf
       lineinfile: dest=/etc/php5/mods-available/xhprof.ini line="{{ item }}" backup=yes
       with_items:
