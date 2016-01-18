@@ -46,7 +46,7 @@ class GroupActivityEventListener extends ActivityEventListener
         $activity = new UserActivity();
         $activity->setTimestamp(new \DateTime());
         $activity->setPriority(1);
-        $activity->setUserId($event->getUser()->getUserId());
+        $activity->setUserId($event->getUser() ? $event->getUser()->getUserId() : null);
         $activity->setUserGroupId($event->getGroup()->getId());
         $activity->setTitle($title);
         $activity->setDescription($description);
