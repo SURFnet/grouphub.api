@@ -18,7 +18,6 @@ class UserGroupType extends AbstractType
             ->add('description', 'text')
             ->add('type', 'text', $notBlank)
             ->add('reference', 'text', $notBlank)
-            ->add('active', 'checkbox')
             ->add('ownerId', 'integer', $notBlank)
             ->add('parent', 'integer', $notBlank);
     }
