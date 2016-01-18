@@ -48,9 +48,7 @@ class UserController extends FOSRestController
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
 
-        $list = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
-            ->findBy([], [$sort => 'ASC'], $limit, $offset);
+        $list = $this->getDoctrine()->getRepository('AppBundle:User')->findBy([], [$sort => 'ASC'], $limit, $offset);
 
         return $this->view($list);
     }
@@ -81,9 +79,7 @@ class UserController extends FOSRestController
      */
     public function getUserAction($id)
     {
-        $user = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
-            ->find($id);
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
 
         if (!$user) {
             throw new NotFoundHttpException(
@@ -107,6 +103,7 @@ class UserController extends FOSRestController
      * )
      *
      * @param Request $request the request object
+     *
      * @return array
      * @throws NotAcceptableHttpException
      */
@@ -129,12 +126,13 @@ class UserController extends FOSRestController
                 $em->flush();
 
                 $this->fireEvent('app.event.user.add', new UserEvent($user));
-                return $this->routeRedirectView('get_user', array('id' => $user->getId()));
-            }
-            catch (DBALException $e) {
+
+                return $this->routeRedirectView('get_user', ['id' => $user->getId()]);
+            } catch (DBALException $e) {
                 throw new NotAcceptableHttpException($e->getMessage());
             }
         }
+
         return $form->getErrors();
     }
 
@@ -166,12 +164,11 @@ class UserController extends FOSRestController
      *
      * @throws NotFoundHttpException when user not exist
      */
-    public function putUserAction(Request $request, $id) {
+    public function putUserAction(Request $request, $id)
+    {
 
         /** @var User $user */
-        $user = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
-            ->find($id);
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
 
         if (!$user) {
             throw new NotFoundHttpException('User with id: ' . $id . ' not found');
@@ -189,9 +186,8 @@ class UserController extends FOSRestController
 
                 $this->fireEvent('app.event.user.update', new UserEvent($user));
 
-                return $this->routeRedirectView('get_user', array('id' => $user->getId()));
-            }
-            catch (DBALException $e) {
+                return $this->routeRedirectView('get_user', ['id' => $user->getId()]);
+            } catch (DBALException $e) {
                 throw new NotAcceptableHttpException($e->getMessage());
             }
         }
@@ -222,7 +218,8 @@ class UserController extends FOSRestController
      *
      * @return array
      */
-    public function deleteUserAction($id) {
+    public function deleteUserAction($id)
+    {
 
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
@@ -243,7 +240,7 @@ class UserController extends FOSRestController
     /**
      * Fire UserEvent.
      *
-     * @param string $event Event id
+     * @param string    $event Event id
      * @param UserEvent $eventObject
      */
     private function fireEvent($event, UserEvent $eventObject)
