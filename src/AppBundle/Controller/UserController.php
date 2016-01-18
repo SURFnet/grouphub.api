@@ -133,7 +133,7 @@ class UserController extends FOSRestController
             }
         }
 
-        return $form->getErrors();
+        return $form;
     }
 
     /**
@@ -192,7 +192,7 @@ class UserController extends FOSRestController
             }
         }
 
-        return $form->getErrors();
+        return $form;
     }
 
     /**
