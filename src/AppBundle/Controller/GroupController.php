@@ -10,6 +10,7 @@ use AppBundle\Form\UserGroupInGroupType;
 use AppBundle\Form\UserGroupType;
 use AppBundle\Form\UserInGroupType;
 use AppBundle\Form\UserInGroupUpdateType;
+use DateTime;
 use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -20,15 +21,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class GroupController
- * @package AppBundle\Controller
  */
 class GroupController extends FOSRestController
 {
     /**
-     * List all groups from the database. Does not support paging!
+     * List all groups from the database.
      *
      * @ApiDoc(
      *  resource = true,
+     *  parameters = {
+     *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
+     *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"}
+     *  },
      *  output="ArrayCollection<AppBundle\Entity\UserGroup>",
      *  statusCodes = {
      *      200 = "Returned when successful",
@@ -36,13 +41,19 @@ class GroupController extends FOSRestController
      *   }
      * )
      *
+     * @param Request $request
+     *
      * @return array
      */
-    public function getGroupsAction()
+    public function getGroupsAction(Request $request)
     {
+        $offset = $request->query->getInt('offset', 0);
+        $limit = $request->query->getInt('limit', 100);
+        $sort = $request->query->get('sort', 'reference');
+
         $list = $this->getDoctrine()
             ->getRepository('AppBundle:UserGroup')
-            ->findAll();
+            ->findBy([], [$sort => 'ASC'], $limit, $offset);
 
         return $this->view($list);
     }
@@ -68,14 +79,11 @@ class GroupController extends FOSRestController
      *   }
      * )
      *
-     * @param Request $request the request object
-     * @param int     $id      the Group id
+     * @param int $id
      *
      * @return array
-     *
-     * @throws NotFoundHttpException when group not exist
      */
-    public function getGroupAction(Request $request, $id)
+    public function getGroupAction($id)
     {
         $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
         if ($group === null) {
@@ -112,7 +120,7 @@ class GroupController extends FOSRestController
         if ($form->isValid()) {
 
             // Created timestamp.
-            $group->setTimeStamp(new \DateTime());
+            $group->setTimeStamp(new DateTime());
 
             try {
                 $em = $this->getDoctrine()->getManager();
@@ -211,14 +219,11 @@ class GroupController extends FOSRestController
      *   }
      * )
 
-     * @param Request $request
-     * @param int $id Group ID
+     * @param int $id
 
      * @return array
-     *
-     * @throws NotFoundHttpException when note not exist
      */
-    public function deleteGroupAction(Request $request, $id)
+    public function deleteGroupAction($id)
     {
         /** @var UserGroup $group */
         $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
@@ -248,13 +253,11 @@ class GroupController extends FOSRestController
      *   }
      * )
      *
-     * @param Request   $request    Request object.
-     * @param int       $id         Group ID
+     * @param int $id
      *
      * @return array
-     * @throws NotFoundHttpException when note not exist
      */
-    public function getGroupUsersAction(Request $request, $id)
+    public function getGroupUsersAction($id)
     {
 
         if ($this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id) === null) {
@@ -425,12 +428,12 @@ class GroupController extends FOSRestController
      *  }
      * )
      *
-     * @param Request $request  Request Object
-     * @param int $groupId      Group ID
-     * @param int $userId       User ID
+     * @param int $groupId
+     * @param int $userId
+     *
      * @return array
      */
-    public function deleteGroupUsersAction(Request $request, $groupId, $userId)
+    public function deleteGroupUsersAction($groupId, $userId)
     {
         $rows = $this->getDoctrine()
             ->getRepository('AppBundle:UserInGroup')
@@ -477,11 +480,11 @@ class GroupController extends FOSRestController
      *   }
      * )
      *
-     * @param Request $request Request object
-     * @param int $groupId Group ID
+     * @param int $groupId
+     *
      * @return array
      */
-    public function getGroupGroupsAction(Request $request, $groupId)
+    public function getGroupGroupsAction($groupId)
     {
 
         $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($groupId);
@@ -522,12 +525,12 @@ class GroupController extends FOSRestController
      *  }
      * )
      *
-     * @param Request   $request          Request Object
-     * @param int       $groupId          Group ID
-     * @param int       $groupInGroupId   User ID
+     * @param int $groupId
+     * @param int $groupInGroupId
+     *
      * @return array
      */
-    public function deleteGroupGroupsAction(Request $request, $groupId, $groupInGroupId)
+    public function deleteGroupGroupsAction($groupId, $groupInGroupId)
     {
         $rows = $this->getDoctrine()
             ->getRepository('AppBundle:UserGroupInGroup')

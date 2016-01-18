@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -8,7 +9,7 @@ use JMS\Serializer\Annotation\Expose;
 
 /**
  * Class UserGroup
- * @package AppBundle\Entity
+ *
  * @ORM\Entity
  * @ORM\Table(name="UserGroup")
  * @ExclusionPolicy("all")
@@ -50,7 +51,7 @@ class UserGroup
     protected $type;
 
     /**
-     * @var int
+     * @var DateTime
      * @ORM\Column(name="UserGroupTimestamp", type="datetime", nullable=true)
      * @Expose()
      */
@@ -164,7 +165,7 @@ class UserGroup
     }
 
     /**
-     * @return int
+     * @return DateTime
      */
     public function getTimestamp()
     {
@@ -172,9 +173,9 @@ class UserGroup
     }
 
     /**
-     * @param int $timestamp
+     * @param DateTime $timestamp
      */
-    public function setTimestamp($timestamp)
+    public function setTimestamp(DateTime $timestamp)
     {
         $this->timestamp = $timestamp;
     }

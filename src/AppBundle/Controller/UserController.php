@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
@@ -17,16 +18,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Rest controller for users.
- *
- * @package AppBundle\Controller
  */
 class UserController extends FOSRestController
 {
     /**
-     * List all users from the database. Does not support paging!
+     * List all users from the database.
      *
      * @ApiDoc(
      *  resource = true,
+     *  parameters = {
+     *      {"name"="offset", "dataType"="int", "required"=false, "description"="offset for retrieving resources"},
+     *      {"name"="limit", "dataType"="int", "required"=false, "description"="limit for retrieving resources"},
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"}
+     *  },
      *  output="ArrayCollection<AppBundle\Entity\User>",
      *  statusCodes = {
      *      200 = "Returned when successful",
@@ -34,13 +38,19 @@ class UserController extends FOSRestController
      *   }
      * )
      *
+     * @param Request $request
+     *
      * @return array
      */
-    public function getUsersAction()
+    public function getUsersAction(Request $request)
     {
+        $offset = $request->query->getInt('offset', 0);
+        $limit = $request->query->getInt('limit', 100);
+        $sort = $request->query->get('sort', 'reference');
+
         $list = $this->getDoctrine()
             ->getRepository('AppBundle:User')
-            ->findAll();
+            ->findBy([], [$sort => 'ASC'], $limit, $offset);
 
         return $this->view($list);
     }
@@ -65,14 +75,11 @@ class UserController extends FOSRestController
      *   }
      * )
      *
-     * @param Request $request the request object
-     * @param int     $id      the User id
+     * @param int $id
      *
      * @return array
-     *
-     * @throws NotFoundHttpException when user not exist
      */
-    public function getUserAction(Request $request, $id)
+    public function getUserAction($id)
     {
         $user = $this->getDoctrine()
             ->getRepository('AppBundle:User')
@@ -210,15 +217,12 @@ class UserController extends FOSRestController
      *     404 = "Returned when the user is not found"
      *   }
      * )
-
-     * @param Request $request
-     * @param int $id User ID
-
-     * @return array
      *
-     * @throws NotFoundHttpException when user not exist
+     * @param int $id
+     *
+     * @return array
      */
-    public function deleteUserAction(Request $request, $id) {
+    public function deleteUserAction($id) {
 
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
