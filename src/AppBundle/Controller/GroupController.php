@@ -53,7 +53,7 @@ class GroupController extends FOSRestController
 
         $list = $this->getDoctrine()
             ->getRepository('AppBundle:UserGroup')
-            ->findBy([], [$sort => 'ASC'], $limit, $offset);
+            ->findBy(['active' => 1], [$sort => 'ASC'], $limit, $offset);
 
         return $this->view($list);
     }
@@ -85,7 +85,7 @@ class GroupController extends FOSRestController
      */
     public function getGroupAction($id)
     {
-        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findOneBy(['id' => $id, 'active' => 1]);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
         }
@@ -119,7 +119,7 @@ class GroupController extends FOSRestController
 
         if ($form->isValid()) {
 
-            // Created timestamp.
+            $group->setActive(1);
             $group->setTimeStamp(new DateTime());
 
             try {
@@ -136,6 +136,7 @@ class GroupController extends FOSRestController
                 throw new NotAcceptableHttpException($e->getMessage());
             }
         }
+
         return $form->getErrors();
     }
 
@@ -171,7 +172,7 @@ class GroupController extends FOSRestController
     public function putGroupAction(Request $request, $id)
     {
         /** @var UserGroup $group */
-        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findOneBy(['id' => $id, 'active' => 1]);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
         }
@@ -226,13 +227,14 @@ class GroupController extends FOSRestController
     public function deleteGroupAction($id)
     {
         /** @var UserGroup $group */
-        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findOneBy(['id' => $id, 'active' => 1]);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
         }
 
+        $group->setActive(0);
+
         $em = $this->getDoctrine()->getManager();
-        $em->remove($group);
         $em->flush();
 
         $this->fireEvent('app.event.group.delete', new GroupEvent($group));
@@ -260,7 +262,7 @@ class GroupController extends FOSRestController
     public function getGroupUsersAction($id)
     {
 
-        if ($this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id) === null) {
+        if ($this->getDoctrine()->getRepository('AppBundle:UserGroup')->findOneBy(['id' => $id, 'active' => 1]) === null) {
             throw new NotFoundHttpException('Group with id ' . $id . ' does not exists.');
         }
 
@@ -303,7 +305,7 @@ class GroupController extends FOSRestController
     public function postGroupUsersAction(Request $request, $id)
     {
         /** @var UserGroup $group */
-        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($id);
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findOneBy(['id' => $id, 'active' => 1]);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $id . ' not found');
         }
@@ -487,7 +489,7 @@ class GroupController extends FOSRestController
     public function getGroupGroupsAction($groupId)
     {
 
-        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($groupId);
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findOneBy(['id' => $groupId, 'active' => 1]);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $groupId . ' not found');
         }
@@ -586,7 +588,7 @@ class GroupController extends FOSRestController
      */
     public function postGroupGroupsAction(Request $request, $groupId) {
         /** @var UserGroup $group */
-        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->find($groupId);
+        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findOneBy(['id' => $groupId, 'active' => 1]);
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $groupId . ' not found');
         }
