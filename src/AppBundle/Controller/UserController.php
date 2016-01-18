@@ -48,7 +48,12 @@ class UserController extends FOSRestController
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
 
-        $list = $this->getDoctrine()->getRepository('AppBundle:User')->findBy([], [$sort => 'ASC'], $limit, $offset);
+        $list = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(
+            [],  // @todo: id > 10
+            [$sort => 'ASC'],
+            $limit,
+            $offset
+        );
 
         return $this->view($list);
     }

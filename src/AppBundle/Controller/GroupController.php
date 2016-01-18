@@ -50,13 +50,20 @@ class GroupController extends FOSRestController
         $offset = $request->query->getInt('offset', 0);
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
+        $type = $request->query->get('type');
+
+        $criteria = ['active' => 1];  // @todo: id > 10
+
+        if ($type !== null) {
+            $criteria['type'] = $type === 'ldap' ? 'ldap' : 'other'; // @todo: add actual other filter
+        }
 
         $list = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findBy(
-                ['active' => 1],
-                [$sort => 'ASC'],
-                $limit,
-                $offset
-            );
+            $criteria,
+            [$sort => 'ASC'],
+            $limit,
+            $offset
+        );
 
         return $this->view($list);
     }
@@ -372,8 +379,8 @@ class GroupController extends FOSRestController
     public function putGroupUsersAction(Request $request, $groupId, $userId)
     {
         $userInGroup = $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->findBy(
-                ["userId" => $userId, "groupId" => $groupId]
-            );
+            ["userId" => $userId, "groupId" => $groupId]
+        );
 
         if ($userInGroup === null) {
             throw new NotFoundHttpException(
@@ -442,8 +449,8 @@ class GroupController extends FOSRestController
     public function deleteGroupUsersAction($groupId, $userId)
     {
         $rows = $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->findBy(
-                ["userId" => $userId, "groupId" => $groupId]
-            );
+            ["userId" => $userId, "groupId" => $groupId]
+        );
 
         if (count($rows) !== 1) {
             throw new NotFoundHttpException(
@@ -541,8 +548,8 @@ class GroupController extends FOSRestController
     public function deleteGroupGroupsAction($groupId, $groupInGroupId)
     {
         $rows = $this->getDoctrine()->getRepository('AppBundle:UserGroupInGroup')->findBy(
-                ['groupId' => $groupId, 'groupInGroupId' => $groupInGroupId]
-            );
+            ['groupId' => $groupId, 'groupInGroupId' => $groupInGroupId]
+        );
 
         if (count($rows) !== 1) {
             throw new NotFoundHttpException(
@@ -634,7 +641,7 @@ class GroupController extends FOSRestController
     /**
      * Fire UserEvent.
      *
-     * @param string $event Event id
+     * @param string     $event Event id
      * @param GroupEvent $eventObject
      */
     private function fireEvent($event, GroupEvent $eventObject)
