@@ -48,12 +48,13 @@ class UserController extends FOSRestController
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
 
-        $list = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(
-            [],  // @todo: id > 10
-            [$sort => 'ASC'],
-            $limit,
-            $offset
-        );
+        $list =  $this->getDoctrine()->getRepository('AppBundle:User')->createQueryBuilder('u')
+            ->where('u.type = \'ldap\'')
+            ->orderBy('u.' . $sort, 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
 
         return $this->view($list);
     }
@@ -232,6 +233,8 @@ class UserController extends FOSRestController
         if (!$user) {
             throw new NotFoundHttpException('User with id: ' . $id . ' not found');
         }
+
+        // @todo: check, update cascade delete to relations (group owner, activities, etc)
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);

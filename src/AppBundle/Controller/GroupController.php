@@ -32,7 +32,8 @@ class GroupController extends FOSRestController
      *  parameters = {
      *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
      *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
-     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"}
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"},
+     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter"}
      *  },
      *  output="ArrayCollection<AppBundle\Entity\UserGroup>",
      *  statusCodes = {
@@ -50,20 +51,20 @@ class GroupController extends FOSRestController
         $offset = $request->query->getInt('offset', 0);
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
-        $type = $request->query->get('type');
+        $type = $request->query->get('type', 'ldap');
 
-        $criteria = ['active' => 1];  // @todo: id > 10
-
-        if ($type !== null) {
-            $criteria['type'] = $type === 'ldap' ? 'ldap' : 'other'; // @todo: add actual other filter
+        $typeFilter = 'g.type = \'ldap\'';
+        if ($type !== 'ldap') {
+            $typeFilter = 'g.type != \'ldap\'';
         }
 
-        $list = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findBy(
-            $criteria,
-            [$sort => 'ASC'],
-            $limit,
-            $offset
-        );
+        $list =  $this->getDoctrine()->getRepository('AppBundle:UserGroup')->createQueryBuilder('g')
+            ->andWhere('g.active = 1')->andWhere($typeFilter)
+            ->orderBy('g.' . $sort, 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
 
         return $this->view($list);
     }
