@@ -1,11 +1,11 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-
 
 /**
  * @ORM\Entity
@@ -26,6 +26,13 @@ class User
      * @Expose()
      */
     protected $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $type = 'ldap';
 
     /**
      * @var string
@@ -231,5 +238,21 @@ class User
     public function getReference()
     {
         return $this->reference;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }
