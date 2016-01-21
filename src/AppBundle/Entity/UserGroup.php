@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use DateTime;
@@ -67,7 +68,6 @@ class UserGroup
      *  options = { "default" = 1 }
      * )
      * @Required()
-     * @Expose()
      */
     protected $active;
 
@@ -80,28 +80,26 @@ class UserGroup
     protected $reference;
 
     /**
-     * @var int
-     * @ORM\Column(name="UserId", type="integer", length=11)
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId"))
      * @Required()
      * @Expose()
      */
-    protected $ownerId;
+    protected $owner;
 
     /**
-     * @var int
-     * @ORM\Column(
-     *  name="ParentGroupId",
-     *  type="integer",
-     *  length=11,
-     *  options={ "default" = 0 }
-     * )
-     * @Required()
+     * @var UserGroup
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
+     * @ORM\JoinColumn(name="ParentGroupId", referencedColumnName="UserGroupId", nullable=true)
      * @Expose()
      */
     protected $parent;
 
     /**
-     * @return int
+     * @return UserGroup
      */
     public function getParent()
     {
@@ -109,27 +107,27 @@ class UserGroup
     }
 
     /**
-     * @param int $parent
+     * @param UserGroup $parent
      */
-    public function setParent($parent)
+    public function setParent(UserGroup $parent = null)
     {
         $this->parent = $parent;
     }
 
     /**
-     * @return int
+     * @return User
      */
-    public function getOwnerId()
+    public function getOwner()
     {
-        return $this->ownerId;
+        return $this->owner;
     }
 
     /**
-     * @param int $userId
+     * @param User $user
      */
-    public function setOwnerId($userId)
+    public function setOwner(User $user)
     {
-        $this->ownerId = $userId;
+        $this->owner = $user;
     }
 
     /**

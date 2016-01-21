@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,87 +8,61 @@ use JMS\Serializer\Annotation\Expose;
 
 /**
  * Class UserGroupInGroup
- * @package AppBundle\Entity
  *
  * @ORM\Entity
- * @ORM\Table(
- *     name="UserGroupInGroup"
- * )
- *
+ * @ORM\Table(name="UserGroupInGroup")
  * @ExclusionPolicy("all")
  */
 class UserGroupInGroup
 {
     /**
-     * @var int
+     * @var UserGroup
+     *
      * @ORM\Id()
-     * @ORM\Column(
-     *     name="UserGroupInGroupId",
-     *     type="integer",
-     *     length=11,
-     *     nullable=false
-     * )
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
+     * @ORM\JoinColumn(name="UserGroupInGroupId", referencedColumnName="UserGroupId")
      * @Expose()
      */
-    protected $groupInGroupId;
+    protected $groupInGroup;
 
     /**
-     * @var int
+     * @var UserGroup
+     *
      * @ORM\Id()
-     * @ORM\Column(
-     *     name="UserGroupId",
-     *     type="integer",
-     *     length=11,
-     *     nullable=false
-     * )
-     *
-     * @Expose()
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
+     * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId")
      */
-    protected $groupId;
+    protected $group;
 
     /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return UserGroupInGroup
+     * @param UserGroup $group
      */
-    public function setGroupId($id)
+    public function setGroup(UserGroup $group)
     {
-        $this->groupId = $id;
-        return $this;
+        $this->group = $group;
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * @return UserGroup
      */
-    public function getGroupId()
+    public function getGroup()
     {
-        return $this->groupId;
+        return $this->group;
     }
 
     /**
-     * Set userGroupId
-     *
-     * @param integer $userGroupId
-     *
-     * @return UserGroupInGroup
+     * @param UserGroup $group
      */
-    public function setGroupInGroupId($userGroupId)
+    public function setGroupInGroup(UserGroup $group)
     {
-        $this->groupInGroupId = $userGroupId;
-        return $this;
+        $this->groupInGroup = $group;
     }
 
     /**
-     * Get userGroupId
-     *
-     * @return integer
+     * @return UserGroup
      */
-    public function getGroupInGroupId()
+    public function getGroupInGroup()
     {
-        return $this->groupInGroupId;
+        return $this->groupInGroup;
     }
 }

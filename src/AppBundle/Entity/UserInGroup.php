@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Annotations\Annotation\Required;
@@ -6,10 +7,9 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Class UserInGroup
- * @package AppBundle\Entity
+ *
  * @ORM\Entity
  * @ORM\Table(name="UserInGroup")
  * @ExclusionPolicy("all")
@@ -17,32 +17,26 @@ use Doctrine\ORM\Mapping as ORM;
 class UserInGroup
 {
     /**
-     * @var int
+     * @var User
+     *
      * @ORM\Id()
-     * @ORM\Column(
-     *     name="UserId",
-     *     type="integer",
-     *     length=11,
-     *     nullable=false
-     * )
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId"))
      * @Required()
      * @Expose()
      */
-    protected $userId;
+    protected $user;
 
     /**
-     * @var int
+     * @var UserGroup
+     *
      * @ORM\Id()
-     * @ORM\Column(
-     *     name="UserGroupId",
-     *     type="integer",
-     *     length=11,
-     *     nullable=false
-     * )
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
+     * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId")
      * @Required()
      * @Expose()
      */
-    protected $groupId;
+    protected $group;
 
     /**
      * @var string
@@ -74,34 +68,34 @@ class UserInGroup
     }
 
     /**
-     * @return int
+     * @return UserGroup
      */
-    public function getGroupId()
+    public function getGroup()
     {
-        return $this->groupId;
+        return $this->group;
     }
 
     /**
-     * @param int $groupId
+     * @param UserGroup $group
      */
-    public function setGroupId($groupId)
+    public function setGroup(UserGroup $group)
     {
-        $this->groupId = $groupId;
+        $this->group = $group;
     }
 
     /**
-     * @return int
+     * @return User
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
-     * @param int $userId
+     * @param User $user
      */
-    public function setUserId($userId)
+    public function setUser(User $user)
     {
-        $this->userId = $userId;
+        $this->user = $user;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,7 +8,7 @@ use JMS\Serializer\Annotation\Expose;
 
 /**
  * Class UserActivity
- * @package AppBundle\Entity
+
  * @ORM\Entity
  * @ORM\Table(name="UserActivity")
  * @ExclusionPolicy("all")
@@ -59,49 +60,51 @@ class UserActivity
     protected $url;
 
     /**
-     * @var int
-     * @ORM\Column(name="UserId", type="integer", length=11, nullable=true)
-     * @Expose()
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId", nullable=true)
      */
-    protected $userId;
+    protected $user;
 
     /**
-     * @var int
-     * @ORM\Column(name="UserGroupId", type="integer", length=11, nullable=true)
-     * @Expose()
+     * @var UserGroup
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
+     * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId", nullable=true)
      */
-    protected $userGroupId;
+    protected $userGroup;
 
     /**
-     * @return int
+     * @return UserGroup
      */
-    public function getUserGroupId()
+    public function getUserGroup()
     {
-        return $this->userGroupId;
+        return $this->userGroup;
     }
 
     /**
-     * @param int $userGroupId
+     * @param UserGroup $userGroup
      */
-    public function setUserGroupId($userGroupId)
+    public function setUserGroup(UserGroup $userGroup = null)
     {
-        $this->userGroupId = $userGroupId;
+        $this->userGroup = $userGroup;
     }
 
     /**
-     * @return int
+     * @return User
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
-     * @param int $userId
+     * @param User $user
      */
-    public function setUserId($userId)
+    public function setUser(User $user = null)
     {
-        $this->userId = $userId;
+        $this->user = $user;
     }
 
     /**

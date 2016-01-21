@@ -1,62 +1,65 @@
 <?php
+
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as orm;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class UserAnnotation
- * @package AppBundle\Entity
- * @orm\Entity
- * @orm\Table(name="UserAnnotation")
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="UserAnnotation")
  */
 class UserAnnotation
 {
     /**
      * @var int
-     * @orm\Id()
-     * @orm\Column(name="AnnotationId", type="integer", length=11, nullable=false)
-     * @orm\GeneratedValue(strategy="AUTO")
+     * @ORM\Id()
+     * @ORM\Column(name="AnnotationId", type="integer", length=11, nullable=false)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @orm\Column(name="AnnotationAttribute", type="string", length=256, nullable=true)
+     * @ORM\Column(name="AnnotationAttribute", type="string", length=256, nullable=true)
      */
     protected $attribute;
 
     /**
      * @var string
-     * @orm\Column(name="AnnotationValue", type="string", length=4096, nullable=true)
+     * @ORM\Column(name="AnnotationValue", type="string", length=4096, nullable=true)
      */
     protected $value;
 
     /**
      * @var string
-     * @orm\Column(name="AnnotationType", type="string", length=128, nullable=true)
+     * @ORM\Column(name="AnnotationType", type="string", length=128, nullable=true)
      */
     protected $type;
 
     /**
-     * @var int
-     * @orm\Column(name="UserId", type="integer", length=11)
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId"))
      */
-    protected $userId;
+    protected $user;
 
     /**
-     * @return int
+     * @return User
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
-     * @param int $userId
+     * @param User $user
      */
-    public function setUserId($userId)
+    public function setUser(User $user)
     {
-        $this->userId = $userId;
+        $this->user = $user;
     }
 
     /**
