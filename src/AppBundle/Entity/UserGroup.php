@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Class UserGroup
@@ -14,6 +15,7 @@ use JMS\Serializer\Annotation\Expose;
  * @ORM\Entity
  * @ORM\Table(name="UserGroup")
  * @ExclusionPolicy("all")
+ * @UniqueEntity("reference")
  */
 class UserGroup
 {

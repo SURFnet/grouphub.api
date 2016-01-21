@@ -6,11 +6,13 @@ use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="User")
  * @ExclusionPolicy("all")
+ * @UniqueEntity("reference")
  */
 class User
 {
