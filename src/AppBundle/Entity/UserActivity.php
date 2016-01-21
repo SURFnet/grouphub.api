@@ -63,7 +63,7 @@ class UserActivity
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId", nullable=true)
+     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId", nullable=true, onDelete="SET NULL")
      */
     protected $user;
 
@@ -71,7 +71,7 @@ class UserActivity
      * @var UserGroup
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
-     * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId", nullable=true)
+     * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId", nullable=true, onDelete="SET NULL")
      */
     protected $userGroup;
 

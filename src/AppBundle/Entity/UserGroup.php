@@ -85,7 +85,7 @@ class UserGroup
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId"))
+     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId")
      * @Required()
      * @Expose()
      */

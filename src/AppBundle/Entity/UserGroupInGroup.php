@@ -20,7 +20,7 @@ class UserGroupInGroup
      *
      * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
-     * @ORM\JoinColumn(name="UserGroupInGroupId", referencedColumnName="UserGroupId")
+     * @ORM\JoinColumn(name="UserGroupInGroupId", referencedColumnName="UserGroupId", onDelete="CASCADE")
      * @Expose()
      */
     protected $groupInGroup;
@@ -30,7 +30,7 @@ class UserGroupInGroup
      *
      * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
-     * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId")
+     * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId", onDelete="CASCADE")
      */
     protected $group;
 

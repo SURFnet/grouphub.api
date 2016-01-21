@@ -42,7 +42,7 @@ class UserAnnotation
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId"))
+     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId", onDelete="CASCADE")
      */
     protected $user;
 
