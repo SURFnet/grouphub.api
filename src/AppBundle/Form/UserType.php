@@ -11,23 +11,36 @@ class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $notBlank = [ "constraints" => new NotBlank() ];
-
-        $builder
-            ->add('firstName', 'text')
-            ->add('lastName', 'text')
-            ->add('loginName', 'text', $notBlank)
-            ->add('reference', 'text', $notBlank);
+        $builder->add(
+            'firstName',
+            'text'
+        )->add(
+            'lastName',
+            'text'
+        )->add(
+            'loginName',
+            'text',
+            [
+                'constraints' => new NotBlank(),
+            ]
+        )->add(
+            'reference',
+            'text',
+            [
+                'constraints' => new NotBlank(),
+            ]
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class'         => 'AppBundle\Entity\User',
-            'intention'          => 'user',
-            'translation_domain' => 'AppBundle'
-        ));
-
+        $resolver->setDefaults(
+            [
+                'data_class'         => 'AppBundle\Entity\User',
+                'intention'          => 'user',
+                'translation_domain' => 'AppBundle',
+            ]
+        );
     }
 
     public function getName()

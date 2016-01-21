@@ -11,24 +11,54 @@ class UserGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $notBlank = ['constraints' => new NotBlank()];
-
-        $builder
-            ->add('name', 'text', $notBlank)
-            ->add('description', 'text')
-            ->add('type', 'text', $notBlank)
-            ->add('reference', 'text', $notBlank)
-            ->add('owner', 'entity', ['class' => 'AppBundle\Entity\User', 'choice_label' => 'id', 'constraints' => new NotBlank()])
-            ->add('parent', 'entity', ['class' => 'AppBundle\Entity\UserGroup', 'choice_label' => 'id']);
+        $builder->add(
+            'name',
+            'text',
+            [
+                'constraints' => new NotBlank(),
+            ]
+        )->add(
+            'description',
+            'text'
+        )->add(
+            'type',
+            'text',
+            [
+                'constraints' => new NotBlank(),
+            ]
+        )->add(
+            'reference',
+            'text',
+            [
+                'constraints' => new NotBlank(),
+            ]
+        )->add(
+            'owner',
+            'entity',
+            [
+                'class'        => 'AppBundle\Entity\User',
+                'choice_label' => 'id',
+                'constraints'  => new NotBlank(),
+            ]
+        )->add(
+            'parent',
+            'entity',
+            [
+                'class'        => 'AppBundle\Entity\UserGroup',
+                'choice_label' => 'id',
+            ]
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class'         => 'AppBundle\Entity\UserGroup',
-            'intention'          => 'group',
-            'translation_domain' => 'AppBundle'
-        ));
+        $resolver->setDefaults(
+            [
+                'data_class'         => 'AppBundle\Entity\UserGroup',
+                'intention'          => 'group',
+                'translation_domain' => 'AppBundle',
+            ]
+        );
     }
 
     public function getName()

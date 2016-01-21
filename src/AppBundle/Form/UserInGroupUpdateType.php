@@ -9,6 +9,12 @@ class UserInGroupUpdateType extends UserInGroupType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('role', 'text', [ "constraints" => new NotBlank() ]);
+        $builder->add(
+            'role',
+            'text',
+            [
+                'constraints' => new NotBlank(),
+            ]
+        );
     }
 }
