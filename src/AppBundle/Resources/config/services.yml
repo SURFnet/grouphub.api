@@ -16,3 +16,5 @@ services:
       - { name: kernel.event_listener, event: app.event.group.useradd, method: groupUserAdd }
       - { name: kernel.event_listener, event: app.event.group.userupdate, method: groupUserUpdate }
       - { name: kernel.event_listener, event: app.event.group.userdelete, method: groupUserDelete }
+      - { name: kernel.event_listener, event: app.event.group.groupadd, method: groupGroupAdd }
+      - { name: kernel.event_listener, event: app.event.group.groupdelete, method: groupGroupDelete }

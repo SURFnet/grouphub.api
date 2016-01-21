@@ -1,22 +1,15 @@
 <?php
-/**
- * @file
- * Project: grouphub.api
- * File: EventListener.php
- */
 
 namespace AppBundle\EventListener;
 
 use AppBundle\Entity\UserActivity;
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
  * Class EventListener
- * @package AppBundle\EventListener
  */
 abstract class ActivityEventListener implements EventSubscriberInterface
 {

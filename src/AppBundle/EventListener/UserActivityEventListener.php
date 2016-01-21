@@ -1,9 +1,4 @@
 <?php
-/**
- * @file
- * Project: grouphub.api
- * File: UserActivityEventListener.php
- */
 
 namespace AppBundle\EventListener;
 
@@ -12,7 +7,6 @@ use AppBundle\Entity\UserActivity;
 
 /**
  * Class UserEventListener
- * @package AppBundle\EventListener
  */
 class UserActivityEventListener extends ActivityEventListener
 {
@@ -41,7 +35,7 @@ class UserActivityEventListener extends ActivityEventListener
         $activity = new UserActivity();
         $activity->setTimestamp(new \DateTime());
         $activity->setPriority(1);
-        $activity->setUserId($event->getUser()->getId());
+        $activity->setUser($event->getUser());
         $activity->setTitle($title);
         $activity->setDescription($description);
 

@@ -1,9 +1,4 @@
 <?php
-/**
- * @file
- * Project: grouphub.api
- * File: UserEventListener.php
- */
 
 namespace AppBundle\EventListener;
 
@@ -12,7 +7,6 @@ use AppBundle\Entity\UserActivity;
 
 /**
  * Class UserEventListener
- * @package AppBundle\EventListener
  */
 class GroupActivityEventListener extends ActivityEventListener
 {
@@ -46,8 +40,8 @@ class GroupActivityEventListener extends ActivityEventListener
         $activity = new UserActivity();
         $activity->setTimestamp(new \DateTime());
         $activity->setPriority(1);
-        $activity->setUserId($event->getUser() ? $event->getUser()->getUserId() : null);
-        $activity->setUserGroupId($event->getGroup()->getId());
+        $activity->setUser($event->getUser() ? $event->getUser()->getUser() : null);
+        $activity->setUserGroup($event->getGroup());
         $activity->setTitle($title);
         $activity->setDescription($description);
 
@@ -92,7 +86,7 @@ class GroupActivityEventListener extends ActivityEventListener
         $activity = $this->getActivity(
             $event,
             'App:Event:Group:userAdd',
-            'Added user with id ' . $event->getUser()->getUserId() .
+            'Added user with id ' . $event->getUser()->getUser()->getId() .
             ' to group with id ' . $event->getGroup()->getId()
         );
         $this->saveActivity($activity);
@@ -103,7 +97,7 @@ class GroupActivityEventListener extends ActivityEventListener
         $activity = $this->getActivity(
             $event,
             'App:Event:Group:userUpdate',
-            'Updated user with id ' . $event->getUser()->getUserId() .
+            'Updated user with id ' . $event->getUser()->getUser()->getId() .
             ' to group with id ' . $event->getGroup()->getId()
         );
         $this->saveActivity($activity);
@@ -114,7 +108,7 @@ class GroupActivityEventListener extends ActivityEventListener
         $activity = $this->getActivity(
             $event,
             'App:Event:Group:userDelete',
-            'Removed user with id ' . $event->getUser()->getUserId() .
+            'Removed user with id ' . $event->getUser()->getUser()->getId() .
             ' from group with id ' . $event->getGroup()->getId()
         );
         $this->saveActivity($activity);
@@ -125,7 +119,7 @@ class GroupActivityEventListener extends ActivityEventListener
         $activity = $this->getActivity(
             $event,
             'App:Event:Group:groupDelete',
-            'Removed group with id ' . $event->getGroupInGroup()->getGroupInGroupId() .
+            'Removed group with id ' . $event->getGroupInGroup()->getGroup()->getId() .
             ' from group with id ' . $event->getGroup()->getId()
         );
         $this->saveActivity($activity);
@@ -136,7 +130,7 @@ class GroupActivityEventListener extends ActivityEventListener
         $activity = $this->getActivity(
             $event,
             'App:Event:Group:groupAdd',
-            'Added group with id ' . $event->getGroupInGroup()->getGroupInGroupId() .
+            'Added group with id ' . $event->getGroupInGroup()->getGroup()->getId() .
             ' from to with id ' . $event->getGroup()->getId()
         );
         $this->saveActivity($activity);
