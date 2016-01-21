@@ -85,13 +85,7 @@ class UserController extends FOSRestController
      */
     public function getUserAction($id)
     {
-        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
-
-        if (!$user) {
-            throw new NotFoundHttpException(
-                'User with id: ' . $id . ' not found'
-            );
-        }
+        $user = $this->getGrouphubUser($id);
 
         return $this->view($user);
     }
@@ -172,23 +166,14 @@ class UserController extends FOSRestController
      */
     public function putUserAction(Request $request, $id)
     {
-
-        /** @var User $user */
-        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
-
-        if (!$user) {
-            throw new NotFoundHttpException('User with id: ' . $id . ' not found');
-        }
+        $user = $this->getGrouphubUser($id);
 
         $form = $this->createForm(new UserType(), $user);
         $form->submit($request);
 
         if ($form->isValid()) {
             try {
-                $em = $this->getDoctrine()->getManager();
-
-                $em->persist($user);
-                $em->flush();
+                $this->getDoctrine()->getManager()->flush();
 
                 $this->fireEvent('app.event.user.update', new UserEvent($user));
 
@@ -226,13 +211,7 @@ class UserController extends FOSRestController
      */
     public function deleteUserAction($id)
     {
-
-        /** @var User $user */
-        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
-
-        if (!$user) {
-            throw new NotFoundHttpException('User with id: ' . $id . ' not found');
-        }
+        $user = $this->getGrouphubUser($id);
 
         // @todo: check, update cascade delete to relations (group owner, activities, etc)
 
@@ -254,5 +233,22 @@ class UserController extends FOSRestController
     private function fireEvent($event, UserEvent $eventObject)
     {
         $this->get('event_dispatcher')->dispatch($event, $eventObject);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return User
+     */
+    private function getGrouphubUser($id)
+    {
+        /** @var User $user */
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
+
+        if ($user === null) {
+            throw new NotFoundHttpException('User with id: ' . $id . ' not found');
+        }
+
+        return $user;
     }
 }
