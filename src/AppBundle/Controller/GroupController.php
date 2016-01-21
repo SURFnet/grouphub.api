@@ -148,7 +148,7 @@ class GroupController extends FOSRestController
     }
 
     /**
-     * Update a single user as a whole. Mind that a PUT requires all user properties included in the JSON object
+     * Update a single group as a whole. Mind that a PUT requires all group properties included in the JSON object
      *
      * @ApiDoc(
      *   input = "AppBundle\Form\UserGroupType",
@@ -158,23 +158,21 @@ class GroupController extends FOSRestController
      *          "name" = "id",
      *          "dataType" = "integer",
      *          "requirement" = "\d+",
-     *          "description" = "UserID"
+     *          "description" = "GroupID"
      *      }
      *   },
-     *   description="Update a user. Make sure to include all properties!",
+     *   description="Update a group. Make sure to include all properties!",
      *   statusCodes = {
      *     200 = "Returned when successful",
-     *     404 = "Returned when the user is not found",
+     *     404 = "Returned when the group is not found",
      *     500 = "Returned when there is a internal error."
      *   }
      * )
      *
-     * @param Request $request the request object
-     * @param int     $id      the user id
+     * @param Request $request
+     * @param int     $id
      *
      * @return array
-     *
-     * @throws NotFoundHttpException when note not exist
      */
     public function putGroupAction(Request $request, $id)
     {
@@ -199,6 +197,56 @@ class GroupController extends FOSRestController
     }
 
     /**
+     * Update a single group as a whole. Mind that a PATCH only updates the specified attributes
+     *
+     * @ApiDoc(
+     *   input = "AppBundle\Form\UserGroupType",
+     *   resource = true,
+     *   requirements = {
+     *      {
+     *          "name" = "id",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "GroupID"
+     *      }
+     *   },
+     *   description="Update a group.",
+     *   statusCodes = {
+     *     200 = "Returned when successful",
+     *     404 = "Returned when the group is not found",
+     *     500 = "Returned when there is a internal error."
+     *   }
+     * )
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return array
+     */
+    public function patchGroupAction(Request $request, $id)
+    {
+        $group = $this->getGroup($id);
+
+        $form = $this->createForm(new UserGroupType(), $group);
+        $form->submit($request, false);
+
+        if ($form->isValid()) {
+            try {
+                $this->getDoctrine()->getManager()->flush();
+
+                $this->fireEvent('app.event.group.update', new GroupEvent($group));
+
+                return $this->routeRedirectView('get_group', ['id' => $group->getId()]);
+            } catch (DBALException $e) {
+                throw new NotAcceptableHttpException($e->getMessage());
+            }
+        }
+
+        return $form;
+    }
+
+
+    /**
      * Delete group from the database by group ID.
      *
      * @ApiDoc(
@@ -213,7 +261,7 @@ class GroupController extends FOSRestController
      *   },
      *   statusCodes = {
      *     200 = "Returned when successful",
-     *     404 = "Returned when the user is not found",
+     *     404 = "Returned when the group is not found",
      *     500 = "Returned when there is a internal error."
      *   }
      * )
