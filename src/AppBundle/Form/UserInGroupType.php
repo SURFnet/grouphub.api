@@ -12,7 +12,7 @@ class UserInGroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('userId', 'integer', [ "constraints" => new NotBlank() ])
+            ->add('user', 'entity', ['class' => 'AppBundle\Entity\User', 'choice_label' => 'id', 'constraints' => new NotBlank()])
             ->add('role', 'text');
     }
 
