@@ -20,12 +20,9 @@ class User
 
     /**
      * @var int
+     *
      * @ORM\Id()
-     * @ORM\Column(
-     *     type="integer",
-     *     length=11,
-     *     name="UserId"
-     * )
+     * @ORM\Column(type="integer", name="UserId")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Expose()
      */
@@ -40,36 +37,24 @@ class User
 
     /**
      * @var string
-     * @ORM\Column(
-     *     type="string",
-     *     length=256,
-     *     name="UserFirstName",
-     *     nullable=true
-     * )
+     *
+     * @ORM\Column(type="string", name="UserFirstName", nullable=true)
      * @Expose()
      */
     protected $firstName;
 
     /**
      * @var string
-     * @ORM\Column(
-     *     type="string",
-     *     length=256,
-     *     name="UserLastName",
-     *     nullable=true
-     * )
+     *
+     * @ORM\Column(type="string", name="UserLastName", nullable=true)
      * @Expose()
      */
     protected $lastName;
 
     /**
      * @var string
-     * @ORM\Column(
-     *     type="string",
-     *     length=256,
-     *     name="UserLoginName",
-     *     nullable=false
-     * )
+     *
+     * @ORM\Column(type="string", name="UserLoginName", nullable=false)
      * @Expose()
      * @Required()
      */
@@ -77,11 +62,8 @@ class User
 
     /**
      * @var string
-     * @ORM\Column(
-     *     type="datetime",
-     *     name="UserTimestamp",
-     *     nullable=true
-     * )
+     *
+     * @ORM\Column(type="datetime", name="UserTimestamp", nullable=true)
      * @Expose()
      */
     protected $timeStamp;
@@ -89,12 +71,7 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(
-     *  type="string",
-     *  length=256,
-     *  name="Reference",
-     *  unique=true
-     * )
+     * @ORM\Column(type="string", name="Reference", unique=true)
      *
      * @Expose()
      */

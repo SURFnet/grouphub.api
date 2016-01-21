@@ -21,8 +21,9 @@ class UserGroup
 {
     /**
      * @var int
+     *
      * @ORM\Id()
-     * @ORM\Column(name="UserGroupId", type="integer", length=11)
+     * @ORM\Column(name="UserGroupId", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Required()
      * @Expose()
@@ -31,7 +32,8 @@ class UserGroup
 
     /**
      * @var string
-     * @ORM\Column(name="UserGroupName", type="string", length=256, nullable=true)
+     *
+     * @ORM\Column(name="UserGroupName", type="string", nullable=true)
      * @Required()
      * @Expose()
      */
@@ -39,7 +41,8 @@ class UserGroup
 
     /**
      * @var string
-     * @ORM\Column(name="UserGroupDescription", type="string", length=4096, nullable=true)
+     *
+     * @ORM\Column(name="UserGroupDescription", type="string", nullable=true)
      * @Required()
      * @Expose()
      */
@@ -47,7 +50,8 @@ class UserGroup
 
     /**
      * @var string
-     * @ORM\Column(name="UserGroupType", type="string", length=128, nullable=true)
+     *
+     * @ORM\Column(name="UserGroupType", type="string", nullable=true)
      * @Required()
      * @Expose()
      */
@@ -55,6 +59,7 @@ class UserGroup
 
     /**
      * @var DateTime
+     *
      * @ORM\Column(name="UserGroupTimestamp", type="datetime", nullable=true)
      * @Expose()
      */
@@ -62,20 +67,16 @@ class UserGroup
 
     /**
      * @var int
-     * @ORM\Column(
-     *  name="UserGroupActive",
-     *  type="smallint",
-     *  length=6,
-     *  nullable=true,
-     *  options = { "default" = 1 }
-     * )
+     *
+     * @ORM\Column(name="UserGroupActive", type="smallint", nullable=true, options = { "default" = 1 })
      * @Required()
      */
     protected $active;
 
     /**
      * @var string
-     * @ORM\Column(name="Reference", type="string", length=128, unique=true)
+     *
+     * @ORM\Column(name="Reference", type="string", unique=true)
      * @Required()
      * @Expose()
      */

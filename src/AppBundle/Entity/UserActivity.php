@@ -17,8 +17,9 @@ class UserActivity
 {
     /**
      * @var int
+     *
      * @ORM\Id()
-     * @ORM\Column(name="UserActivityId", type="integer", length=11)
+     * @ORM\Column(name="UserActivityId", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Expose()
      */
@@ -26,35 +27,40 @@ class UserActivity
 
     /**
      * @var string
-     * @ORM\Column(name="UserActivityTimestamp", type="datetime", nullable=false)
+     *
+     * @ORM\Column(name="UserActivityTimestamp", type="datetime")
      * @Expose()
      */
     protected $timestamp;
 
     /**
      * @var string
-     * @ORM\Column(name="UserActivityTitle", type="string", length=256, nullable=true)
+     *
+     * @ORM\Column(name="UserActivityTitle", type="string", nullable=true)
      * @Expose()
      */
     protected $title;
 
     /**
      * @var string
-     * @ORM\Column(name="UserActivityDescription", type="string", length=256, nullable=true)
+     *
+     * @ORM\Column(name="UserActivityDescription", type="string", nullable=true)
      * @Expose()
      */
     protected $description;
 
     /**
      * @var int
-     * @ORM\Column(name="UserActivityPriority", type="smallint", length=6)
+     *
+     * @ORM\Column(name="UserActivityPriority", type="smallint")
      * @Expose()
      */
     protected $priority;
 
     /**
      * @var string
-     * @ORM\Column(name="UserActivityUrl", type="string", length=1024, nullable=true)
+     *
+     * @ORM\Column(name="UserActivityUrl", type="string", nullable=true)
      * @Expose()
      */
     protected $url;

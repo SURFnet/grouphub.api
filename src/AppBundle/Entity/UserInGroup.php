@@ -3,9 +3,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Annotations\Annotation\Required;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class UserInGroup
@@ -40,12 +40,8 @@ class UserInGroup
 
     /**
      * @var string
-     * @ORM\Column(
-     *     name="UserInGroupRole",
-     *     type="string",
-     *     length=128,
-     *     nullable=true
-     * )
+     *
+     * @ORM\Column(name="UserInGroupRole", type="string", nullable=true)
      * @Required()
      * @Expose()
      */
