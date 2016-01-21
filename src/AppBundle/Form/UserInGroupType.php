@@ -11,17 +11,31 @@ class UserInGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('user', 'entity', ['class' => 'AppBundle\Entity\User', 'choice_label' => 'id', 'constraints' => new NotBlank()])
-            ->add('role', 'text');
+        $builder->add(
+            'user',
+            'entity',
+            [
+                'class'        => 'AppBundle\Entity\User',
+                'choice_label' => 'id',
+                'constraints'  => new NotBlank(),
+            ]
+        )->add(
+            'role',
+            'text',
+            [
+                'constraints' => new NotBlank(),
+            ]
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class'         => 'AppBundle\Entity\UserInGroup',
-            'translation_domain' => 'AppBundle'
-        ));
+        $resolver->setDefaults(
+            [
+                'data_class'         => 'AppBundle\Entity\UserInGroup',
+                'translation_domain' => 'AppBundle',
+            ]
+        );
     }
 
     public function getName()
