@@ -16,6 +16,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class User
 {
+    const REFERENCE_TRASH = 'sys:trash_user';
+
     /**
      * @var int
      * @ORM\Id()

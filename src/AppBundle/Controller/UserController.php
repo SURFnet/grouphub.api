@@ -213,13 +213,21 @@ class UserController extends FOSRestController
     {
         $user = $this->getGrouphubUser($id);
 
-        // @todo: check, update cascade delete to relations (group owner, activities, etc)
+        $doctrine = $this->getDoctrine();
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($user);
-        $em->flush();
+        $ownedGroups = $doctrine->getRepository('AppBundle:UserGroup')->findBy(['owner' => $user]);
+        foreach ($ownedGroups as $group) {
+            $group->setActive(0);
+            $group->setOwner(
+                $doctrine->getRepository('AppBundle:User')->findOneBy(['reference' => User::REFERENCE_TRASH])
+            );
+        }
 
         $this->fireEvent('app.event.user.delete', new UserEvent($user));
+
+        $em = $doctrine->getManager();
+        $em->remove($user);
+        $em->flush();
 
         return $this->routeRedirectView('get_users');
     }
