@@ -296,15 +296,28 @@ class GroupController extends FOSRestController
      *   }
      * )
      *
-     * @param int $id
+     * @param Request $request
+     * @param int     $id
      *
      * @return array
      */
-    public function getGroupUsersAction($id)
+    public function getGroupUsersAction(Request $request, $id)
     {
         $this->getGroup($id);
 
-        $list = $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->findBy(['group' => $id]);
+        $offset = $request->query->getInt('offset', 0);
+        $limit = $request->query->getInt('limit', 100);
+        $sort = $request->query->get('sort', 'reference');
+
+        $list =  $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->createQueryBuilder('ug')
+            ->where('ug.group = :id')
+            ->setParameter('id', $id)
+            ->join('ug.user', 'u')
+            ->orderBy('u.' . $sort, 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
 
         return $this->view($list);
     }
@@ -373,7 +386,7 @@ class GroupController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
-     *  input="AppBundle\Form\UserInGroupType",
+     *  input="AppBundle\Form\UserInGroupUpdateType",
      *  requirements = {
      *      {
      *          "name" = "groupId",
