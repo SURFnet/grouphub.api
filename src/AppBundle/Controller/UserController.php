@@ -5,13 +5,10 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use AppBundle\Event\UserEvent;
 use AppBundle\Form\UserType;
-
 use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
-
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -47,16 +44,23 @@ class UserController extends FOSRestController
         $offset = $request->query->getInt('offset', 0);
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
+        $reference = $request->query->get('reference');
 
-        $list =  $this->getDoctrine()->getRepository('AppBundle:User')->createQueryBuilder('u')
-            ->where('u.type = \'ldap\'')
-            ->orderBy('u.' . $sort, 'ASC')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+        $qb = $this->getDoctrine()->getRepository('AppBundle:User')->createQueryBuilder('u');
 
-        return $this->view($list);
+        $qb->where('u.type = \'ldap\'')->orderBy('u.' . $sort, 'ASC')->setFirstResult($offset)->setMaxResults($limit);
+
+        if ($reference !== null) {
+            $qb->andWhere('u.reference = :reference')->setParameter('reference', $reference);
+        }
+
+        $result = $qb->getQuery()->getResult();
+
+        if (count($result) === 1) {
+            $result = current($result);
+        }
+
+        return $this->view($result);
     }
 
     /**
