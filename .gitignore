@@ -1,3 +1,4 @@
+/app/bootstrap.php.cache
 /web/bundles/
 /app/cache/*
 /app/logs/*
@@ -8,6 +9,3 @@
 app/config/parameters.yml
 .vagrant
 .idea
-*.php~
-code.tar.gz
-orig/*

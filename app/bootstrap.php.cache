@@ -5,7 +5,7 @@ namespace {
     $loader = require_once __DIR__.'/./autoload.php';
 }
 
- 
+
 namespace Symfony\Component\HttpFoundation
 {
 class ParameterBag implements \IteratorAggregate, \Countable
@@ -172,7 +172,7 @@ $this->set($key, $values);
 }
 public function get($key, $default = null, $first = true)
 {
-$key = strtr(strtolower($key),'_','-');
+$key = str_replace('_','-', strtolower($key));
 if (!array_key_exists($key, $this->headers)) {
 if (null === $default) {
 return $first ? null : array();
@@ -186,7 +186,7 @@ return $this->headers[$key];
 }
 public function set($key, $values, $replace = true)
 {
-$key = strtr(strtolower($key),'_','-');
+$key = str_replace('_','-', strtolower($key));
 $values = array_values((array) $values);
 if (true === $replace || !isset($this->headers[$key])) {
 $this->headers[$key] = $values;
@@ -199,7 +199,7 @@ $this->cacheControl = $this->parseCacheControl($values[0]);
 }
 public function has($key)
 {
-return array_key_exists(strtr(strtolower($key),'_','-'), $this->headers);
+return array_key_exists(str_replace('_','-', strtolower($key)), $this->headers);
 }
 public function contains($key, $value)
 {
@@ -207,7 +207,7 @@ return in_array($value, $this->get($key, null, false));
 }
 public function remove($key)
 {
-$key = strtr(strtolower($key),'_','-');
+$key = str_replace('_','-', strtolower($key));
 unset($this->headers[$key]);
 if ('cache-control'=== $key) {
 $this->cacheControl = array();
@@ -278,8 +278,10 @@ return $cacheControl;
 }
 namespace Symfony\Component\HttpFoundation
 {
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-class FileBag extends ParameterBag
+
+    use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+    class FileBag extends ParameterBag
 {
 private static $fileKeys = array('error','name','size','tmp_name','type');
 public function __construct(array $parameters = array())
@@ -398,8 +400,10 @@ return $headers;
 }
 namespace Symfony\Component\HttpFoundation
 {
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-class Request
+
+    use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+    class Request
 {
 const HEADER_FORWARDED ='forwarded';
 const HEADER_CLIENT_IP ='client_ip';
@@ -1394,7 +1398,7 @@ $this->setContent($content);
 $this->setStatusCode($status);
 $this->setProtocolVersion('1.0');
 if (!$this->headers->has('Date')) {
-$this->setDate(new \DateTime(null, new \DateTimeZone('UTC')));
+$this->setDate(\DateTime::createFromFormat('U', time(), new \DateTimeZone('UTC')));
 }
 }
 public static function create($content ='', $status = 200, $headers = array())
@@ -1458,12 +1462,12 @@ public function sendHeaders()
 if (headers_sent()) {
 return $this;
 }
-header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
 foreach ($this->headers->allPreserveCase() as $name => $values) {
 foreach ($values as $value) {
-header($name.': '.$value, false, $this->statusCode);
+header($name.': '.$value, false);
 }
 }
+header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
 foreach ($this->headers->getCookies() as $cookie) {
 setcookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
 }
@@ -1513,7 +1517,7 @@ if ($this->isInvalid()) {
 throw new \InvalidArgumentException(sprintf('The HTTP status code "%s" is not valid.', $code));
 }
 if (null === $text) {
-$this->statusText = isset(self::$statusTexts[$code]) ? self::$statusTexts[$code] :'';
+$this->statusText = isset(self::$statusTexts[$code]) ? self::$statusTexts[$code] :'unknown status';
 return $this;
 }
 if (false === $text) {
@@ -1873,7 +1877,7 @@ $this->set('Cache-Control','');
 public function set($key, $values, $replace = true)
 {
 parent::set($key, $values, $replace);
-$uniqueKey = strtr(strtolower($key),'_','-');
+$uniqueKey = str_replace('_','-', strtolower($key));
 $this->headerNames[$uniqueKey] = $key;
 if (in_array($uniqueKey, array('cache-control','etag','last-modified','expires'))) {
 $computed = $this->computeCacheControlValue();
@@ -1885,7 +1889,7 @@ $this->computedCacheControl = $this->parseCacheControl($computed);
 public function remove($key)
 {
 parent::remove($key);
-$uniqueKey = strtr(strtolower($key),'_','-');
+$uniqueKey = str_replace('_','-', strtolower($key));
 unset($this->headerNames[$uniqueKey]);
 if ('cache-control'=== $uniqueKey) {
 $this->computedCacheControl = array();
@@ -1989,10 +1993,15 @@ public function setContainer(ContainerInterface $container = null);
 }
 namespace Symfony\Component\DependencyInjection
 {
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-interface ContainerInterface
+
+    use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
+    use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+    use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+    use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
+    use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+    use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+
+    interface ContainerInterface
 {
 const EXCEPTION_ON_INVALID_REFERENCE = 1;
 const NULL_ON_INVALID_REFERENCE = 2;
@@ -2021,15 +2030,15 @@ public function initialized($id);
 }
 namespace Symfony\Component\DependencyInjection
 {
-use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Exception\RuntimeException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
-class Container implements IntrospectableContainerInterface
+
+    use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
+    use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+    use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+    use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
+    use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+    use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+
+    class Container implements IntrospectableContainerInterface
 {
 protected $parameterBag;
 protected $services = array();
@@ -2155,9 +2164,7 @@ try {
 $service = $this->$method();
 } catch (\Exception $e) {
 unset($this->loading[$id]);
-if (array_key_exists($id, $this->services)) {
 unset($this->services[$id]);
-}
 if ($e instanceof InactiveScopeException && self::EXCEPTION_ON_INVALID_REFERENCE !== $invalidBehavior) {
 return;
 }
@@ -2277,15 +2284,29 @@ return strtr(ucwords(strtr($id, array('_'=>' ','.'=>'_ ','\\'=>'_ '))), array(' 
 }
 public static function underscore($id)
 {
-return strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/','/([a-z\d])([A-Z])/'), array('\\1_\\2','\\1_\\2'), strtr($id,'_','.')));
+return strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/','/([a-z\d])([A-Z])/'), array('\\1_\\2','\\1_\\2'), str_replace('_','.', $id)));
 }
 }
 }
 namespace Symfony\Component\HttpKernel
 {
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-interface HttpKernelInterface
+
+    use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\RequestStack;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+    use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+    use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+    use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+    use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+    use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+    interface HttpKernelInterface
 {
 const MASTER_REQUEST = 1;
 const SUB_REQUEST = 2;
@@ -2294,10 +2315,23 @@ public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = 
 }
 namespace Symfony\Component\HttpKernel
 {
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\Config\Loader\LoaderInterface;
-interface KernelInterface extends HttpKernelInterface, \Serializable
+
+    use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\RequestStack;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+    use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+    use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+    use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+    use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+    use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+    interface KernelInterface extends HttpKernelInterface, \Serializable
 {
 public function registerBundles();
 public function registerContainerConfiguration(LoaderInterface $loader);
@@ -2320,38 +2354,46 @@ public function getCharset();
 }
 namespace Symfony\Component\HttpKernel
 {
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-interface TerminableInterface
+
+    use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\RequestStack;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+    use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+    use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+    use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+    use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+    use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+    interface TerminableInterface
 {
 public function terminate(Request $request, Response $response);
 }
 }
 namespace Symfony\Component\HttpKernel
 {
-use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
-use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\HttpKernel\Config\EnvParametersResource;
-use Symfony\Component\HttpKernel\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
-use Symfony\Component\HttpKernel\DependencyInjection\AddClassesToCachePass;
-use Symfony\Component\Config\Loader\LoaderResolver;
-use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\ClassLoader\ClassCollectionLoader;
-abstract class Kernel implements KernelInterface, TerminableInterface
+
+    use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\RequestStack;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+    use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+    use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+    use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+    use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+    use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+    abstract class Kernel implements KernelInterface, TerminableInterface
 {
 protected $bundles = array();
 protected $bundleMap;
@@ -2363,11 +2405,11 @@ protected $booted = false;
 protected $name;
 protected $startTime;
 protected $loadClassCache;
-const VERSION ='2.7.5';
-const VERSION_ID = 20705;
+const VERSION ='2.7.9';
+const VERSION_ID = 20709;
 const MAJOR_VERSION = 2;
 const MINOR_VERSION = 7;
-const RELEASE_VERSION = 5;
+const RELEASE_VERSION = 9;
 const EXTRA_VERSION ='';
 const END_OF_MAINTENANCE ='05/2018';
 const END_OF_LIFE ='05/2019';
@@ -2828,10 +2870,15 @@ return call_user_func_array(array($this->decorated, $method), $args);
 }
 namespace Symfony\Component\HttpKernel\Bundle
 {
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-interface BundleInterface extends ContainerAwareInterface
+
+    use Symfony\Component\Console\Application;
+    use Symfony\Component\DependencyInjection\Container;
+    use Symfony\Component\DependencyInjection\ContainerAware;
+    use Symfony\Component\DependencyInjection\ContainerBuilder;
+    use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+    use Symfony\Component\Finder\Finder;
+
+    interface BundleInterface extends ContainerAwareInterface
 {
 public function boot();
 public function shutdown();
@@ -2856,13 +2903,15 @@ $this->container = $container;
 }
 namespace Symfony\Component\HttpKernel\Bundle
 {
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-abstract class Bundle extends ContainerAware implements BundleInterface
+
+    use Symfony\Component\Console\Application;
+    use Symfony\Component\DependencyInjection\Container;
+    use Symfony\Component\DependencyInjection\ContainerAware;
+    use Symfony\Component\DependencyInjection\ContainerBuilder;
+    use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+    use Symfony\Component\Finder\Finder;
+
+    abstract class Bundle extends ContainerAware implements BundleInterface
 {
 protected $name;
 protected $extension;
@@ -2931,13 +2980,16 @@ public function registerCommands(Application $application)
 if (!is_dir($dir = $this->getPath().'/Command')) {
 return;
 }
+if (!class_exists('Symfony\Component\Finder\Finder')) {
+throw new \RuntimeException('You need the symfony/finder component to register bundle commands.');
+}
 $finder = new Finder();
 $finder->files()->name('*Command.php')->in($dir);
 $prefix = $this->getNamespace().'\\Command';
 foreach ($finder as $file) {
 $ns = $prefix;
 if ($relativePath = $file->getRelativePath()) {
-$ns .='\\'.strtr($relativePath,'/','\\');
+$ns .='\\'.str_replace('/','\\', $relativePath);
 }
 $class = $ns.'\\'.$file->getBasename('.php');
 if ($this->container) {
@@ -2961,8 +3013,11 @@ return $this->getNamespace().'\\DependencyInjection\\'.$basename.'Extension';
 }
 namespace Symfony\Component\Config
 {
-use Symfony\Component\Config\Resource\ResourceInterface;
-interface ConfigCacheInterface
+
+    use Symfony\Component\Filesystem\Exception\IOException;
+    use Symfony\Component\Filesystem\Filesystem;
+
+    interface ConfigCacheInterface
 {
 public function getPath();
 public function isFresh();
@@ -2971,10 +3026,11 @@ public function write($content, array $metadata = null);
 }
 namespace Symfony\Component\Config
 {
-use Symfony\Component\Config\Resource\ResourceInterface;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
-class ConfigCache implements ConfigCacheInterface
+
+    use Symfony\Component\Filesystem\Exception\IOException;
+    use Symfony\Component\Filesystem\Filesystem;
+
+    class ConfigCache implements ConfigCacheInterface
 {
 private $debug;
 private $file;
@@ -3039,21 +3095,23 @@ return $this->file.'.meta';
 }
 namespace Symfony\Component\HttpKernel
 {
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-class HttpKernel implements HttpKernelInterface, TerminableInterface
+
+    use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\RequestStack;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+    use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+    use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+    use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+    use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+    use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+    use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+    class HttpKernel implements HttpKernelInterface, TerminableInterface
 {
 protected $dispatcher;
 protected $resolver;
@@ -3192,15 +3250,17 @@ return (string) $var;
 }
 namespace Symfony\Component\HttpKernel\DependencyInjection
 {
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Scope;
-class ContainerAwareHttpKernel extends HttpKernel
+
+    use Symfony\Component\DependencyInjection\ContainerInterface;
+    use Symfony\Component\DependencyInjection\Scope;
+    use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\RequestStack;
+    use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+    use Symfony\Component\HttpKernel\HttpKernel;
+    use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+    class ContainerAwareHttpKernel extends HttpKernel
 {
 protected $container;
 public function __construct(EventDispatcherInterface $dispatcher, ContainerInterface $container, ControllerResolverInterface $controllerResolver, RequestStack $requestStack = null, $triggerDeprecation = true)
