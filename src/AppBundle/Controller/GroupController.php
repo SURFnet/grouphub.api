@@ -16,6 +16,7 @@ use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -138,7 +139,7 @@ class GroupController extends FOSRestController
 
                 $this->fireEvent('app.event.group.add', new GroupEvent($group));
 
-                return $this->routeRedirectView('get_group', ['id' => $group->getId()]);
+                return $this->view($group, Response::HTTP_CREATED);
             } catch (DBALException $e) {
                 throw new NotAcceptableHttpException($e->getMessage());
             }
