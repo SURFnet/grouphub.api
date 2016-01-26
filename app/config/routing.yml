@@ -13,6 +13,10 @@ group:
     resource: "@AppBundle/Controller/GroupController.php"
     type:     rest
 
+user_group:
+    resource: "@AppBundle/Controller/UserGroupController.php"
+    type:     rest
+
 NelmioApiDocBundle:
   resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
   prefix:   /api/doc
