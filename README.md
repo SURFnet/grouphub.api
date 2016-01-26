@@ -43,9 +43,8 @@ You can do this with the symfony console command at the vagrant box
 
 # Getting started
 After starting and provisioning your vagrant box you can go to:
-<http://dev.grouphub.org/app_dev.php>
+<http://dev.api.grouphub.org/app_dev.php>
 
 ## API Documentation
-API Documentation can be found at [apidoc](http://mroest.github.io/grouphub.api/)
-Or when you have the vagrant box running you can go to <http://dev.grouphub.org/app_dev.php/api/doc> to see the
+Or when you have the vagrant box running you can go to <http://dev.api.grouphub.org/app_dev.php/api/doc> to see the
 runtime documentation version.
