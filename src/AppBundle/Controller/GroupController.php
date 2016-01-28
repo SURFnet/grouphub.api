@@ -22,6 +22,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class GroupController
+ *
+ * @todo: Introduce service layer, and move most logic there...
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GroupController extends FOSRestController
 {
@@ -273,6 +276,8 @@ class GroupController extends FOSRestController
      */
     public function deleteGroupAction($id)
     {
+        // @todo: not allowed to disable group which is a parent
+
         $group = $this->getGroup($id);
 
         $group->setActive(0);
