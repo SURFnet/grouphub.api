@@ -74,6 +74,7 @@
         - zip
         - unzip
         - git
+        - ant
 
     - name: Configure Exim4
       replace: dest=/etc/exim4/update-exim4.conf.conf replace="dc_eximconfig_configtype='internet'" regexp="^dc_eximconfig_configtype.*$" backup=yes
