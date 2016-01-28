@@ -1,13 +1,6 @@
 <?php
-/**
- * @file
- * Project: grouphub.api
- * File: AppExtension.php
- */
-
 
 namespace AppBundle\DependencyInjection;
-
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,7 +9,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Class AppExtension
- * @package AppBundle\DependencyInjection
  */
 class AppExtension extends Extension
 {

@@ -3,10 +3,10 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Entity\UserActivity;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
  * Class EventListener
@@ -36,6 +36,7 @@ abstract class ActivityEventListener implements EventSubscriberInterface
     {
         /** @var Registry $doctrine */
         $doctrine = $this->container->get('doctrine');
+
         return $doctrine;
     }
 
@@ -50,11 +51,9 @@ abstract class ActivityEventListener implements EventSubscriberInterface
             $em = $this->getDoctrine()->getManager();
             $em->persist($activity);
             $em->flush();
-        }
-        catch (DBALException $e) {
+        } catch (DBALException $e) {
             $this->container->get('logger')->error(
-                'Unable to save user activity log to database with message ' .
-                $e->getMessage()
+                'Unable to save user activity log to database with message ' . $e->getMessage()
             );
         }
     }
