@@ -4,14 +4,15 @@ security:
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
-        ROLE_API:         ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
         in_memory:
             memory:
                 users:
-                    restapi:  { password: secretpw, roles: [ 'ROLE_API' ] }
+                    grouphub:
+                        password: %password_user%
+                        roles: 'ROLE_USER'
 
     firewalls:
         dev:
@@ -19,8 +20,9 @@ security:
             security: false
 
         main:
-            pattern: ^/
-            anonymous: ~
             stateless:  true
-            http_basic:
-                realm: "GroupHub REST API (username: restapi, password: secretpw)"
+            anonymous: ~
+            http_basic: ~
+
+    access_control:
+        - { path: ^/, roles: ROLE_USER }
