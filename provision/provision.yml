@@ -33,7 +33,7 @@
           { option: "opcache.memory_consumption", section: "PHP", value: "128" },
           { option: "opcache.interned_strings_buffer", section: "PHP", value: "8" },
           { option: "opcache.max_accelerated_files", section: "PHP", value: "4000" },
-          { option: "opcache.revalidate_freq", section: "PHP", value: "60" },
+          { option: "opcache.revalidate_freq", section: "PHP", value: "0" },
           { option: "opcache.fast_shutdown", section: "PHP", value: "1" }
         ]
       }
