@@ -12,6 +12,7 @@ use AppBundle\Form\UserInGroupType;
 use AppBundle\Form\UserInGroupUpdateType;
 use DateTime;
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\QueryBuilder;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -38,6 +39,7 @@ class GroupController extends FOSRestController
      *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
      *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"},
      *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter, either 'ldap' or '!ldap'"}
+     *      {"name"="query", "dataType"="string", "required"=false, "description"="search filter"}
      *  },
      *  output="ArrayCollection<AppBundle\Entity\UserGroup>",
      *  statusCodes = {
@@ -55,7 +57,11 @@ class GroupController extends FOSRestController
         $offset = $request->query->getInt('offset', 0);
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
-        $type = $request->query->get('type', null);
+        $type = $request->query->get('type');
+        $query = $request->query->get('query');
+
+        /** @var QueryBuilder $qb */
+        $qb = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->createQueryBuilder('g');
 
         $typeFilter = '1 = 1';
 
@@ -67,8 +73,20 @@ class GroupController extends FOSRestController
             $typeFilter = 'g.type != \'ldap\'';
         }
 
-        $list =  $this->getDoctrine()->getRepository('AppBundle:UserGroup')->createQueryBuilder('g')
-            ->andWhere('g.active = 1')->andWhere($typeFilter)
+        $queryFilter = '1 = 1';
+        if (!empty($query)) {
+            $queryFilter = $qb->expr()->orX(
+                $qb->expr()->like('g.name', ':query'),
+                $qb->expr()->like('g.description', ':query')
+            );
+
+            $qb->setParameter('query', '%'.$query.'%');
+        }
+
+        $list = $qb
+            ->andWhere('g.active = 1')
+            ->andWhere($typeFilter)
+            ->andWhere($queryFilter)
             ->orderBy('g.' . $sort, 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
