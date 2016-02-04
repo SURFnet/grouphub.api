@@ -38,7 +38,7 @@ class GroupController extends FOSRestController
      *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
      *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
      *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"},
-     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter, either 'ldap' or '!ldap'"}
+     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter, either 'ldap' or '!ldap'"},
      *      {"name"="query", "dataType"="string", "required"=false, "description"="search filter"}
      *  },
      *  output="ArrayCollection<AppBundle\Entity\UserGroup>",
