@@ -76,7 +76,7 @@ class UserGroup
     /**
      * @var string
      *
-     * @ORM\Column(name="Reference", type="string", unique=true)
+     * @ORM\Column(name="Reference", type="string", unique=true, nullable=true)
      * @Required()
      * @Expose()
      */

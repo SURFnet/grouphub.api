@@ -28,10 +28,7 @@ class UserGroupType extends AbstractType
             ]
         )->add(
             'reference',
-            'text',
-            [
-                'constraints' => new NotBlank(),
-            ]
+            'text'
         )->add(
             'owner',
             'entity',
