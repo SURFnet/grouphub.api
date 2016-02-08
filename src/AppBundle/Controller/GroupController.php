@@ -38,7 +38,7 @@ class GroupController extends FOSRestController
      *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
      *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
      *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"},
-     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter, either 'ldap' or '!ldap'"},
+     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter, either 'ldap', '!ldap' or 'formal'"},
      *      {"name"="query", "dataType"="string", "required"=false, "description"="search filter"}
      *  },
      *  output="ArrayCollection<AppBundle\Entity\UserGroup>",
@@ -71,6 +71,10 @@ class GroupController extends FOSRestController
 
         if ($type === '!ldap') {
             $typeFilter = 'g.type != \'ldap\'';
+        }
+
+        if ($type === 'formal') {
+            $typeFilter = 'g.type = \'formal\'';
         }
 
         $queryFilter = '1 = 1';
