@@ -26,7 +26,9 @@ class UserController extends FOSRestController
      *  parameters = {
      *      {"name"="offset", "dataType"="int", "required"=false, "description"="offset for retrieving resources"},
      *      {"name"="limit", "dataType"="int", "required"=false, "description"="limit for retrieving resources"},
-     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"}
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"},
+     *      {"name"="reference", "dataType"="string", "required"=false, "description"="filter"},
+     *      {"name"="login_name", "dataType"="string", "required"=false, "description"="filter"}
      *  },
      *  output="ArrayCollection<AppBundle\Entity\User>",
      *  statusCodes = {
@@ -45,6 +47,7 @@ class UserController extends FOSRestController
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
         $reference = $request->query->get('reference');
+        $loginName = $request->query->get('login_name');
 
         $qb = $this->getDoctrine()->getRepository('AppBundle:User')->createQueryBuilder('u');
 
@@ -52,6 +55,10 @@ class UserController extends FOSRestController
 
         if ($reference !== null) {
             $qb->andWhere('u.reference = :reference')->setParameter('reference', $reference);
+        }
+
+        if ($loginName !== null) {
+            $qb->andWhere('u.loginName = :loginName')->setParameter('loginName', $loginName);
         }
 
         $result = $qb->getQuery()->getResult();
