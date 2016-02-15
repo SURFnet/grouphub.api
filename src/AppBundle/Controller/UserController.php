@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use AppBundle\Event\UserEvent;
 use AppBundle\Form\UserType;
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\QueryBuilder;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -48,7 +49,9 @@ class UserController extends FOSRestController
         $sort = $request->query->get('sort', 'reference');
         $reference = $request->query->get('reference');
         $loginName = $request->query->get('login_name');
+        $query = $request->query->get('query');
 
+        /** @var QueryBuilder $qb */
         $qb = $this->getDoctrine()->getRepository('AppBundle:User')->createQueryBuilder('u');
 
         $qb->where('u.type = \'ldap\'')->orderBy('u.' . $sort, 'ASC')->setFirstResult($offset)->setMaxResults($limit);
@@ -59,6 +62,18 @@ class UserController extends FOSRestController
 
         if ($loginName !== null) {
             $qb->andWhere('u.loginName = :loginName')->setParameter('loginName', $loginName);
+        }
+
+        if (!empty($query)) {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like('u.firstName', ':query'),
+                    $qb->expr()->like('u.lastName', ':query'),
+                    $qb->expr()->like('u.loginName', ':query')
+                )
+            );
+
+            $qb->setParameter('query', '%'.$query.'%');
         }
 
         $result = $qb->getQuery()->getResult();

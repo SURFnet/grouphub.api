@@ -341,9 +341,25 @@ class GroupController extends FOSRestController
         $offset = $request->query->getInt('offset', 0);
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
+        $query = $request->query->get('query');
 
-        $list =  $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->createQueryBuilder('ug')
-            ->where('ug.group = :id')
+        /** @var QueryBuilder $qb */
+        $qb = $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->createQueryBuilder('ug');
+
+        if (!empty($query)) {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like('u.firstName', ':query'),
+                    $qb->expr()->like('u.lastName', ':query'),
+                    $qb->expr()->like('u.loginName', ':query')
+                )
+            );
+
+            $qb->setParameter('query', '%'.$query.'%');
+        }
+
+        $list =  $qb
+            ->andWhere('ug.group = :id')
             ->setParameter('id', $id)
             ->join('ug.user', 'u')
             ->orderBy('u.' . $sort, 'ASC')
