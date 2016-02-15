@@ -78,7 +78,7 @@ class UserController extends FOSRestController
 
         $result = $qb->getQuery()->getResult();
 
-        if (count($result) === 1) {
+        if (!empty($loginName) && count($result) === 1) {
             $result = current($result);
         }
 

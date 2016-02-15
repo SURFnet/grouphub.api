@@ -3,12 +3,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Class UserAnnotation
  *
  * @ORM\Entity
  * @ORM\Table(name="UserAnnotation")
+ *
+ * @ExclusionPolicy("all")
  */
 class UserAnnotation
 {
@@ -25,6 +29,8 @@ class UserAnnotation
      * @var string
      *
      * @ORM\Column(name="AnnotationAttribute", type="string", nullable=true)
+     *
+     * @Expose()
      */
     protected $attribute;
 
@@ -32,6 +38,8 @@ class UserAnnotation
      * @var string
      *
      * @ORM\Column(name="AnnotationValue", type="string", nullable=true)
+     *
+     * @Expose()
      */
     protected $value;
 
@@ -45,7 +53,7 @@ class UserAnnotation
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="annotations")
      * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId", onDelete="CASCADE")
      */
     protected $user;

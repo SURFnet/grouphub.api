@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Annotations\Annotation\Required;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
@@ -76,6 +77,23 @@ class User
      * @Expose()
      */
     protected $reference;
+
+    /**
+     * @var UserAnnotation[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserAnnotation", mappedBy="user", orphanRemoval=true, cascade={"persist"})
+     *
+     * @Expose()
+     */
+    protected $annotations;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->annotations = new ArrayCollection();
+    }
 
     /**
      * Set id
@@ -235,5 +253,31 @@ class User
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return UserAnnotation[]
+     */
+    public function getAnnotations()
+    {
+        return $this->annotations;
+    }
+
+    /**
+     * @param UserAnnotation $annotation
+     */
+    public function addAnnotation(UserAnnotation $annotation)
+    {
+        $annotation->setUser($this);
+
+        $this->annotations->add($annotation);
+    }
+
+    /**
+     * @param UserAnnotation $annotation
+     */
+    public function removeAnnotation(UserAnnotation $annotation)
+    {
+        $this->annotations->removeElement($annotation);
     }
 }

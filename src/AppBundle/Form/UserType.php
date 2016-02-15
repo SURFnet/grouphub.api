@@ -29,6 +29,15 @@ class UserType extends AbstractType
             [
                 'constraints' => new NotBlank(),
             ]
+        )->add(
+            'annotations',
+            'collection',
+            [
+                'type'         => new UserAnnotationType(),
+                'allow_add'    => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+            ]
         );
     }
 
