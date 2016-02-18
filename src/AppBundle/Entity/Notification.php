@@ -20,6 +20,7 @@ class Notification
      * @ORM\Id()
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
      * @Expose()
      */
     protected $id;
@@ -71,6 +72,15 @@ class Notification
     protected $type;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     *
+     * @Expose()
+     */
+    protected $created;
+
+    /**
      * @param User      $to
      * @param User      $from
      * @param string    $type
@@ -89,6 +99,8 @@ class Notification
         $this->type = $type;
         $this->message = $message;
         $this->group = $group;
+
+        $this->created = new \DateTime();
     }
 
     /**
