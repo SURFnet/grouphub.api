@@ -17,6 +17,10 @@ user_group:
     resource: "@AppBundle/Controller/UserGroupController.php"
     type:     rest
 
+notification:
+    resource: "@AppBundle/Controller/UserNotificationController.php"
+    type:     rest
+
 NelmioApiDocBundle:
   resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
   prefix:   /api/doc
