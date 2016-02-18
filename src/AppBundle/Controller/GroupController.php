@@ -419,6 +419,7 @@ class GroupController extends FOSRestController
 
                 $event = new GroupEvent($group);
                 $event->setUser($userInGroup);
+                $event->setMessage($form->get('message')->getData());
                 $this->fireEvent('app.event.group.useradd', $event);
 
                 return $this->routeRedirectView('get_group_users', ['id' => $group->getId()]);

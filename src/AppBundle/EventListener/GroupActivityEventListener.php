@@ -2,8 +2,9 @@
 
 namespace AppBundle\EventListener;
 
-use AppBundle\Event\GroupEvent;
+use AppBundle\Entity\Notification;
 use AppBundle\Entity\UserActivity;
+use AppBundle\Event\GroupEvent;
 
 /**
  * Class UserEventListener
@@ -90,6 +91,20 @@ class GroupActivityEventListener extends ActivityEventListener
             ' to group with id ' . $event->getGroup()->getId()
         );
         $this->saveActivity($activity);
+
+        if ($event->getUser()->getRole() === 'prospect') {
+            $notification = new Notification(
+                $event->getGroup()->getOwner(),
+                $event->getUser()->getUser(),
+                Notification::TYPE_PROSPECT,
+                $event->getMessage(),
+                $event->getGroup()
+            );
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($notification);
+            $em->flush();
+        }
     }
 
     public function groupUserUpdate(GroupEvent $event)

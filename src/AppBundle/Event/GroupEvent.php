@@ -8,8 +8,8 @@
 namespace AppBundle\Event;
 
 use AppBundle\Entity\UserGroup;
-use AppBundle\Entity\UserInGroup;
 use AppBundle\Entity\UserGroupInGroup;
+use AppBundle\Entity\UserInGroup;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -31,6 +31,14 @@ class GroupEvent extends Event
      */
     protected $groupInGroup;
 
+    /**
+     * @var string
+     */
+    protected $message;
+
+    /**
+     * @param UserGroup $group
+     */
     public function __construct(UserGroup $group)
     {
         $this->group = $group;
@@ -76,5 +84,21 @@ class GroupEvent extends Event
     public function setGroupInGroup($groupInGroup)
     {
         $this->groupInGroup = $groupInGroup;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param string $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
     }
 }

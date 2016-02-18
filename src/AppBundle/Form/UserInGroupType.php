@@ -25,6 +25,12 @@ class UserInGroupType extends AbstractType
             [
                 'constraints' => new NotBlank(),
             ]
+        )->add(
+            'message',
+            'text',
+            [
+                'mapped' => false
+            ]
         );
     }
 
