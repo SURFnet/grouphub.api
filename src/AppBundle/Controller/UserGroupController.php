@@ -7,6 +7,7 @@ use AppBundle\Entity\UserInGroup;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Rest controller for users.
@@ -33,17 +34,27 @@ class UserGroupController extends FOSRestController
      *   }
      * )
      *
-     * @param int $id
+     * @param int     $id
+     * @param Request $request
      *
      * @return array
      */
-    public function getUserGroupsAction($id)
+    public function getUserGroupsAction($id, Request $request)
     {
+        $sort = $request->query->get('sort', 'reference');
+
+        $sortDir = 'ASC';
+        if ($sort[0] === '-') {
+            $sortDir = 'DESC';
+            $sort = substr($sort, 1);
+        }
+
         /** @var UserGroup[] $other */
         $owned = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->createQueryBuilder('g')
             ->andWhere('g.active = 1')
             ->andWhere('g.owner = :user')
             ->setParameter('user', $id)
+            ->addOrderBy('g.' . $sort, $sortDir)
             ->getQuery()
             ->getResult();
 
@@ -53,6 +64,8 @@ class UserGroupController extends FOSRestController
             ->andWhere('g.active = 1')
             ->andWhere('ug.user = :user')
             ->setParameter('user', $id)
+            ->addOrderBy('ug.role', 'ASC')
+            ->addOrderBy('g.' . $sort, $sortDir)
             ->getQuery()
             ->getResult();
 

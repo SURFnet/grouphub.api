@@ -37,7 +37,7 @@ class GroupController extends FOSRestController
      *  parameters = {
      *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
      *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
-     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"},
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property, prefix with '-' to change the order"},
      *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter, either 'ldap', '!ldap' or 'formal'"},
      *      {"name"="query", "dataType"="string", "required"=false, "description"="search filter"}
      *  },
@@ -65,6 +65,12 @@ class GroupController extends FOSRestController
 
         $typeFilter = '1 = 1';
 
+        $sortDir = 'ASC';
+        if ($sort[0] === '-') {
+            $sortDir = 'DESC';
+            $sort = substr($sort, 1);
+        }
+
         if ($type === 'ldap') {
             $typeFilter = 'g.type = \'ldap\'';
         }
@@ -91,7 +97,7 @@ class GroupController extends FOSRestController
             ->andWhere('g.active = 1')
             ->andWhere($typeFilter)
             ->andWhere($queryFilter)
-            ->orderBy('g.' . $sort, 'ASC')
+            ->orderBy('g.' . $sort, $sortDir)
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery()
