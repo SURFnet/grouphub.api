@@ -13,6 +13,7 @@ use AppBundle\Form\UserInGroupUpdateType;
 use DateTime;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -93,17 +94,23 @@ class GroupController extends FOSRestController
             $qb->setParameter('query', '%'.$query.'%');
         }
 
-        $list = $qb
+        $query = $qb
             ->andWhere('g.active = 1')
             ->andWhere($typeFilter)
             ->andWhere($queryFilter)
             ->orderBy('g.' . $sort, $sortDir)
             ->setFirstResult($offset)
             ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
 
-        return $this->view($list);
+        $paginator = new Paginator($query);
+
+        $result = [
+            'count' => $paginator->count(),
+            'items' => $paginator->getIterator()->getArrayCopy(),
+        ];
+
+        return $this->view($result);
     }
 
     /**
