@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use DateTime;
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
@@ -268,6 +269,8 @@ class UserGroup
      */
     public function getUserCount()
     {
-        return $this->users->count();
+        $criteria = Criteria::create()->where(Criteria::expr()->neq('role', 'prospect'));
+
+        return $this->users->matching($criteria)->count();
     }
 }
