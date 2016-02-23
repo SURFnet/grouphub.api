@@ -81,7 +81,7 @@ class User
     /**
      * @var UserAnnotation[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserAnnotation", mappedBy="user", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserAnnotation", mappedBy="user", orphanRemoval=true, cascade={"persist"}, fetch="EAGER")
      *
      * @Expose()
      */
