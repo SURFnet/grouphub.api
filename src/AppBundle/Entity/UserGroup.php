@@ -4,9 +4,11 @@ namespace AppBundle\Entity;
 
 use DateTime;
 use Doctrine\Common\Annotations\Annotation\Required;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -100,6 +102,20 @@ class UserGroup
      * @Expose()
      */
     protected $parent;
+
+    /**
+     * @var UserInGroup[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserInGroup", mappedBy="group", fetch="EXTRA_LAZY")
+     */
+    protected $users;
+
+    /**
+     */
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     /**
      * @return UserGroup
@@ -243,5 +259,15 @@ class UserGroup
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @VirtualProperty
+     *
+     * @return int
+     */
+    public function getUserCount()
+    {
+        return $this->users->count();
     }
 }

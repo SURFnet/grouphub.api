@@ -31,7 +31,7 @@ class UserInGroup
      * @var UserGroup
      *
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup", inversedBy="users")
      * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId", onDelete="CASCADE")
      * @Required()
      * @Expose()
