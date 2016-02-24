@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -13,11 +14,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class UserNotificationController extends FOSRestController
 {
     /**
-     * @param int $id
+     * @param int     $id
+     * @param Request $request
      *
      * @return View
      */
-    public function getUserNotificationsAction($id)
+    public function getUserNotificationsAction($id, Request $request)
     {
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
@@ -26,7 +28,13 @@ class UserNotificationController extends FOSRestController
             throw new NotFoundHttpException('User with id: ' . $id . ' not found');
         }
 
-        $notifications = $this->getDoctrine()->getRepository('AppBundle:Notification')->findBy(['to' => $user]);
+        $filters = ['to' => $user];
+
+        if ($request->query->has('group')) {
+            $filters['group'] = $request->query->getInt('group');
+        }
+
+        $notifications = $this->getDoctrine()->getRepository('AppBundle:Notification')->findBy($filters);
 
         return $this->view($notifications);
     }
