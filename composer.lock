@@ -847,16 +847,16 @@
         },
         {
             "name": "friendsofsymfony/http-cache-bundle",
-            "version": "1.3.6",
+            "version": "1.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSHttpCacheBundle.git",
-                "reference": "49e9fa198cdcb0d80e9da7b2c2eb1e43537bc622"
+                "reference": "f12b74b422e46c65daae8b3363bcf555f6957eea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSHttpCacheBundle/zipball/49e9fa198cdcb0d80e9da7b2c2eb1e43537bc622",
-                "reference": "49e9fa198cdcb0d80e9da7b2c2eb1e43537bc622",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSHttpCacheBundle/zipball/f12b74b422e46c65daae8b3363bcf555f6957eea",
+                "reference": "f12b74b422e46c65daae8b3363bcf555f6957eea",
                 "shasum": ""
             },
             "require": {
@@ -923,7 +923,7 @@
                 "purge",
                 "varnish"
             ],
-            "time": "2015-12-11 17:44:26"
+            "time": "2016-02-24 21:36:18"
         },
         {
             "name": "friendsofsymfony/rest-bundle",
@@ -2465,16 +2465,16 @@
         },
         {
             "name": "willdurand/hateoas",
-            "version": "v2.9.0",
+            "version": "2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/willdurand/Hateoas.git",
-                "reference": "6e6ee945100bef3534c9276f0cf1c70d0115670c"
+                "reference": "1add9a4448793cf40b52544136532b9752e06d7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/willdurand/Hateoas/zipball/6e6ee945100bef3534c9276f0cf1c70d0115670c",
-                "reference": "6e6ee945100bef3534c9276f0cf1c70d0115670c",
+                "url": "https://api.github.com/repos/willdurand/Hateoas/zipball/1add9a4448793cf40b52544136532b9752e06d7b",
+                "reference": "1add9a4448793cf40b52544136532b9752e06d7b",
                 "shasum": ""
             },
             "require": {
@@ -2483,16 +2483,15 @@
                 "jms/metadata": "~1.1",
                 "jms/serializer": "~1.0",
                 "php": ">=5.4",
+                "phpoption/phpoption": ">=1.1.0,<2.0-dev",
                 "symfony/expression-language": "~2.4 || ~3.0"
             },
             "require-dev": {
-                "atoum/atoum": "*@dev",
-                "hautelook/frankenstein": "~0.1",
                 "pagerfanta/pagerfanta": "~1.0",
-                "phpunit/phpunit": "~3.7",
-                "symfony/dependency-injection": "~2.0 || ~3.0",
-                "symfony/routing": "~2.0 || ~3.0",
-                "symfony/yaml": "~2.0 || ~3.0",
+                "phpunit/phpunit": "~4.5",
+                "symfony/dependency-injection": "~2.4 || ~3.0",
+                "symfony/routing": "~2.4 || ~3.0",
+                "symfony/yaml": "~2.4 || ~3.0",
                 "twig/twig": "~1.12"
             },
             "suggest": {
@@ -2526,7 +2525,7 @@
                 }
             ],
             "description": "A PHP library to support implementing representations for HATEOAS REST web services",
-            "time": "2015-12-04 15:31:02"
+            "time": "2016-01-26 15:39:06"
         },
         {
             "name": "willdurand/hateoas-bundle",
