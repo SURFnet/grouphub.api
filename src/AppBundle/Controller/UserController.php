@@ -7,6 +7,7 @@ use AppBundle\Event\UserEvent;
 use AppBundle\Form\UserType;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -76,10 +77,17 @@ class UserController extends FOSRestController
             $qb->setParameter('query', '%'.$query.'%');
         }
 
-        $result = $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
 
-        if (!empty($loginName) && count($result) === 1) {
-            $result = current($result);
+        $paginator = new Paginator($query);
+
+        $result = [
+            'count' => $paginator->count(),
+            'items' => $paginator->getIterator()->getArrayCopy(),
+        ];
+
+        if (!empty($loginName) && $result['count'] === 1) {
+            $result = current($result['items']);
         }
 
         return $this->view($result);
