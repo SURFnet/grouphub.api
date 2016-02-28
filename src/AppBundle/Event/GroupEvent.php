@@ -1,9 +1,4 @@
 <?php
-/**
- * @file
- * Project: grouphub.api
- * File: UserAddEvent.php
- */
 
 namespace AppBundle\Event;
 
@@ -14,7 +9,6 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class GroupEvent
- * @package AppBundle\Event
  */
 class GroupEvent extends Event
 {
@@ -22,10 +16,12 @@ class GroupEvent extends Event
      * @var UserGroup
      */
     protected $group;
+
     /**
      * @var UserInGroup
      */
     protected $user;
+
     /**
      * @var UserGroupInGroup
      */
