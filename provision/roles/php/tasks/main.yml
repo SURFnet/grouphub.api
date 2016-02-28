@@ -20,13 +20,13 @@
     - php5-redis
     - php5-mcrypt
     - php5-xsl
-    - php5-xhprof
+    - php5-intl
+    - php5-apcu
 
 - name: Configure php.ini
   lineinfile: dest=/etc/php5/cli/php.ini line="{{ item.line }}" regexp="{{ item.regexp }}" backup=yes
   with_items:
     - { line: "date.timezone={{ timezone }}", regexp: "date.timezone" }
-    - { line: "max_execution_time = 0", regexp: "max_execution_time" }
 
 - include: xdebug.yml
   when: enable_xdebug

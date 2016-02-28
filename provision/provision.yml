@@ -15,6 +15,7 @@
     - { role: php, enable_xdebug: true }
     - { role: mysql, mysql_root_password: "root", mysql_bind_address: "127.0.0.1" }
     - { role: franklinkim.redis }
+    - { role: geerlingguy.composer }
     - { role: nbz4live.php-fpm,
         php_fpm_pools: [
           {
@@ -96,9 +97,3 @@
       command: a2dissite default
 
     - service: name=apache2 state=restarted enabled=yes
-
-    - name: Configure XHProf
-      lineinfile: dest=/etc/php5/mods-available/xhprof.ini line="{{ item }}" backup=yes
-      with_items:
-        - xhprof.output_dir="{{ projectdir }}/xhprof"
-      notify: restart php-fpm
