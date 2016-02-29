@@ -19,6 +19,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -316,9 +317,12 @@ class GroupController extends FOSRestController
      */
     public function deleteGroupAction($id)
     {
-        // @todo: not allowed to disable group which is a parent
-
         $group = $this->getGroup($id);
+
+        $children = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findBy(['parent' => $id, 'active' => 1]);
+        if (!empty($children)) {
+            throw new BadRequestHttpException('Parent groups cannot be disabled');
+        }
 
         $group->setActive(0);
 
@@ -615,6 +619,7 @@ class GroupController extends FOSRestController
      */
     public function deleteGroupGroupsAction($groupId, $groupInGroupId)
     {
+        /** @var UserGroupInGroup $groupInGroup */
         $groupInGroup = $this->getDoctrine()->getRepository('AppBundle:UserGroupInGroup')->findOneBy(
             ['group' => $groupId, 'groupInGroup' => $groupInGroupId]
         );
