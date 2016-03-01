@@ -48,3 +48,16 @@ After starting and provisioning your vagrant box you can go to:
 ## API Documentation
 Or when you have the vagrant box running you can go to <http://dev.api.grouphub.org/app_dev.php/api/doc> to see the
 runtime documentation version.
+
+# Deployment
+
+## Requirements
+
+ - apache2
+ - php
+ - mysql
+ - git
+ - acl
+ - php5-intl
+ - php5-curl
+ - php5-apcu
