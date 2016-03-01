@@ -3,10 +3,11 @@
 namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserGroup;
+use AppBundle\Entity\UserInGroup;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Entity\UserGroup;
 
 /**
  * Class LoadGroupData
@@ -32,6 +33,12 @@ class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
         $group->setReference('sys:formal_group');
         $group->setActive(1);
         $manager->persist($group);
+
+        $membership = new UserInGroup();
+        $membership->setGroup($group);
+        $membership->setUser($this->getReference('admin-user'));
+        $membership->setRole('member');
+        $manager->persist($membership);
 
         $manager->flush();
     }

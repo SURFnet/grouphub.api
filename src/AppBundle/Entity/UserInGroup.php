@@ -48,7 +48,7 @@ class UserInGroup
     protected $role;
 
     /**
-     * @return int
+     * @return string
      */
     public function getRole()
     {
@@ -56,7 +56,7 @@ class UserInGroup
     }
 
     /**
-     * @param int $role
+     * @param string $role
      */
     public function setRole($role)
     {
