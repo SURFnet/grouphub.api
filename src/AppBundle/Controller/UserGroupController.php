@@ -42,6 +42,12 @@ class UserGroupController extends FOSRestController
     public function getUserGroupsAction($id, Request $request)
     {
         $sort = $request->query->get('sort', 'reference');
+        $type = $request->query->get('type');
+
+        $typeFilter = '1 = 1';
+        if ($type === 'formal') {
+            $typeFilter = 'g.type = \'formal\'';
+        }
 
         $sortDir = 'ASC';
         if ($sort[0] === '-') {
@@ -53,6 +59,7 @@ class UserGroupController extends FOSRestController
         $owned = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->createQueryBuilder('g')
             ->andWhere('g.active = 1')
             ->andWhere('g.owner = :user')
+            ->andWhere($typeFilter)
             ->setParameter('user', $id)
             ->addOrderBy('g.' . $sort, $sortDir)
             ->getQuery()
@@ -63,6 +70,7 @@ class UserGroupController extends FOSRestController
             ->join('ug.group', 'g')
             ->andWhere('g.active = 1')
             ->andWhere('ug.user = :user')
+            ->andWhere($typeFilter)
             ->setParameter('user', $id)
             ->addOrderBy('ug.role', 'ASC')
             ->addOrderBy('g.' . $sort, $sortDir)
