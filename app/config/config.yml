@@ -105,3 +105,7 @@ monolog:
         chromephp:
             type:  chromephp
             level: info
+
+accelerator_cache:
+    host: %url%
+    web_dir: %kernel.root_dir%/../web
