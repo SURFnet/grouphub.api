@@ -86,7 +86,7 @@ class UserController extends FOSRestController
             'items' => $paginator->getIterator()->getArrayCopy(),
         ];
 
-        if (!empty($loginName) && $result['count'] === 1) {
+        if ((!empty($loginName) || !empty($reference)) && $result['count'] === 1) {
             $result = current($result['items']);
         }
 
