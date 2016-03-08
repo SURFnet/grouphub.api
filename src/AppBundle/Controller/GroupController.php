@@ -359,6 +359,7 @@ class GroupController extends FOSRestController
         $limit = $request->query->getInt('limit', 100);
         $sort = $request->query->get('sort', 'reference');
         $query = $request->query->get('query');
+        $users = (array)$request->query->get('users');
 
         /** @var QueryBuilder $qb */
         $qb = $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->createQueryBuilder('ug');
@@ -373,6 +374,14 @@ class GroupController extends FOSRestController
             );
 
             $qb->setParameter('query', '%'.$query.'%');
+        }
+
+        if (!empty($users)) {
+            $qb->andWhere($qb->expr()->in('ug.user', ':users'));
+            $qb->setParameter('users', $users);
+
+            $offset = 0;
+            $limit = count($users);
         }
 
         $list =  $qb
