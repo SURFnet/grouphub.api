@@ -384,17 +384,25 @@ class GroupController extends FOSRestController
             $limit = count($users);
         }
 
-        $list =  $qb
+        $qb
             ->andWhere('ug.group = :id')
             ->setParameter('id', $id)
             ->join('ug.user', 'u')
             ->orderBy('u.' . $sort, 'ASC')
             ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setMaxResults($limit);
 
-        return $this->view($list);
+        $query = $qb->getQuery();
+
+        $paginator = new Paginator($query, false);
+
+        $result = [
+            'count' => $paginator->count(),
+            'items' => $paginator->getIterator()->getArrayCopy(),
+        ];
+
+
+        return $this->view($result);
     }
 
     /**
