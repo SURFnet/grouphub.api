@@ -41,13 +41,9 @@ class UserGroupController extends FOSRestController
      */
     public function getUserGroupsAction($id, Request $request)
     {
+        // @todo: move to more generic param parser
         $sort = $request->query->get('sort', 'reference');
         $type = $request->query->get('type');
-
-        $typeFilter = '1 = 1';
-        if ($type === 'formal') {
-            $typeFilter = 'g.type = \'formal\'';
-        }
 
         $sortDir = 'ASC';
         if ($sort[0] === '-') {
@@ -55,37 +51,83 @@ class UserGroupController extends FOSRestController
             $sort = substr($sort, 1);
         }
 
-        /** @var UserGroup[] $other */
-        $owned = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->createQueryBuilder('g')
-            ->andWhere('g.active = 1')
-            ->andWhere('g.owner = :user')
-            ->andWhere($typeFilter)
-            ->setParameter('user', $id)
-            ->addOrderBy('g.' . $sort, $sortDir)
-            ->getQuery()
-            ->getResult();
+        $result = $this->get('app.manager.user_group')->findUserGroups($id, $type, $sort, $sortDir);
 
-        /** @var UserInGroup[] $other */
-        $other = $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->createQueryBuilder('ug')
-            ->join('ug.group', 'g')
-            ->andWhere('g.active = 1')
-            ->andWhere('ug.user = :user')
-            ->andWhere($typeFilter)
-            ->setParameter('user', $id)
-            ->addOrderBy('ug.role', 'ASC')
-            ->addOrderBy('g.' . $sort, $sortDir)
-            ->getQuery()
-            ->getResult();
+        return $this->view($result);
+    }
 
-        $result = [];
+    public function getUserGroupsGroupedAction($id, Request $request)
+    {
+        // @todo: docblocks
+        $offset = $request->query->getInt('offset', 0);
+        $limit = $request->query->getInt('limit', 10);
+        $sort = $request->query->get('sort', 'reference');
+        $type = $request->query->get('type');
 
-        foreach ($owned as $group) {
-            $result[] = ['role' => 'owner', 'group' => $group];
+        $sortDir = 'ASC';
+        if ($sort[0] === '-') {
+            $sortDir = 'DESC';
+            $sort = substr($sort, 1);
         }
 
-        foreach ($other as $group) {
-            $result[] = ['role' => $group->getRole(), 'group' => $group->getGroup()];
+        $result = $this->get('app.manager.user_group')->findUserGroupsGroupedByTypeAndRole($id, $type, $sort, $sortDir, $offset, $limit);
+
+        return $this->view($result);
+    }
+
+    public function getUserGroupsOwnerAction($id, Request $request)
+    {
+        // @todo: docblocks
+        $offset = $request->query->getInt('offset', 0);
+        $limit = $request->query->getInt('limit', 10);
+        $sort = $request->query->get('sort', 'reference');
+        $type = $request->query->get('type');
+
+        $sortDir = 'ASC';
+        if ($sort[0] === '-') {
+            $sortDir = 'DESC';
+            $sort = substr($sort, 1);
         }
+
+        $result = $this->get('app.manager.user_group')->findUserGroupsForRole($id, 'owner', $type, $sort, $sortDir, $offset, $limit);
+
+        return $this->view($result);
+    }
+
+    public function getUserGroupsAdminAction($id, Request $request)
+    {
+        // @todo: docblocks
+        $offset = $request->query->getInt('offset', 0);
+        $limit = $request->query->getInt('limit', 10);
+        $sort = $request->query->get('sort', 'reference');
+        $type = $request->query->get('type');
+
+        $sortDir = 'ASC';
+        if ($sort[0] === '-') {
+            $sortDir = 'DESC';
+            $sort = substr($sort, 1);
+        }
+
+        $result = $this->get('app.manager.user_group')->findUserGroupsForRole($id, 'admin', $type, $sort, $sortDir, $offset, $limit);
+
+        return $this->view($result);
+    }
+
+    public function getUserGroupsMemberAction($id, Request $request)
+    {
+        // @todo: docblocks
+        $offset = $request->query->getInt('offset', 0);
+        $limit = $request->query->getInt('limit', 10);
+        $sort = $request->query->get('sort', 'reference');
+        $type = $request->query->get('type');
+
+        $sortDir = 'ASC';
+        if ($sort[0] === '-') {
+            $sortDir = 'DESC';
+            $sort = substr($sort, 1);
+        }
+
+        $result = $this->get('app.manager.user_group')->findUserGroupsForRole($id, 'member', $type, $sort, $sortDir, $offset, $limit);
 
         return $this->view($result);
     }
@@ -123,6 +165,7 @@ class UserGroupController extends FOSRestController
      */
     public function getUserGroupAction($userId, $groupId)
     {
+        // @todo: move to/merge in manager
         /** @var UserGroup[] $other */
         $owned = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->createQueryBuilder('g')
             ->andWhere('g.id = :groupId')

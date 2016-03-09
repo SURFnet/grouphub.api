@@ -1,4 +1,8 @@
 services:
+  app.manager.user_group:
+    class: AppBundle\Manager\UserGroupManager
+    arguments: ["@doctrine"]
+
   app.event.user:
     class: AppBundle\EventListener\UserActivityEventListener
     arguments: ["@service_container"]
@@ -6,6 +10,7 @@ services:
       - { name: kernel.event_listener, event: app.event.user.add, method: userAdd }
       - { name: kernel.event_listener, event: app.event.user.update, method: userUpdate }
       - { name: kernel.event_listener, event: app.event.user.delete, method: userDelete }
+
   app.event.group:
     class: AppBundle\EventListener\GroupActivityEventListener
     arguments: ["@service_container"]
