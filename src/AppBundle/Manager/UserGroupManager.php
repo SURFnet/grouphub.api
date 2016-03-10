@@ -37,8 +37,15 @@ class UserGroupManager
      *
      * @return array
      */
-    public function findUserGroups($userId, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = 0, $limit = 10, array $groupsIds = [])
-    {
+    public function findUserGroups(
+        $userId,
+        $type = null,
+        $sortColumn = 'reference',
+        $sortDir = 'ASC',
+        $offset = 0,
+        $limit = 10,
+        array $groupsIds = []
+    ) {
         $result = [
             'count' => 0,
             'items' => [],
@@ -67,8 +74,14 @@ class UserGroupManager
      *
      * @return array of collections
      */
-    public function findUserGroupsGroupedByTypeAndRole($userId, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = 0, $limit = 10)
-    {
+    public function findUserGroupsGroupedByTypeAndRole(
+        $userId,
+        $type = null,
+        $sortColumn = 'reference',
+        $sortDir = 'ASC',
+        $offset = 0,
+        $limit = 10
+    ) {
         $result = [];
 
         if ($type === null) {
@@ -106,8 +119,16 @@ class UserGroupManager
      *
      * @return array collection
      */
-    public function findUserGroupsForRole($userId, $role, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = 0, $limit = 10, array $groups = [])
-    {
+    public function findUserGroupsForRole(
+        $userId,
+        $role,
+        $type = null,
+        $sortColumn = 'reference',
+        $sortDir = 'ASC',
+        $offset = 0,
+        $limit = 10,
+        array $groups = []
+    ) {
         if ($role === 'owner') {
             $query = $this->getOwnerGroupsQuery($userId, $type, $sortColumn, $sortDir, $offset, $limit, $groups);
 
@@ -198,8 +219,15 @@ class UserGroupManager
      *
      * @return \Doctrine\ORM\Query
      */
-    private function getOwnerGroupsQuery($userId, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = null, $limit = null, array $groups = [])
-    {
+    private function getOwnerGroupsQuery(
+        $userId,
+        $type = null,
+        $sortColumn = 'reference',
+        $sortDir = 'ASC',
+        $offset = null,
+        $limit = null,
+        array $groups = []
+    ) {
         /** @var QueryBuilder $qb */
         $qb = $this->doctrine->getManager()->createQueryBuilder();
 
@@ -250,8 +278,16 @@ class UserGroupManager
      *
      * @return \Doctrine\ORM\Query
      */
-    private function getOtherGroupsQuery($userId, $role = null, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = null, $limit = null, array $groups = [])
-    {
+    private function getOtherGroupsQuery(
+        $userId,
+        $role = null,
+        $type = null,
+        $sortColumn = 'reference',
+        $sortDir = 'ASC',
+        $offset = null,
+        $limit = null,
+        array $groups = []
+    ) {
         /** @var QueryBuilder $qb */
         $qb = $this->doctrine->getManager()->createQueryBuilder();
 
