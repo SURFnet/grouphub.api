@@ -67,6 +67,7 @@ class UserGroupController extends FOSRestController
         $offset = $request->query->getInt('offset', 0);
         $limit = $request->query->getInt('limit', 10);
         $sort = $request->query->get('sort', 'reference');
+        $type = $request->query->get('type');
 
         $sortDir = 'ASC';
         if ($sort[0] === '-') {
@@ -76,6 +77,7 @@ class UserGroupController extends FOSRestController
 
         $result = $this->get('app.manager.user_group')->findUserGroupsGroupedByTypeAndRole(
             $id,
+            $type,
             $sort,
             $sortDir,
             $offset,

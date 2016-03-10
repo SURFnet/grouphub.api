@@ -58,6 +58,7 @@ class UserGroupManager
 
     /**
      * @param int    $userId
+     * @param string $type
      * @param string $sortColumn
      * @param string $sortDir
      * @param int    $offset
@@ -65,11 +66,17 @@ class UserGroupManager
      *
      * @return array of collections
      */
-    public function findUserGroupsGroupedByTypeAndRole($userId, $sortColumn = 'reference', $sortDir = 'ASC', $offset = 0, $limit = 10)
+    public function findUserGroupsGroupedByTypeAndRole($userId, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = 0, $limit = 10)
     {
         $result = [];
 
-        foreach ([UserGroup::TYPE_GROUPHUB, 'other'] as $type) {
+        if ($type === null) {
+            $types = [UserGroup::TYPE_GROUPHUB, 'other'];
+        } else {
+            $types = [$type];
+        }
+
+        foreach ($types as $type) {
             foreach (['owner', UserInGroup::ROLE_ADMIN, UserInGroup::ROLE_MEMBER, UserInGroup::ROLE_PROSPECT] as $role) {
                 $result[$type][$role] = $this->findUserGroupsForRole(
                     $userId,
