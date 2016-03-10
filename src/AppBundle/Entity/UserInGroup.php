@@ -16,6 +16,10 @@ use JMS\Serializer\Annotation\Expose;
  */
 class UserInGroup
 {
+    const ROLE_ADMIN = 'admin';
+    const ROLE_MEMBER = 'member';
+    const ROLE_PROSPECT = 'prospect';
+
     /**
      * @var User
      *

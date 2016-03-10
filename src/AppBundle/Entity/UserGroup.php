@@ -22,6 +22,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class UserGroup
 {
+    const TYPE_LDAP = 'ldap';
+    const TYPE_FORMAL = 'formal';
+    const TYPE_GROUPHUB = 'grouphub';
+
     /**
      * @var int
      *
@@ -269,7 +273,7 @@ class UserGroup
      */
     public function getUserCount()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->neq('role', 'prospect'));
+        $criteria = Criteria::create()->where(Criteria::expr()->neq('role', UserInGroup::ROLE_PROSPECT));
 
         return $this->users->matching($criteria)->count();
     }

@@ -4,6 +4,7 @@ namespace AppBundle\EventListener;
 
 use AppBundle\Entity\Notification;
 use AppBundle\Entity\UserActivity;
+use AppBundle\Entity\UserInGroup;
 use AppBundle\Event\GroupEvent;
 
 /**
@@ -92,7 +93,7 @@ class GroupActivityEventListener extends ActivityEventListener
         );
         $this->saveActivity($activity);
 
-        if ($event->getUser()->getRole() === 'prospect') {
+        if ($event->getUser()->getRole() === UserInGroup::ROLE_PROSPECT) {
             $notification = new Notification(
                 $event->getGroup()->getOwner(),
                 $event->getUser()->getUser(),
