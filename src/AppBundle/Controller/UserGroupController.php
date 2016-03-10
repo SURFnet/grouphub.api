@@ -219,10 +219,6 @@ class UserGroupController extends FOSRestController
     {
         $group = $this->get('app.manager.user_group')->getUserGroup($userId, $groupId);
 
-        if (empty($group)) {
-            throw $this->createNotFoundException();
-        }
-
         return $this->view($group);
     }
 }
