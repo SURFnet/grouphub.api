@@ -44,6 +44,7 @@ class UserGroupController extends FOSRestController
         $limit = $request->query->getInt('limit', 10);
         $sort = $request->query->get('sort', 'reference');
         $type = $request->query->get('type');
+        $groups = (array)$request->query->get('groups');
 
         $sortDir = 'ASC';
         if ($sort[0] === '-') {
@@ -51,7 +52,7 @@ class UserGroupController extends FOSRestController
             $sort = substr($sort, 1);
         }
 
-        $result = $this->get('app.manager.user_group')->findUserGroups($id, $type, $sort, $sortDir, $offset, $limit);
+        $result = $this->get('app.manager.user_group')->findUserGroups($id, $type, $sort, $sortDir, $offset, $limit, $groups);
 
         return $this->view($result);
     }

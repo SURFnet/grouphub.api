@@ -33,10 +33,11 @@ class UserGroupManager
      * @param string $sortDir
      * @param int    $offset
      * @param int    $limit
+     * @param array  $groupsIds
      *
      * @return array
      */
-    public function findUserGroups($userId, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = 0, $limit = 10)
+    public function findUserGroups($userId, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = 0, $limit = 10, array $groupsIds = [])
     {
         $result = [
             'count' => 0,
@@ -44,7 +45,7 @@ class UserGroupManager
         ];
 
         foreach (['owner', UserInGroup::ROLE_ADMIN, UserInGroup::ROLE_MEMBER, UserInGroup::ROLE_PROSPECT] as $role) {
-            $groups = $this->findUserGroupsForRole($userId, $role, $type, $sortColumn, $sortDir, max(0, $offset), $limit);
+            $groups = $this->findUserGroupsForRole($userId, $role, $type, $sortColumn, $sortDir, max(0, $offset), $limit, $groupsIds);
 
             $result['count'] += $groups['count'];
             $result['items'] = array_merge($result['items'], $groups['items']);
@@ -101,13 +102,14 @@ class UserGroupManager
      * @param string $sortDir
      * @param int    $offset
      * @param int    $limit
+     * @param array  $groups
      *
      * @return array collection
      */
-    public function findUserGroupsForRole($userId, $role, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = 0, $limit = 10)
+    public function findUserGroupsForRole($userId, $role, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = 0, $limit = 10, array $groups = [])
     {
         if ($role === 'owner') {
-            $query = $this->getOwnerGroupsQuery($userId, $type, $sortColumn, $sortDir, $offset, $limit);
+            $query = $this->getOwnerGroupsQuery($userId, $type, $sortColumn, $sortDir, $offset, $limit, $groups);
 
             $paginator = new Paginator($query);
 
@@ -123,7 +125,7 @@ class UserGroupManager
             return $result;
         }
 
-        $query = $this->getOtherGroupsQuery($userId, $role, $type, $sortColumn, $sortDir, $offset, $limit);
+        $query = $this->getOtherGroupsQuery($userId, $role, $type, $sortColumn, $sortDir, $offset, $limit, $groups);
 
         $paginator = new Paginator($query, false);
 
@@ -159,7 +161,7 @@ class UserGroupManager
             ->setParameter('groupId', $groupId)
             ->setParameter('userId', $userId)
             ->getQuery()
-            ->getFirstResult();
+            ->getOneOrNullResult();
 
         if (!empty($group)) {
             return ['role' => 'owner', 'group' => $group];
@@ -176,7 +178,7 @@ class UserGroupManager
             ->setParameter('userId', $userId)
             ->setParameter('groupId', $groupId)
             ->getQuery()
-            ->getFirstResult();
+            ->getOneOrNullResult();
 
         if (!empty($group)) {
             return ['role' => $group->getRole(), 'group' => $group->getGroup()];
@@ -192,10 +194,11 @@ class UserGroupManager
      * @param string $sortDir
      * @param int    $offset
      * @param int    $limit
+     * @param array  $groups
      *
      * @return \Doctrine\ORM\Query
      */
-    private function getOwnerGroupsQuery($userId, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = null, $limit = null)
+    private function getOwnerGroupsQuery($userId, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = null, $limit = null, array $groups = [])
     {
         /** @var QueryBuilder $qb */
         $qb = $this->doctrine->getManager()->createQueryBuilder();
@@ -210,6 +213,14 @@ class UserGroupManager
             } else {
                 $qb->andWhere('g.type = :type')->setParameter('type', $type);
             }
+        }
+
+        if (!empty($groups)) {
+            $qb->andWhere($qb->expr()->in('g.id', ':groups'));
+            $qb->setParameter('groups', $groups);
+
+            $offset = 0;
+            $limit = count($groups);
         }
 
         $qb
@@ -235,10 +246,11 @@ class UserGroupManager
      * @param string $sortDir
      * @param int    $offset
      * @param int    $limit
+     * @param array  $groups
      *
      * @return \Doctrine\ORM\Query
      */
-    private function getOtherGroupsQuery($userId, $role = null, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = null, $limit = null)
+    private function getOtherGroupsQuery($userId, $role = null, $type = null, $sortColumn = 'reference', $sortDir = 'ASC', $offset = null, $limit = null, array $groups = [])
     {
         /** @var QueryBuilder $qb */
         $qb = $this->doctrine->getManager()->createQueryBuilder();
@@ -253,6 +265,14 @@ class UserGroupManager
             } else {
                 $qb->andWhere('g.type = :type')->setParameter('type', $type);
             }
+        }
+
+        if (!empty($groups)) {
+            $qb->andWhere($qb->expr()->in('ug.group', ':groups'));
+            $qb->setParameter('groups', $groups);
+
+            $offset = 0;
+            $limit = count($groups);
         }
 
         if ($role !== null) {
