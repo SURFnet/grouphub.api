@@ -9,7 +9,9 @@ framework:
     router:
         strict_requirements: null
     validation:
-        cache: apc
+        cache: validator.mapping.cache.doctrine.apc
+    serializer:
+        cache: serializer.mapping.cache.doctrine.apc
 
 doctrine:
     orm:
