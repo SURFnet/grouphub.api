@@ -92,7 +92,7 @@ class UserGroup
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId")
      * @Required()
      * @Expose()
@@ -102,7 +102,7 @@ class UserGroup
     /**
      * @var UserGroup
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup", fetch="EAGER")
      * @ORM\JoinColumn(name="ParentGroupId", referencedColumnName="UserGroupId", nullable=true)
      * @Expose()
      */
@@ -114,6 +114,11 @@ class UserGroup
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserInGroup", mappedBy="group", fetch="EXTRA_LAZY")
      */
     protected $users;
+
+    /**
+     * @var int
+     */
+    private $userCount;
 
     /**
      */
@@ -273,8 +278,14 @@ class UserGroup
      */
     public function getUserCount()
     {
+        if ($this->userCount !== null) {
+            return $this->userCount;
+        }
+
         $criteria = Criteria::create()->where(Criteria::expr()->neq('role', UserInGroup::ROLE_PROSPECT));
 
-        return $this->users->matching($criteria)->count();
+        $this->userCount = $this->users->matching($criteria)->count();
+
+        return $this->userCount;
     }
 }

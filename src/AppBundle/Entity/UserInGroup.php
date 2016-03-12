@@ -24,7 +24,7 @@ class UserInGroup
      * @var User
      *
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId", onDelete="CASCADE")
      * @Required()
      * @Expose()
@@ -35,7 +35,7 @@ class UserInGroup
      * @var UserGroup
      *
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup", inversedBy="users", fetch="EAGER")
      * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId", onDelete="CASCADE")
      * @Required()
      * @Expose()

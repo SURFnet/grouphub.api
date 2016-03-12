@@ -46,22 +46,7 @@ class UserGroupManager
         $limit = 10,
         array $groupsIds = []
     ) {
-        $result = [
-            'count' => 0,
-            'items' => [],
-        ];
-
-        foreach (['owner', UserInGroup::ROLE_ADMIN, UserInGroup::ROLE_MEMBER, UserInGroup::ROLE_PROSPECT] as $role) {
-            $groups = $this->findUserGroupsForRole($userId, $role, $type, $sortColumn, $sortDir, max(0, $offset), $limit, $groupsIds);
-
-            $result['count'] += $groups['count'];
-            $result['items'] = array_merge($result['items'], $groups['items']);
-
-            $offset -= $groups['count'] - count($groups['items']);
-            $limit -= count($groups['items']);
-        }
-
-        return $result;
+        return $this->findUserGroupsForRole($userId, null, $type, $sortColumn, $sortDir, $offset, $limit, $groupsIds);
     }
 
     /**
@@ -121,7 +106,7 @@ class UserGroupManager
      */
     public function findUserGroupsForRole(
         $userId,
-        $role,
+        $role = null,
         $type = null,
         $sortColumn = 'reference',
         $sortDir = 'ASC',
@@ -129,31 +114,37 @@ class UserGroupManager
         $limit = 10,
         array $groups = []
     ) {
-        if ($role === 'owner') {
+        $result = [
+            'count' => 0,
+            'items' => [],
+        ];
+
+        if ($role === null || $role === 'owner') {
             $query = $this->getOwnerGroupsQuery($userId, $type, $sortColumn, $sortDir, $offset, $limit, $groups);
 
             $paginator = new Paginator($query);
 
-            $result = [
-                'count' => $paginator->count(),
-                'items' => [],
-            ];
+            $result['count'] += $paginator->count();
 
             foreach ($paginator as $group) {
                 $result['items'][] = ['role' => 'owner', 'group' => $group];
             }
 
-            return $result;
+            if ($role === 'owner') {
+                return $result;
+            }
+        }
+
+        if ($role === null) {
+            $offset -= $result['count'] - count($result['items']);
+            $limit -= count($result['items']);
         }
 
         $query = $this->getOtherGroupsQuery($userId, $role, $type, $sortColumn, $sortDir, $offset, $limit, $groups);
 
         $paginator = new Paginator($query, false);
 
-        $result = [
-            'count' => $paginator->count(),
-            'items' => [],
-        ];
+        $result['count'] += $paginator->count();
 
         foreach ($paginator as $group) {
             /** @var UserInGroup $group */
