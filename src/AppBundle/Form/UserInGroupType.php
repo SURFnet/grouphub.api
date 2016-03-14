@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\UserInGroup;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,15 +22,17 @@ class UserInGroupType extends AbstractType
             ]
         )->add(
             'role',
-            'text',
+            'choice',
             [
-                'constraints' => new NotBlank(),
+                'constraints'       => new NotBlank(),
+                'choices'           => [UserInGroup::ROLE_ADMIN, UserInGroup::ROLE_MEMBER, UserInGroup::ROLE_PROSPECT],
+                'choices_as_values' => true,
             ]
         )->add(
             'message',
             'text',
             [
-                'mapped' => false
+                'mapped' => false,
             ]
         );
     }

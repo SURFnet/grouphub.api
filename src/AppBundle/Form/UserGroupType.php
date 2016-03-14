@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\UserGroup;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,9 +23,11 @@ class UserGroupType extends AbstractType
             'text'
         )->add(
             'type',
-            'text',
+            'choice',
             [
-                'constraints' => new NotBlank(),
+                'constraints'       => new NotBlank(),
+                'choices'           => [UserGroup::TYPE_GROUPHUB, UserGroup::TYPE_FORMAL, UserGroup::TYPE_LDAP],
+                'choices_as_values' => true,
             ]
         )->add(
             'reference',
