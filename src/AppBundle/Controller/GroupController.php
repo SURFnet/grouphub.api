@@ -360,6 +360,7 @@ class GroupController extends FOSRestController
         $sort = $request->query->get('sort', 'reference');
         $query = $request->query->get('query');
         $users = (array)$request->query->get('users');
+        $role = $request->query->get('role');
 
         /** @var QueryBuilder $qb */
         $qb = $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->createQueryBuilder('ug');
@@ -382,6 +383,10 @@ class GroupController extends FOSRestController
 
             $offset = 0;
             $limit = count($users);
+        }
+
+        if (!empty($role)) {
+            $qb->andWhere('ug.role = :role')->setParameter('role', $role);
         }
 
         $qb
