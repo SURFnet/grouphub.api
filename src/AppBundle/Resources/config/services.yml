@@ -4,22 +4,13 @@ services:
     arguments: ["@doctrine"]
 
   app.event.user:
-    class: AppBundle\EventListener\UserActivityEventListener
-    arguments: ["@service_container"]
+    class: AppBundle\EventSubscriber\UserActivitySubscriber
+    arguments: ["@doctrine", "@logger"]
     tags:
-      - { name: kernel.event_listener, event: app.event.user.add, method: userAdd }
-      - { name: kernel.event_listener, event: app.event.user.update, method: userUpdate }
-      - { name: kernel.event_listener, event: app.event.user.delete, method: userDelete }
+        - { name: kernel.event_subscriber }
 
   app.event.group:
-    class: AppBundle\EventListener\GroupActivityEventListener
-    arguments: ["@service_container"]
+    class: AppBundle\EventSubscriber\GroupActivitySubscriber
+    arguments: ["@doctrine", "@logger"]
     tags:
-      - { name: kernel.event_listener, event: app.event.group.add, method: groupAdd }
-      - { name: kernel.event_listener, event: app.event.group.update, method: groupUpdate }
-      - { name: kernel.event_listener, event: app.event.group.delete, method: groupDelete }
-      - { name: kernel.event_listener, event: app.event.group.useradd, method: groupUserAdd }
-      - { name: kernel.event_listener, event: app.event.group.userupdate, method: groupUserUpdate }
-      - { name: kernel.event_listener, event: app.event.group.userdelete, method: groupUserDelete }
-      - { name: kernel.event_listener, event: app.event.group.groupadd, method: groupGroupAdd }
-      - { name: kernel.event_listener, event: app.event.group.groupdelete, method: groupGroupDelete }
+        - { name: kernel.event_subscriber }

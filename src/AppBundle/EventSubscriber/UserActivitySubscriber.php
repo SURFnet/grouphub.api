@@ -1,14 +1,14 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace AppBundle\EventSubscriber;
 
 use AppBundle\Event\UserEvent;
 use AppBundle\Entity\UserActivity;
 
 /**
- * Class UserEventListener
+ * Class UserActivitySubscriber
  */
-class UserActivityEventListener extends ActivityEventListener
+class UserActivitySubscriber extends ActivitySubscriber
 {
     /**
      * {@inheritdoc}
@@ -16,7 +16,7 @@ class UserActivityEventListener extends ActivityEventListener
     public static function getSubscribedEvents()
     {
         return [
-            'app.event.user.add' => 'userAdd',
+            'app.event.user.add'    => 'userAdd',
             'app.event.user.delete' => 'userDelete',
             'app.event.user.update' => 'userUpdate',
         ];
@@ -25,9 +25,10 @@ class UserActivityEventListener extends ActivityEventListener
     /**
      * Get the user activity object
      *
-     * @param UserEvent $event
-     * @param string $title
+     * @param UserEvent   $event
+     * @param string      $title
      * @param string|null $description
+     *
      * @return UserActivity
      */
     protected function getActivity(UserEvent $event, $title, $description = null)

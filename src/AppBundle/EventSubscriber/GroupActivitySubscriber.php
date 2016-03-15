@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace AppBundle\EventSubscriber;
 
 use AppBundle\Entity\Notification;
 use AppBundle\Entity\UserActivity;
@@ -8,9 +8,9 @@ use AppBundle\Entity\UserInGroup;
 use AppBundle\Event\GroupEvent;
 
 /**
- * Class UserEventListener
+ * Class GroupActivitySubscriber
  */
-class GroupActivityEventListener extends ActivityEventListener
+class GroupActivitySubscriber extends ActivitySubscriber
 {
     /**
      * {@inheritdoc}
@@ -32,9 +32,10 @@ class GroupActivityEventListener extends ActivityEventListener
     /**
      * Get the user activity object
      *
-     * @param GroupEvent $event
-     * @param string $title
+     * @param GroupEvent  $event
+     * @param string      $title
      * @param string|null $description
+     *
      * @return UserActivity
      */
     protected function getActivity(GroupEvent $event, $title, $description = null)
@@ -102,7 +103,7 @@ class GroupActivityEventListener extends ActivityEventListener
                 $event->getGroup()
             );
 
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->doctrine->getManager();
             $em->persist($notification);
             $em->flush();
         }
