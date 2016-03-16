@@ -66,9 +66,29 @@ class NotificationManager
         if ($response === 'confirm') {
             $userInGroup->setRole(UserInGroup::ROLE_MEMBER);
             $this->membershipManager->updateMembership($userInGroup);
+
+            $notification = new Notification(
+                $userInGroup->getUser(),
+                $notification->getTo(),
+                Notification::TYPE_CONFIRMED,
+                '',
+                $userInGroup->getGroup()
+            );
         } else {
             $this->membershipManager->deleteMembership($userInGroup);
+
+            $notification = new Notification(
+                $userInGroup->getUser(),
+                $notification->getTo(),
+                Notification::TYPE_DENIED,
+                '',
+                $userInGroup->getGroup()
+            );
         }
+
+        $em = $this->doctrine->getManager();
+        $em->persist($notification);
+        $em->flush();
     }
 
     /**

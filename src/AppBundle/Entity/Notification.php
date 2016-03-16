@@ -13,6 +13,8 @@ use JMS\Serializer\Annotation\Expose;
 class Notification
 {
     const TYPE_PROSPECT = 'prospect';
+    const TYPE_CONFIRMED = 'confirmed';
+    const TYPE_DENIED = 'denied';
 
     /**
      * @var int
@@ -109,6 +111,14 @@ class Notification
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return User
+     */
+    public function getTo()
+    {
+        return $this->to;
     }
 
     /**
