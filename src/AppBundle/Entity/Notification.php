@@ -112,6 +112,22 @@ class Notification
     }
 
     /**
+     * @return User
+     */
+    public function getFrom()
+    {
+        return $this->from;
+    }
+
+    /**
+     * @return UserGroup
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
      * @return string
      */
     public function getType()
