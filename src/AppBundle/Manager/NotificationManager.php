@@ -5,7 +5,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Notification;
 use AppBundle\Entity\UserInGroup;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class NotificationManager
@@ -18,17 +18,20 @@ class NotificationManager
     private $doctrine;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $dispatcher;
 
     /**
-     * @param Registry          $doctrine
-     * @param EventDispatcher   $dispatcher
+     * @param Registry $doctrine
+     * @param EventDispatcherInterface $dispatcher
      * @param MembershipManager $membershipManager
      */
-    public function __construct(Registry $doctrine, EventDispatcher $dispatcher, MembershipManager $membershipManager)
-    {
+    public function __construct(
+        Registry $doctrine,
+        EventDispatcherInterface $dispatcher,
+        MembershipManager $membershipManager
+    ) {
         $this->doctrine = $doctrine;
         $this->dispatcher = $dispatcher;
 

@@ -5,7 +5,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\UserInGroup;
 use AppBundle\Event\GroupEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class MembershipManager
@@ -18,15 +18,15 @@ class MembershipManager
     private $doctrine;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $dispatcher;
 
     /**
-     * @param Registry        $doctrine
-     * @param EventDispatcher $dispatcher
+     * @param Registry                 $doctrine
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(Registry $doctrine, EventDispatcher $dispatcher)
+    public function __construct(Registry $doctrine, EventDispatcherInterface $dispatcher)
     {
         $this->doctrine = $doctrine;
         $this->dispatcher = $dispatcher;
