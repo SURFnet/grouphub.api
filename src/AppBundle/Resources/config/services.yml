@@ -23,3 +23,20 @@ services:
     tags:
         - { name: kernel.event_subscriber }
 
+  app.form.user_in_group:
+    class: AppBundle\Form\UserInGroupType
+    arguments: ["@doctrine.orm.entity_manager"]
+    tags:
+        - { name: form.type }
+
+  app.form.group:
+    class: AppBundle\Form\UserGroupType
+    arguments: ["@doctrine.orm.entity_manager"]
+    tags:
+        - { name: form.type }
+
+  app.form.group_in_group:
+    class: AppBundle\Form\UserGroupInGroupType
+    arguments: ["@doctrine.orm.entity_manager"]
+    tags:
+        - { name: form.type }

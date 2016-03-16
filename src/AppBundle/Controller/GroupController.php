@@ -167,7 +167,7 @@ class GroupController extends FOSRestController
     {
         $group = new UserGroup();
 
-        $form = $this->createForm(new UserGroupType(), $group);
+        $form = $this->createForm(UserGroupType::class, $group);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -223,7 +223,7 @@ class GroupController extends FOSRestController
     {
         $group = $this->getGroup($id);
 
-        $form = $this->createForm(new UserGroupType(), $group);
+        $form = $this->createForm(UserGroupType::class, $group);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -272,7 +272,7 @@ class GroupController extends FOSRestController
     {
         $group = $this->getGroup($id);
 
-        $form = $this->createForm(new UserGroupType(), $group);
+        $form = $this->createForm(UserGroupType::class, $group);
         $form->submit($request, false);
 
         if ($form->isValid()) {
@@ -447,7 +447,7 @@ class GroupController extends FOSRestController
         $userInGroup = new UserInGroup();
         $userInGroup->setGroup($group);
 
-        $form = $this->createForm(new UserInGroupType(), $userInGroup);
+        $form = $this->createForm(UserInGroupType::class, $userInGroup);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -682,7 +682,7 @@ class GroupController extends FOSRestController
         $groupInGroup = new UserGroupInGroup();
         $groupInGroup->setGroup($group);
 
-        $form = $this->createForm(new UserGroupInGroupType(), $groupInGroup);
+        $form = $this->createForm(UserGroupInGroupType::class, $groupInGroup);
         $form->submit($request);
 
         if ($form->isValid()) {

@@ -2,7 +2,10 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\User;
 use AppBundle\Entity\UserGroup;
+use AppBundle\Form\DataTransformer\EntityToIdTransformer;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -10,6 +13,16 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserGroupType extends AbstractType
 {
+    /**
+     * @var ObjectManager
+     */
+    private $manager;
+
+    public function __construct(ObjectManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -33,20 +46,18 @@ class UserGroupType extends AbstractType
             'reference',
             'text'
         )->add(
-            'owner',
-            'entity',
-            [
-                'class'        => 'AppBundle\Entity\User',
-                'choice_label' => 'id',
-                'constraints'  => new NotBlank(),
-            ]
+            $builder->create(
+                'owner',
+                'text',
+                [
+                    'constraints' => new NotBlank(),
+                ]
+            )->addModelTransformer(new EntityToIdTransformer($this->manager, User::class))
         )->add(
-            'parent',
-            'entity',
-            [
-                'class'        => 'AppBundle\Entity\UserGroup',
-                'choice_label' => 'id',
-            ]
+            $builder->create(
+                'parent',
+                'text'
+            )->addModelTransformer(new EntityToIdTransformer($this->manager, UserGroup::class))
         );
     }
 
