@@ -110,4 +110,12 @@ class Notification
     {
         return $this->id;
     }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 }
