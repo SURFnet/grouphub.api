@@ -1,7 +1,15 @@
 services:
+  app.manager.membership:
+    class: AppBundle\Manager\MembershipManager
+    arguments: ["@doctrine", "@event_dispatcher"]
+
   app.manager.user_group:
     class: AppBundle\Manager\UserGroupManager
     arguments: ["@doctrine"]
+
+  app.manager.notification:
+    class: AppBundle\Manager\NotificationManager
+    arguments: ["@doctrine", "@event_dispatcher", "@app.manager.membership"]
 
   app.event.user:
     class: AppBundle\EventSubscriber\UserActivitySubscriber
@@ -14,3 +22,4 @@ services:
     arguments: ["@doctrine", "@logger"]
     tags:
         - { name: kernel.event_subscriber }
+

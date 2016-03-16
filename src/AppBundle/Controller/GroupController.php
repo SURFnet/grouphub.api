@@ -512,17 +512,9 @@ class GroupController extends FOSRestController
         $form->submit($request);
 
         if ($form->isValid()) {
-            try {
-                $this->getDoctrine()->getManager()->flush();
+            $this->get('app.manager.membership')->updateMembership($userInGroup);
 
-                $event = new GroupEvent($userInGroup->getGroup());
-                $event->setUser($userInGroup);
-                $this->fireEvent('app.event.group.userupdate', $event);
-
-                return $this->routeRedirectView('get_group_users', ['id' => $groupId]);
-            } catch (DBALException $e) {
-                throw new NotAcceptableHttpException($e->getMessage());
-            }
+            return $this->routeRedirectView('get_group_users', ['id' => $groupId]);
         }
 
         return $form;
@@ -563,13 +555,7 @@ class GroupController extends FOSRestController
     {
         $userInGroup = $this->getUserInGroup($groupId, $userId);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($userInGroup);
-        $em->flush();
-
-        $event = new GroupEvent($userInGroup->getGroup());
-        $event->setUser($userInGroup);
-        $this->fireEvent('app.event.group.userdelete', $event);
+        $this->get('app.manager.membership')->deleteMembership($userInGroup);
 
         return $this->routeRedirectView('get_groups');
     }
@@ -753,8 +739,7 @@ class GroupController extends FOSRestController
      */
     private function getUserInGroup($groupId, $userId)
     {
-        $repo = $this->getDoctrine()->getRepository('AppBundle:UserInGroup');
-        $userInGroup = $repo->findOneBy(["user" => $userId, "group" => $groupId]);
+        $userInGroup = $this->get('app.manager.membership')->findMembership($userId, $groupId);
 
         if ($userInGroup === null) {
             throw $this->createNotFoundException(

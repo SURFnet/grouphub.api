@@ -49,17 +49,9 @@ class UserNotificationController extends FOSRestController
      */
     public function deleteUserNotificationsAction($userId, $id)
     {
-        $notification = $this->getDoctrine()->getRepository('AppBundle:Notification')->findOneBy(
-            ['to' => $userId, 'id' => $id]
-        );
+        $notification = $this->getNotification($userId, $id);
 
-        if ($notification === null) {
-            throw new NotFoundHttpException('Notification ' . $id . ' not found for user ' . $userId);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($notification);
-        $em->flush();
+        $this->get('app.manager.notification')->deleteNotification($notification);
 
         return $this->routeRedirectView('get_user_notifications', ['id' => $userId]);
     }
@@ -79,25 +71,30 @@ class UserNotificationController extends FOSRestController
             throw new BadRequestHttpException();
         }
 
+        $notification = $this->getNotification($userId, $id);
+
+        $this->get('app.manager.notification')->processNotification($notification, $response);
+
+        return $this->routeRedirectView('get_user_notifications', ['id' => $userId]);
+    }
+
+    /**
+     * @param int $userId
+     * @param int $notificationId
+     *
+     * @return Notification
+     */
+    private function getNotification($userId, $notificationId)
+    {
         /** @var Notification $notification */
         $notification = $this->getDoctrine()->getRepository('AppBundle:Notification')->findOneBy(
-            ['to' => $userId, 'id' => $id]
+            ['to' => $userId, 'id' => $notificationId]
         );
 
         if ($notification === null) {
-            throw new NotFoundHttpException('Notification ' . $id . ' not found for user ' . $userId);
+            throw new NotFoundHttpException('Notification ' . $notificationId . ' not found for user ' . $userId);
         }
 
-        switch ($notification->getType()) {
-            case Notification::TYPE_PROSPECT:
-                // @todo: implement: update or delete membership, and send new notification
-                break;
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($notification);
-        $em->flush();
-
-        return $this->routeRedirectView('get_user_notifications', ['id' => $userId]);
+        return $notification;
     }
 }
