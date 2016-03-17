@@ -61,6 +61,7 @@ class GroupController extends FOSRestController
         $sort = $request->query->get('sort', 'reference');
         $type = $request->query->get('type');
         $query = $request->query->get('query');
+        $ids = $request->query->get('ids');
 
         /** @var QueryBuilder $qb */
         $qb = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->createQueryBuilder('g');
@@ -93,6 +94,14 @@ class GroupController extends FOSRestController
             );
 
             $qb->setParameter('query', '%'.$query.'%');
+        }
+
+        if (!empty($ids)) {
+            $qb->andWhere($qb->expr()->in('g.id', ':groups'));
+            $qb->setParameter('groups', $ids);
+
+            $offset = 0;
+            $limit = count($ids);
         }
 
         $query = $qb
