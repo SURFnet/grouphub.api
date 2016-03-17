@@ -57,7 +57,6 @@ namespace :symfony do
 
   desc "Execute migrations"
   task :migrate do
-    # @todo: use actual doctrine migrations
     invoke 'symfony:console', 'doctrine:schema:update', '--no-interaction --force', 'db'
   end
 end

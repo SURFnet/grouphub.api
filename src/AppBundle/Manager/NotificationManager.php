@@ -39,6 +39,38 @@ class NotificationManager
     }
 
     /**
+     * @param int $notificationId
+     * @param int $userId
+     *
+     * @return Notification
+     */
+    public function findNotification($notificationId, $userId)
+    {
+        $repo = $this->doctrine->getRepository('AppBundle:Notification');
+
+        return $repo->findOneBy(['to' => $userId, 'id' => $notificationId]);
+    }
+
+    /**
+     * @param int  $userId
+     * @param int  $groupId
+     *
+     * @return Notification[]
+     */
+    public function findNotificationsForUser($userId, $groupId = null)
+    {
+        $filters = ['to' => $userId];
+
+        if ($groupId !== null) {
+            $filters['group'] = $groupId;
+        }
+
+        $repo = $this->doctrine->getRepository('AppBundle:Notification');
+
+        return $repo->findBy($filters);
+    }
+
+    /**
      * @param Notification $notification
      * @param string       $response
      */
