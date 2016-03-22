@@ -24,8 +24,8 @@ class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
 
         $group = new UserGroup();
         $group->setId(1);
-        $group->setName('FormalGroup');
-        $group->setDescription('');
+        $group->setName('AdminGroup');
+        $group->setDescription('GroupHUB administrator group');
         $group->setType('formal');
         $group->setOwner($this->getReference('formal-user'));
         $group->setParent(null);
@@ -37,7 +37,7 @@ class LoadGroupData extends AbstractFixture implements OrderedFixtureInterface
         $membership = new UserInGroup();
         $membership->setGroup($group);
         $membership->setUser($this->getReference('admin-user'));
-        $membership->setRole('member');
+        $membership->setRole('admin');
         $manager->persist($membership);
 
         $manager->flush();

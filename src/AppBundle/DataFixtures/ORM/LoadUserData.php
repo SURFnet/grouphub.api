@@ -44,11 +44,11 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
 
         $user = new User();
         $user->setId(2);
-        $user->setFirstName('Formal');
+        $user->setFirstName('Admin');
         $user->setLastName('User');
-        $user->setLoginName('FormalUser');
+        $user->setLoginName('AdminUser');
         $user->setTimeStamp(new \DateTime());
-        $user->setReference('sys:formal_user');
+        $user->setReference('sys:admin_user');
         $user->setType('system');
         $manager->persist($user);
 
@@ -66,8 +66,8 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
 
         $user = new User();
         $user->setId(4);
-        $user->setFirstName('Ad');
-        $user->setLastName('Min');
+        $user->setFirstName('GroupHUB');
+        $user->setLastName('Administrator');
         $user->setLoginName($this->container->getParameter('admin_uid'));
         $user->setTimeStamp(new \DateTime());
         $user->setReference($this->container->getParameter('admin_dn'));
