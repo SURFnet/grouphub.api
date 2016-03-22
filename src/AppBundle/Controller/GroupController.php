@@ -42,6 +42,7 @@ class GroupController extends FOSRestController
      *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property, prefix with '-' to change the order"},
      *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter, either 'ldap', '!ldap' or 'formal'"},
      *      {"name"="query", "dataType"="string", "required"=false, "description"="search filter"}
+     *      {"name"="ids", "dataType"="array", "required"=false, "description"="a list of id's to retrieve"}
      *  },
      *  output="ArrayCollection<AppBundle\Entity\UserGroup>",
      *  statusCodes = {
@@ -182,7 +183,7 @@ class GroupController extends FOSRestController
         if ($form->isValid()) {
 
             $group->setActive(1);
-            $group->setTimeStamp(new DateTime());
+            $group->setTimestamp(new DateTime());
 
             try {
                 $em = $this->getDoctrine()->getManager();
@@ -347,6 +348,14 @@ class GroupController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
+     *  parameters = {
+     *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
+     *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property, prefix with '-' to change the order"},
+     *      {"name"="query", "dataType"="string", "required"=false, "description"="search filter"}
+     *      {"name"="users", "dataType"="array", "required"=false, "description"="array with user ids"},
+     *      {"name"="role", "dataType"="string", "required"=false, "description"="role filter"}
+     *  },
      *  output="ArrayCollection<AppBundle\Entity\User>",
      *  statusCodes = {
      *      200 = "Returned when successful",

@@ -30,7 +30,8 @@ class UserController extends FOSRestController
      *      {"name"="limit", "dataType"="int", "required"=false, "description"="limit for retrieving resources"},
      *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property"},
      *      {"name"="reference", "dataType"="string", "required"=false, "description"="filter"},
-     *      {"name"="login_name", "dataType"="string", "required"=false, "description"="filter"}
+     *      {"name"="login_name", "dataType"="string", "required"=false, "description"="filter"},
+     *      {"name"="query", "dataType"="string", "required"=false, "description"="search filter"},
      *  },
      *  output="ArrayCollection<AppBundle\Entity\User>",
      *  statusCodes = {

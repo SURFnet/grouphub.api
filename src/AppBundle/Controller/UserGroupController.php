@@ -18,6 +18,13 @@ class UserGroupController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
+     *  parameters = {
+     *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
+     *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property used when retrieving resources"},
+     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter"},
+     *      {"name"="groups", "dataType"="array", "required"=false, "description"="group id filter"}
+    *   },
      *  requirements = {
      *     {
      *         "name" = "id",
@@ -58,6 +65,30 @@ class UserGroupController extends FOSRestController
     }
 
     /**
+     * List all roles and groups a user belongs to in a grouped 'view'
+     *
+     * @ApiDoc(
+     *  parameters = {
+     *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
+     *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property used when retrieving resources"},
+     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter"}
+     *   },
+     *  requirements = {
+     *     {
+     *         "name" = "id",
+     *         "dataType" = "integer",
+     *         "requirement" = "\d+",
+     *         "description" = "UserID"
+     *     }
+     *  },
+     *  output="array<AppBundle\Entity\UserInGroup>",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      500 = "Returned when there is an internal server error"
+     *   }
+     * )
+     *
      * @param int     $id
      * @param Request $request
      *
@@ -89,6 +120,30 @@ class UserGroupController extends FOSRestController
     }
 
     /**
+     * List all groups a user owns
+     *
+     * @ApiDoc(
+     *  parameters = {
+     *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
+     *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property used when retrieving resources"},
+     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter"}
+     *   },
+     *  requirements = {
+     *     {
+     *         "name" = "id",
+     *         "dataType" = "integer",
+     *         "requirement" = "\d+",
+     *         "description" = "UserID"
+     *     }
+     *  },
+     *  output="array<AppBundle\Entity\UserInGroup>",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      500 = "Returned when there is an internal server error"
+     *   }
+     * )
+     *
      * @param int     $id
      * @param Request $request
      *
@@ -121,6 +176,30 @@ class UserGroupController extends FOSRestController
     }
 
     /**
+     * List all admin groups of a user.
+     *
+     * @ApiDoc(
+     *  parameters = {
+     *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
+     *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property used when retrieving resources"},
+     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter"}
+     *   },
+     *  requirements = {
+     *     {
+     *         "name" = "id",
+     *         "dataType" = "integer",
+     *         "requirement" = "\d+",
+     *         "description" = "UserID"
+     *     }
+     *  },
+     *  output="array<AppBundle\Entity\UserInGroup>",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      500 = "Returned when there is an internal server error"
+     *   }
+     * )
+     *
      * @param int     $id
      * @param Request $request
      *
@@ -153,6 +232,30 @@ class UserGroupController extends FOSRestController
     }
 
     /**
+     * List all member groups of a user.
+     *
+     * @ApiDoc(
+     *  parameters = {
+     *      {"name"="offset", "dataType"="integer", "required"=false, "description"="offset for retrieving resources"},
+     *      {"name"="limit", "dataType"="integer", "required"=false, "description"="limit for retrieving resources"},
+     *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property used when retrieving resources"},
+     *      {"name"="type", "dataType"="string", "required"=false, "description"="type filter"}
+     *   },
+     *  requirements = {
+     *     {
+     *         "name" = "id",
+     *         "dataType" = "integer",
+     *         "requirement" = "\d+",
+     *         "description" = "UserID"
+     *     }
+     *  },
+     *  output="array<AppBundle\Entity\UserInGroup>",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      500 = "Returned when there is an internal server error"
+     *   }
+     * )
+     *
      * @param int     $id
      * @param Request $request
      *

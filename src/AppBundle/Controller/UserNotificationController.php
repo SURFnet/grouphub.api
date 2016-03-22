@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Notification;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -15,6 +16,28 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class UserNotificationController extends FOSRestController
 {
     /**
+     * List all notifications of a user.
+     *
+     * @ApiDoc(
+     *  resource = true,
+     *  parameters = {
+     *      {"name"="group", "dataType"="integer", "required"=false, "description"="group id filter"}
+     *  },
+     *  requirements = {
+     *     {
+     *         "name" = "id",
+     *         "dataType" = "integer",
+     *         "requirement" = "\d+",
+     *         "description" = "UserID"
+     *     }
+     *  },
+     *  output="array<AppBundle\Entity\Notification>",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      500 = "Returned when there is an internal server error"
+     *   }
+     * )
+     *
      * @param int     $id
      * @param Request $request
      *
@@ -31,6 +54,31 @@ class UserNotificationController extends FOSRestController
     }
 
     /**
+     * Remove a notification.
+     *
+     * @ApiDoc(
+     *  resource = true,
+     *  requirements = {
+     *      {
+     *          "name" = "userId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "UserID"
+     *      },
+     *      {
+     *          "name" = "notificationId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "NotificationID"
+     *      }
+     *  },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      404 = "Returned when the group or user is not found.",
+     *      500 = "Returned when there is a internal error."
+     *  }
+     * )
+     *
      * @param int $userId
      * @param int $id
      *
@@ -46,6 +94,34 @@ class UserNotificationController extends FOSRestController
     }
 
     /**
+     * Add a response to a notification.
+     *
+     * @ApiDoc(
+     *  resource = true,
+     *  requirements = {
+     *      {
+     *          "name" = "userId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "UserID"
+     *      },
+     *      {
+     *          "name" = "notificationId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "NotificationID"
+     *      }
+     *  },
+     *  parameters = {
+     *      {"name"="type", "dataType"="string", "required"=true, "description"="response, either 'confirm' or 'deny'"}
+     *  },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      404 = "Returned when the group or user is not found.",
+     *      500 = "Returned when there is a internal error."
+     *  }
+     * )
+     *
      * @param int     $userId
      * @param int     $id
      * @param Request $request
@@ -68,6 +144,32 @@ class UserNotificationController extends FOSRestController
     }
 
     /**
+     * Retrieve a single Notification for a User.
+     *
+     * @ApiDoc(
+     *   output = "AppBundle\Entity\Notification",
+     *   resource = true,
+     *   requirements = {
+     *      {
+     *          "name" = "userId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "UserID"
+     *      },
+     *      {
+     *          "name" = "notificationId",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "NotificationID"
+     *      }
+     *   },
+     *   statusCodes = {
+     *     200 = "Returned when successful",
+     *     404 = "Returned when the notification is not found",
+     *     500 = "Returned when there is a internal error."
+     *   }
+     * )
+     *
      * @param int $userId
      * @param int $notificationId
      *
