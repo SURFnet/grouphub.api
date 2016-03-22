@@ -54,10 +54,81 @@ runtime documentation version.
 ## Requirements
 
  - apache2
- - php
  - mysql
  - git
  - acl
- - php5-intl
- - php5-curl
- - php5-apcu
+ - php
+   * php5-intl
+   * php5-curl
+   * php5-apcu
+ 
+ - ssh access
+ 
+Consider setting `opcache.validate_timestamps = 0` in php.ini for a lot of free performance!
+ 
+## Vhost
+
+Minimum requirements:
+
+```sh
+<VirtualHost *:80>
+    ServerName api.grouphub.org
+    
+    DocumentRoot /project/dir/web
+    
+    <Directory /project/dir/web>
+        Options FollowSymLinks
+        AllowOverride All
+        Order Allow,Deny
+        Allow from All
+    </Directory>
+</VirtualHost>
+```
+
+Usage of HTTPS is highly recommended. Also consider the API to be only accessible by accepted IP addresses.
+
+## Process
+
+@todo: initial setup; parameters; load fixtures 
+
+To do an actual deployment, make sure a stage is available in app/config/deployment/stages/. Then run 
+
+```sh
+cap [stage-name] deploy
+```
+
+This script will ask the branch/tag of the software to deploy. The default will probably be sufficient in most cases.
+
+## Configuration
+
+Configuration can be found in app/config/parameters.yml:
+
+```sh
+parameters:
+    # Database connection data and credentials
+    database_driver:   pdo_mysql
+    database_host:     127.0.0.1
+    database_port:     ~
+    database_name:     symfony
+    database_user:     root
+    database_password: ~
+
+    # Mailer settings
+    mailer_transport: smtp
+    mailer_host:      127.0.0.1
+    mailer_user:      ~
+    mailer_password:  ~
+
+    # A random string for security purposes 
+    secret: ThisTokenIsNotSoSecretChangeIt
+
+    # The password required to access this API
+    password_user: ~
+
+    # Data of the 'admin' user which will be made a member of the root admin group
+    admin_uid: admin
+    admin_dn:  cn=Admin Admin,ou=Users,ou=SURFuni,dc=surfuni,dc=org
+
+    # The URL of this API, used to clear the cache after a new deployment
+    url: http://api.grouphub.surfuni.org
+```
