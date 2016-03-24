@@ -3,6 +3,10 @@ services:
     class: AppBundle\Manager\UserManager
     arguments: ["@doctrine", "@event_dispatcher"]
 
+  app.manager.group:
+    class: AppBundle\Manager\GroupManager
+    arguments: ["@doctrine", "@event_dispatcher"]
+
   app.manager.membership:
     class: AppBundle\Manager\MembershipManager
     arguments: ["@doctrine", "@event_dispatcher"]
@@ -10,6 +14,10 @@ services:
   app.manager.user_group:
     class: AppBundle\Manager\UserGroupManager
     arguments: ["@doctrine"]
+
+  app.manager.group_in_group:
+    class: AppBundle\Manager\GroupInGroupManager
+    arguments: ["@doctrine", "@event_dispatcher"]
 
   app.manager.notification:
     class: AppBundle\Manager\NotificationManager

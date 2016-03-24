@@ -5,29 +5,19 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\UserGroup;
 use AppBundle\Entity\UserGroupInGroup;
 use AppBundle\Entity\UserInGroup;
-use AppBundle\Event\GroupEvent;
 use AppBundle\Form\UserGroupInGroupType;
 use AppBundle\Form\UserGroupType;
 use AppBundle\Form\UserInGroupType;
 use AppBundle\Form\UserInGroupUpdateType;
-use DateTime;
-use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class GroupController
- *
- * @todo: Introduce service layer, and move most logic there...
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GroupController extends FOSRestController
 {
@@ -64,62 +54,13 @@ class GroupController extends FOSRestController
         $query = $request->query->get('query');
         $ids = $request->query->get('ids');
 
-        /** @var QueryBuilder $qb */
-        $qb = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->createQueryBuilder('g');
-
-        $typeFilter = '1 = 1';
-
         $sortDir = 'ASC';
         if ($sort[0] === '-') {
             $sortDir = 'DESC';
             $sort = substr($sort, 1);
         }
 
-        if ($type === 'ldap') {
-            $typeFilter = 'g.type = \'ldap\'';
-        }
-
-        if ($type === '!ldap') {
-            $typeFilter = 'g.type != \'ldap\'';
-        }
-
-        if ($type === 'formal') {
-            $typeFilter = 'g.type = \'formal\'';
-        }
-
-        $queryFilter = '1 = 1';
-        if (!empty($query)) {
-            $queryFilter = $qb->expr()->orX(
-                $qb->expr()->like('g.name', ':query'),
-                $qb->expr()->like('g.description', ':query')
-            );
-
-            $qb->setParameter('query', '%'.$query.'%');
-        }
-
-        if (!empty($ids)) {
-            $qb->andWhere($qb->expr()->in('g.id', ':groups'));
-            $qb->setParameter('groups', $ids);
-
-            $offset = 0;
-            $limit = count($ids);
-        }
-
-        $query = $qb
-            ->andWhere('g.active = 1')
-            ->andWhere($typeFilter)
-            ->andWhere($queryFilter)
-            ->orderBy('g.' . $sort, $sortDir)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery();
-
-        $paginator = new Paginator($query);
-
-        $result = [
-            'count' => $paginator->count(),
-            'items' => $paginator->getIterator()->getArrayCopy(),
-        ];
+        $result = $this->get('app.manager.group')->findGroups($query, $type, $sort, $sortDir, $offset, $limit, $ids);
 
         return $this->view($result);
     }
@@ -181,22 +122,9 @@ class GroupController extends FOSRestController
         $form->submit($request);
 
         if ($form->isValid()) {
+            $this->get('app.manager.group')->addGroup($group);
 
-            $group->setActive(1);
-            $group->setTimestamp(new DateTime());
-
-            try {
-                $em = $this->getDoctrine()->getManager();
-
-                $em->persist($group);
-                $em->flush();
-
-                $this->fireEvent('app.event.group.add', new GroupEvent($group));
-
-                return $this->view($group, Response::HTTP_CREATED);
-            } catch (DBALException $e) {
-                throw new NotAcceptableHttpException($e->getMessage());
-            }
+            return $this->view($group, Response::HTTP_CREATED);
         }
 
         return $form;
@@ -237,15 +165,9 @@ class GroupController extends FOSRestController
         $form->submit($request);
 
         if ($form->isValid()) {
-            try {
-                $this->getDoctrine()->getManager()->flush();
+            $this->get('app.manager.group')->updateGroup($group);
 
-                $this->fireEvent('app.event.group.update', new GroupEvent($group));
-
-                return $this->routeRedirectView('get_group', ['id' => $group->getId()]);
-            } catch (DBALException $e) {
-                throw new NotAcceptableHttpException($e->getMessage());
-            }
+            return $this->routeRedirectView('get_group', ['id' => $group->getId()]);
         }
 
         return $form;
@@ -286,15 +208,9 @@ class GroupController extends FOSRestController
         $form->submit($request, false);
 
         if ($form->isValid()) {
-            try {
-                $this->getDoctrine()->getManager()->flush();
+            $this->get('app.manager.group')->updateGroup($group);
 
-                $this->fireEvent('app.event.group.update', new GroupEvent($group));
-
-                return $this->routeRedirectView('get_group', ['id' => $group->getId()]);
-            } catch (DBALException $e) {
-                throw new NotAcceptableHttpException($e->getMessage());
-            }
+            return $this->routeRedirectView('get_group', ['id' => $group->getId()]);
         }
 
         return $form;
@@ -329,16 +245,7 @@ class GroupController extends FOSRestController
     {
         $group = $this->getGroup($id);
 
-        $children = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findBy(['parent' => $id, 'active' => 1]);
-        if (!empty($children)) {
-            throw new BadRequestHttpException('Parent groups cannot be disabled');
-        }
-
-        $group->setActive(0);
-
-        $this->getDoctrine()->getManager()->flush();
-
-        $this->fireEvent('app.event.group.delete', new GroupEvent($group));
+        $this->get('app.manager.group')->deleteGroup($group);
 
         return $this->routeRedirectView('get_groups');
     }
@@ -380,50 +287,7 @@ class GroupController extends FOSRestController
         $users = (array)$request->query->get('users');
         $role = $request->query->get('role');
 
-        /** @var QueryBuilder $qb */
-        $qb = $this->getDoctrine()->getRepository('AppBundle:UserInGroup')->createQueryBuilder('ug');
-
-        if (!empty($query)) {
-            $qb->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->like('u.firstName', ':query'),
-                    $qb->expr()->like('u.lastName', ':query'),
-                    $qb->expr()->like('u.loginName', ':query')
-                )
-            );
-
-            $qb->setParameter('query', '%'.$query.'%');
-        }
-
-        if (!empty($users)) {
-            $qb->andWhere($qb->expr()->in('ug.user', ':users'));
-            $qb->setParameter('users', $users);
-
-            $offset = 0;
-            $limit = count($users);
-        }
-
-        if (!empty($role)) {
-            $qb->andWhere('ug.role = :role')->setParameter('role', $role);
-        }
-
-        $qb
-            ->andWhere('ug.group = :id')
-            ->setParameter('id', $id)
-            ->join('ug.user', 'u')
-            ->orderBy('u.' . $sort, 'ASC')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
-
-        $query = $qb->getQuery();
-
-        $paginator = new Paginator($query, false);
-
-        $result = [
-            'count' => $paginator->count(),
-            'items' => $paginator->getIterator()->getArrayCopy(),
-        ];
-
+        $result = $this->get('app.manager.membership')->findMemberships($id, $query, $role, $users, $sort, $offset, $limit);
 
         return $this->view($result);
     }
@@ -455,11 +319,9 @@ class GroupController extends FOSRestController
      *
      * @return array
      * @throws NotFoundHttpException when note not exist
-     * @throws NotAcceptableHttpException when <input> is not valid.
      */
     public function postGroupUsersAction(Request $request, $id)
     {
-        /** @var UserGroup $group */
         $group = $this->getGroup($id);
 
         $userInGroup = new UserInGroup();
@@ -469,20 +331,9 @@ class GroupController extends FOSRestController
         $form->submit($request);
 
         if ($form->isValid()) {
-            try {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($userInGroup);
-                $em->flush();
+            $this->get('app.manager.membership')->addMembership($userInGroup, $form->get('message')->getData());
 
-                $event = new GroupEvent($group);
-                $event->setUser($userInGroup);
-                $event->setMessage($form->get('message')->getData());
-                $this->fireEvent('app.event.group.useradd', $event);
-
-                return $this->routeRedirectView('get_group_users', ['id' => $group->getId()]);
-            } catch (DBALException $e) {
-                throw new NotAcceptableHttpException($e->getMessage());
-            }
+            return $this->routeRedirectView('get_group_users', ['id' => $group->getId()]);
         }
 
         return $form;
@@ -607,9 +458,9 @@ class GroupController extends FOSRestController
     {
         $this->getGroup($groupId);
 
-        $rows = $this->getDoctrine()->getRepository('AppBundle:UserGroupInGroup')->findBy(['group' => $groupId]);
+        $result = $this->get('app.manager.group_in_group')->findGroupInGroups($groupId);
 
-        return $this->view($rows);
+        return $this->view($result);
     }
 
     /**
@@ -645,10 +496,7 @@ class GroupController extends FOSRestController
      */
     public function deleteGroupGroupsAction($groupId, $groupInGroupId)
     {
-        /** @var UserGroupInGroup $groupInGroup */
-        $groupInGroup = $this->getDoctrine()->getRepository('AppBundle:UserGroupInGroup')->findOneBy(
-            ['group' => $groupId, 'groupInGroup' => $groupInGroupId]
-        );
+        $groupInGroup = $this->get('app.manager.group_in_group')->findGroupInGroup($groupId, $groupInGroupId);
 
         if ($groupInGroup === null) {
             throw new NotFoundHttpException(
@@ -656,13 +504,7 @@ class GroupController extends FOSRestController
             );
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($groupInGroup);
-        $em->flush();
-
-        $event = new GroupEvent($groupInGroup->getGroup());
-        $event->setGroupInGroup($groupInGroup);
-        $this->fireEvent('app.event.group.groupdelete', $event);
+        $this->get('app.manager.group_in_group')->deleteGroupInGroup($groupInGroup);
 
         return $this->routeRedirectView('get_groups');
     }
@@ -704,33 +546,12 @@ class GroupController extends FOSRestController
         $form->submit($request);
 
         if ($form->isValid()) {
-            try {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($groupInGroup);
-                $em->flush();
+            $this->get('app.manager.group_in_group')->addGroupInGroup($groupInGroup);
 
-                $event = new GroupEvent($group);
-                $event->setGroupInGroup($groupInGroup);
-                $this->fireEvent('app.event.group.groupadd', $event);
-
-                return $this->routeRedirectView('get_group_users', ['id' => $group->getId()]);
-            } catch (DBALException $e) {
-                throw new NotAcceptableHttpException($e->getMessage());
-            }
+            return $this->routeRedirectView('get_group_users', ['id' => $group->getId()]);
         }
 
         return $form;
-    }
-
-    /**
-     * Fire UserEvent.
-     *
-     * @param string     $event Event id
-     * @param GroupEvent $eventObject
-     */
-    private function fireEvent($event, GroupEvent $eventObject)
-    {
-        $this->get('event_dispatcher')->dispatch($event, $eventObject);
     }
 
     /**
@@ -740,7 +561,7 @@ class GroupController extends FOSRestController
      */
     private function getGroup($id)
     {
-        $group = $this->getDoctrine()->getRepository('AppBundle:UserGroup')->findOneBy(['id' => $id, 'active' => 1]);
+        $group = $this->get('app.manager.group')->findGroup($id);
 
         if ($group === null) {
             throw new NotFoundHttpException('Group with id: ' . $id . ' not found');

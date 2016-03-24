@@ -5,6 +5,8 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\UserInGroup;
 use AppBundle\Event\GroupEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -43,6 +45,90 @@ class MembershipManager
         $repo = $this->doctrine->getRepository('AppBundle:UserInGroup');
 
         return $repo->findOneBy(['user' => $userId, 'group' => $groupId]);
+    }
+
+    /**
+     * @param int    $groupId
+     * @param string $query
+     * @param string $role
+     * @param array  $users
+     * @param string $sort
+     * @param int    $offset
+     * @param int    $limit
+     *
+     * @return UserInGroup[]
+     */
+    public function findMemberships(
+        $groupId,
+        $query = null,
+        $role = null,
+        array $users = [],
+        $sort = 'reference',
+        $offset = 0,
+        $limit = 100
+    ) {
+        /** @var QueryBuilder $qb */
+        $qb = $this->doctrine->getRepository('AppBundle:UserInGroup')->createQueryBuilder('ug');
+
+        if (!empty($query)) {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like('u.firstName', ':query'),
+                    $qb->expr()->like('u.lastName', ':query'),
+                    $qb->expr()->like('u.loginName', ':query')
+                )
+            );
+
+            $qb->setParameter('query', '%' . $query . '%');
+        }
+
+        if (!empty($users)) {
+            $qb->andWhere($qb->expr()->in('ug.user', ':users'));
+            $qb->setParameter('users', $users);
+
+            $offset = 0;
+            $limit = count($users);
+        }
+
+        if (!empty($role)) {
+            $qb->andWhere('ug.role = :role')->setParameter('role', $role);
+        }
+
+        $qb
+            ->andWhere('ug.group = :id')
+            ->setParameter('id', $groupId)
+            ->join('ug.user', 'u')
+            ->orderBy('u.' . $sort, 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $query = $qb->getQuery();
+
+        $paginator = new Paginator($query, false);
+
+        $result = [
+            'count' => $paginator->count(),
+            'items' => $paginator->getIterator()->getArrayCopy(),
+        ];
+
+        return $result;
+    }
+
+    /**
+     * @param UserInGroup $userInGroup
+     * @param             $message
+     */
+    public function addMembership(UserInGroup $userInGroup, $message)
+    {
+        $manager = $this->doctrine->getManager();
+        $manager->persist($userInGroup);
+        $manager->flush();
+
+        $event = new GroupEvent($userInGroup->getGroup());
+        $event->setUser($userInGroup);
+        $event->setMessage($message);
+
+        $this->dispatcher->dispatch('app.event.group.useradd', $event);
     }
 
     /**
