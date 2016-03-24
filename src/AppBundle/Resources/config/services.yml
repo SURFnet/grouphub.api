@@ -1,4 +1,8 @@
 services:
+  app.manager.user:
+    class: AppBundle\Manager\UserManager
+    arguments: ["@doctrine", "@event_dispatcher"]
+
   app.manager.membership:
     class: AppBundle\Manager\MembershipManager
     arguments: ["@doctrine", "@event_dispatcher"]

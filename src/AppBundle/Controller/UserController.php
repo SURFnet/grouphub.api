@@ -3,11 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
-use AppBundle\Event\UserEvent;
 use AppBundle\Form\UserType;
-use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -53,43 +49,7 @@ class UserController extends FOSRestController
         $loginName = $request->query->get('login_name');
         $query = $request->query->get('query');
 
-        /** @var QueryBuilder $qb */
-        $qb = $this->getDoctrine()->getRepository('AppBundle:User')->createQueryBuilder('u');
-
-        $qb->where('u.type = \'ldap\'')->orderBy('u.' . $sort, 'ASC')->setFirstResult($offset)->setMaxResults($limit);
-
-        if ($reference !== null) {
-            $qb->andWhere('u.reference = :reference')->setParameter('reference', $reference);
-        }
-
-        if ($loginName !== null) {
-            $qb->andWhere('u.loginName = :loginName')->setParameter('loginName', $loginName);
-        }
-
-        if (!empty($query)) {
-            $qb->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->like('u.firstName', ':query'),
-                    $qb->expr()->like('u.lastName', ':query'),
-                    $qb->expr()->like('u.loginName', ':query')
-                )
-            );
-
-            $qb->setParameter('query', '%'.$query.'%');
-        }
-
-        $query = $qb->getQuery();
-
-        $paginator = new Paginator($query);
-
-        $result = [
-            'count' => $paginator->count(),
-            'items' => $paginator->getIterator()->getArrayCopy(),
-        ];
-
-        if ((!empty($loginName) || !empty($reference)) && $result['count'] === 1) {
-            $result = current($result['items']);
-        }
+        $result = $this->get('app.manager.user')->findUsers($query, $sort, $offset, $limit, $reference, $loginName);
 
         return $this->view($result);
     }
@@ -150,22 +110,9 @@ class UserController extends FOSRestController
         $form->submit($request);
 
         if ($form->isValid()) {
+            $this->get('app.manager.user')->addUser($user);
 
-            // Created timestamp.
-            $user->setTimeStamp(new \DateTime());
-
-            try {
-                $em = $this->getDoctrine()->getManager();
-
-                $em->persist($user);
-                $em->flush();
-
-                $this->fireEvent('app.event.user.add', new UserEvent($user));
-
-                return $this->routeRedirectView('get_user', ['id' => $user->getId()]);
-            } catch (DBALException $e) {
-                throw new NotAcceptableHttpException($e->getMessage());
-            }
+            return $this->routeRedirectView('get_user', ['id' => $user->getId()]);
         }
 
         return $form;
@@ -207,15 +154,9 @@ class UserController extends FOSRestController
         $form->submit($request);
 
         if ($form->isValid()) {
-            try {
-                $this->getDoctrine()->getManager()->flush();
+            $this->get('app.manager.user')->updateUser($user);
 
-                $this->fireEvent('app.event.user.update', new UserEvent($user));
-
-                return $this->routeRedirectView('get_user', ['id' => $user->getId()]);
-            } catch (DBALException $e) {
-                throw new NotAcceptableHttpException($e->getMessage());
-            }
+            return $this->routeRedirectView('get_user', ['id' => $user->getId()]);
         }
 
         return $form;
@@ -248,34 +189,9 @@ class UserController extends FOSRestController
     {
         $user = $this->getGrouphubUser($id);
 
-        $doctrine = $this->getDoctrine();
-
-        $ownedGroups = $doctrine->getRepository('AppBundle:UserGroup')->findBy(['owner' => $user]);
-        foreach ($ownedGroups as $group) {
-            $group->setActive(0);
-            $group->setOwner(
-                $doctrine->getRepository('AppBundle:User')->findOneBy(['reference' => User::REFERENCE_TRASH])
-            );
-        }
-
-        $this->fireEvent('app.event.user.delete', new UserEvent($user));
-
-        $em = $doctrine->getManager();
-        $em->remove($user);
-        $em->flush();
+        $this->get('app.manager.user')->deleteUser($user);
 
         return $this->routeRedirectView('get_users');
-    }
-
-    /**
-     * Fire UserEvent.
-     *
-     * @param string    $event Event id
-     * @param UserEvent $eventObject
-     */
-    private function fireEvent($event, UserEvent $eventObject)
-    {
-        $this->get('event_dispatcher')->dispatch($event, $eventObject);
     }
 
     /**
@@ -285,8 +201,7 @@ class UserController extends FOSRestController
      */
     private function getGrouphubUser($id)
     {
-        /** @var User $user */
-        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
+        $user = $this->get('app.manager.user')->findUser($id);
 
         if ($user === null) {
             throw new NotFoundHttpException('User with id: ' . $id . ' not found');
