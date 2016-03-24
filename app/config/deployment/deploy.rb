@@ -5,7 +5,7 @@ set :application, 'grouphub.api'
 set :repo_url, 'git@github.com:SURFnet/grouphub.api.git'
 
 # Default branch is :master
-ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+ask :branch, `git tag`.split("\n").last
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, '/var/www/grouphub.api'
