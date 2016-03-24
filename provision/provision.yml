@@ -81,8 +81,7 @@
       replace: dest=/etc/exim4/update-exim4.conf.conf replace="dc_eximconfig_configtype='internet'" regexp="^dc_eximconfig_configtype.*$" backup=yes
     - service: name=exim4 state=restarted enabled=yes
 
-    - gem: name=capistrano
-    - gem: name=capistrano-symfony
+    - gem: name=capistrano-symfony pre_release=true
 
     - name: Configure virtualhost
       template: src="files/vhost.j2" dest="/etc/apache2/sites-available/{{ sitename }}"
