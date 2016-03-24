@@ -49,6 +49,10 @@ runtime documentation version.
 Consider setting `opcache.validate_timestamps` to `0` in php.ini for a lot of free performance!
 
 Also make sure there is a directory `/project/dir/` available which is writable by the `deployment` user. 
+
+If you want to deploy the app you will need capistrano-symfony:
+
+`gem install capistrano-symfony --pre-release`
  
 ### Vhost
 
