@@ -8,7 +8,6 @@ use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -100,7 +99,6 @@ class UserController extends FOSRestController
      * @param Request $request the request object
      *
      * @return array
-     * @throws NotAcceptableHttpException
      */
     public function postUsersAction(Request $request)
     {
