@@ -9,11 +9,6 @@ Description of what this API is can be found at:
  - Virtualbox
  - Vagrant
  - Ansible
- - composer
-
-## SSH public key
-While provisioning the Ansible script will copy your SSH pub key from `(~/.ssh/id_rsa.pub)` to the vagrant box.
-Make sure your key lives at that location before you initialize the vagrant box. 
 
 ## Vagrant plugins
 Make sure you have the following vagrant plugins installed.
@@ -29,18 +24,6 @@ Make sure you have the following vagrant plugins installed.
 The `composer install` command will ask you about your database credentials. Make sure you have an empty MySQL database
 and MySQL user/pass available. The command will write the app/config/parameters.yml that is required by the Symfony framework.
 
-## Database import
-To get you going you need to create the database structure.
-
-You can do this with the symfony console command at the vagrant box
-
-```sh
-<projectdir>$ vagrant ssh
-<vagrantbox>$ php app/console doctrine:database:create
-<vagrantbox>$ php app/console doctrine:schema:create 
-<vagrantbox>$ php app/console doctrine:fixtures:load
-```
-
 # Getting started
 After starting and provisioning your vagrant box you can go to:
 <http://dev.api.grouphub.org/app_dev.php>
@@ -53,20 +36,21 @@ runtime documentation version.
 
 ## Requirements
 
- - apache2
- - mysql
+ - sshd (with a configured 'deployment' user)
+ - apache2 (vhost see below)
+ - mysql (with a configured user and database) 
  - git
  - acl
  - php
    * php5-intl
    * php5-curl
    * php5-apcu
+
+Consider setting `opcache.validate_timestamps` to `0` in php.ini for a lot of free performance!
+
+Also make sure there is a directory `/project/dir/` available which is writable by the `deployment` user. 
  
- - ssh access
- 
-Consider setting `opcache.validate_timestamps = 0` in php.ini for a lot of free performance!
- 
-## Vhost
+### Vhost
 
 Minimum requirements:
 
@@ -74,9 +58,9 @@ Minimum requirements:
 <VirtualHost *:80>
     ServerName api.grouphub.org
     
-    DocumentRoot /project/dir/web
+    DocumentRoot /project/dir/current/web
     
-    <Directory /project/dir/web>
+    <Directory /project/dir/current/web>
         Options FollowSymLinks
         AllowOverride All
         Order Allow,Deny
@@ -89,8 +73,6 @@ Usage of HTTPS is highly recommended. Also consider the API to be only accessibl
 
 ## Process
 
-@todo: initial setup; parameters; load fixtures 
-
 To do an actual deployment, make sure a stage is available in app/config/deployment/stages/. Then run 
 
 ```sh
@@ -98,6 +80,9 @@ cap [stage-name] deploy
 ```
 
 This script will ask the branch/tag of the software to deploy. The default will probably be sufficient in most cases.
+
+The first time the script will most likely fail because the configuration is invalid, fix this manually as described below, 
+then run the script again.
 
 ## Configuration
 
@@ -109,9 +94,9 @@ parameters:
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
+    database_name:     grouphub
+    database_user:     grouphub
+    database_password: password
 
     # Mailer settings
     mailer_transport: smtp
@@ -131,4 +116,12 @@ parameters:
 
     # The URL of this API, used to clear the cache after a new deployment
     url: http://api.grouphub.surfuni.org
+```
+## Database setup
+
+The very first time the site is deployed some initial data needs to be imported, 
+this can be done as follows (on the remote server):
+
+```sh
+php app/console doctrine:fixtures:load -e=prod
 ```
