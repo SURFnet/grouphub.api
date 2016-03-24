@@ -45,12 +45,12 @@ class UserManager
     }
 
     /**
-     * @param null   $query
+     * @param string $query
      * @param string $sort
      * @param int    $offset
      * @param int    $limit
-     * @param null   $reference
-     * @param null   $loginName
+     * @param string $reference
+     * @param string $loginName
      *
      * @return User|User[]
      */
