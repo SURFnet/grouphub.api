@@ -144,32 +144,6 @@ class UserNotificationController extends FOSRestController
     }
 
     /**
-     * Retrieve a single Notification for a User.
-     *
-     * @ApiDoc(
-     *   output = "AppBundle\Entity\Notification",
-     *   resource = true,
-     *   requirements = {
-     *      {
-     *          "name" = "userId",
-     *          "dataType" = "integer",
-     *          "requirement" = "\d+",
-     *          "description" = "UserID"
-     *      },
-     *      {
-     *          "name" = "notificationId",
-     *          "dataType" = "integer",
-     *          "requirement" = "\d+",
-     *          "description" = "NotificationID"
-     *      }
-     *   },
-     *   statusCodes = {
-     *     200 = "Returned when successful",
-     *     404 = "Returned when the notification is not found",
-     *     500 = "Returned when there is a internal error."
-     *   }
-     * )
-     *
      * @param int $userId
      * @param int $notificationId
      *
