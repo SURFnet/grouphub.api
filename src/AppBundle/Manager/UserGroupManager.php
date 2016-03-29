@@ -224,7 +224,7 @@ class UserGroupManager
 
         $qb->select('g')->from('AppBundle:UserGroup', 'g');
 
-        if ($type !== null) {
+        if (!empty($type)) {
             if ($type === 'admin') {
                 $qb->andWhere('g.type = :type')->andWhere('g.id = 1 OR g.parent = 1')->setParameter('type', UserGroup::TYPE_FORMAL);
             } elseif ($type === 'other') {
@@ -284,7 +284,7 @@ class UserGroupManager
 
         $qb->select('ug')->from('AppBundle:UserInGroup', 'ug');
 
-        if ($type !== null) {
+        if (!empty($type)) {
             if ($type === 'admin') {
                 $qb->andWhere('g.type = :type')->andWhere('g.id = 1 OR g.parent = 1')->setParameter('type', UserGroup::TYPE_FORMAL);
             } elseif ($type === 'other') {
