@@ -71,15 +71,19 @@ class MembershipManager
         $qb = $this->doctrine->getRepository('AppBundle:UserInGroup')->createQueryBuilder('ug');
 
         if (!empty($query)) {
-            $qb->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->like('u.firstName', ':query'),
-                    $qb->expr()->like('u.lastName', ':query'),
-                    $qb->expr()->like('u.loginName', ':query')
-                )
-            );
+            $terms = explode(' ', $query);
 
-            $qb->setParameter('query', '%' . $query . '%');
+            foreach ($terms as $i => $term) {
+                $qb->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->like('u.firstName', ':term' . $i),
+                        $qb->expr()->like('u.lastName', ':term' . $i),
+                        $qb->expr()->like('u.loginName', ':term' . $i)
+                    )
+                );
+
+                $qb->setParameter('term' . $i, '%' . $term . '%');
+            }
         }
 
         if (!empty($users)) {

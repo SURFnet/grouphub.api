@@ -70,7 +70,7 @@ class UserManager
         }
 
         if (!empty($query)) {
-            $terms = explode(' ', '%' . $query . '%');
+            $terms = explode(' ', $query);
 
             foreach ($terms as $i => $term) {
                 $qb->andWhere(
@@ -81,7 +81,7 @@ class UserManager
                     )
                 );
 
-                $qb->setParameter('term' . $i, $term);
+                $qb->setParameter('term' . $i, '%' . $term . '%');
             }
         }
 
