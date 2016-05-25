@@ -138,10 +138,11 @@ class UserManager
             );
         }
 
+        $this->dispatcher->dispatch('app.event.user.delete', new UserEvent($user));
+
         $em = $this->doctrine->getManager();
         $em->remove($user);
         $em->flush();
 
-        $this->dispatcher->dispatch('app.event.user.delete', new UserEvent($user));
     }
 }
