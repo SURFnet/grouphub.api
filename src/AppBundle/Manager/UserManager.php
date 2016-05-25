@@ -25,7 +25,7 @@ class UserManager
     private $dispatcher;
 
     /**
-     * @param Registry                 $doctrine
+     * @param Registry $doctrine
      * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(Registry $doctrine, EventDispatcherInterface $dispatcher)
@@ -54,8 +54,14 @@ class UserManager
      *
      * @return User|User[]
      */
-    public function findUsers($query = null, $sort = 'reference', $offset = 0, $limit = 100, $reference = null, $loginName = null)
-    {
+    public function findUsers(
+        $query = null,
+        $sort = 'reference',
+        $offset = 0,
+        $limit = 100,
+        $reference = null,
+        $loginName = null
+    ) {
         /** @var QueryBuilder $qb */
         $qb = $this->doctrine->getRepository('AppBundle:User')->createQueryBuilder('u');
 
@@ -143,6 +149,5 @@ class UserManager
         $em = $this->doctrine->getManager();
         $em->remove($user);
         $em->flush();
-
     }
 }
