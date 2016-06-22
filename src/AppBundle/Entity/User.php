@@ -72,7 +72,7 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(type="string", name="Reference", unique=true, options={"collation":"latin1_general_ci"})
+     * @ORM\Column(type="string", name="Reference", unique=true, options={"collation":"utf8_unicode_ci"})
      *
      * @Expose()
      */

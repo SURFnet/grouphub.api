@@ -83,7 +83,7 @@ class UserGroup
     /**
      * @var string
      *
-     * @ORM\Column(name="Reference", type="string", unique=true, nullable=true, options={"collation":"latin1_general_ci"})
+     * @ORM\Column(name="Reference", type="string", unique=true, nullable=true, options={"collation":"utf8_unicode_ci"})
      * @Required()
      * @Expose()
      */
