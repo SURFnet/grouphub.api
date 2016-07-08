@@ -151,10 +151,16 @@ class GroupManager
             throw new \InvalidArgumentException('Parent groups cannot be disabled');
         }
 
-        $group->setActive(0);
-
-        $this->doctrine->getManager()->flush();
-
         $this->dispatcher->dispatch('app.event.group.delete', new GroupEvent($group));
+
+        $em = $this->doctrine->getManager();
+
+        if ($group->getType() !== UserGroup::TYPE_LDAP) {
+            $group->setActive(0);
+        } else {
+            $em->remove($group);
+        }
+
+        $em->flush();
     }
 }
