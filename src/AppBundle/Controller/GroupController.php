@@ -9,7 +9,6 @@ use AppBundle\Form\UserGroupInGroupType;
 use AppBundle\Form\UserGroupType;
 use AppBundle\Form\UserInGroupType;
 use AppBundle\Form\UserInGroupUpdateType;
-use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;

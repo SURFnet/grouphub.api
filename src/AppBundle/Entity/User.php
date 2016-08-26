@@ -62,7 +62,7 @@ class User
     protected $loginName;
 
     /**
-     * @var string
+     * @var \DateTime
      *
      * @ORM\Column(type="datetime", name="UserTimestamp", nullable=true)
      * @Expose()
