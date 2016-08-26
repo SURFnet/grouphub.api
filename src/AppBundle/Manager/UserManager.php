@@ -5,6 +5,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\User;
 use AppBundle\Event\UserEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -65,7 +66,14 @@ class UserManager
         /** @var QueryBuilder $qb */
         $qb = $this->doctrine->getRepository('AppBundle:User')->createQueryBuilder('u');
 
-        $qb->where('u.type = \'ldap\'')->orderBy('u.' . $sort, 'ASC')->setFirstResult($offset)->setMaxResults($limit);
+        if ($sort === 'name') {
+            $sort = new Expr\OrderBy('u.lastName');
+            $sort->add('u.firstName');
+        } else {
+            $sort = new Expr\OrderBy('u.' . $sort);
+        }
+
+        $qb->where('u.type = \'ldap\'')->orderBy($sort)->setFirstResult($offset)->setMaxResults($limit);
 
         if ($reference !== null) {
             $qb->andWhere('u.reference = :reference')->setParameter('reference', $reference);
