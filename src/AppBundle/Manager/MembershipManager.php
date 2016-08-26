@@ -5,6 +5,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\UserInGroup;
 use AppBundle\Event\GroupEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -98,11 +99,18 @@ class MembershipManager
             $qb->andWhere('ug.role = :role')->setParameter('role', $role);
         }
 
+        if ($sort === 'name') {
+            $sort = new Expr\OrderBy('u.lastName');
+            $sort->add('u.firstName');
+        } else {
+            $sort = new Expr\OrderBy('u.' . $sort);
+        }
+
         $qb
             ->andWhere('ug.group = :id')
             ->setParameter('id', $groupId)
             ->join('ug.user', 'u')
-            ->orderBy('u.' . $sort, 'ASC')
+            ->orderBy($sort)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
