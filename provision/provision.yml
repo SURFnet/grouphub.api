@@ -59,9 +59,6 @@
     - name: APT | Install DotDeb key
       apt_key: url=http://www.dotdeb.org/dotdeb.gpg
 
-    - name: Perform system update
-      action: apt upgrade=safe state=latest update_cache=yes
-
   tasks:
     - name: Install common packages
       action: apt pkg={{ item }} state=installed update_cache=yes

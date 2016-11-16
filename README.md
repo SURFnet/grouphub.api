@@ -127,5 +127,7 @@ The very first time the site is deployed some initial data needs to be imported,
 this can be done as follows (on the remote server):
 
 ```sh
-php app/console doctrine:fixtures:load -e=prod
+app/console doctrine:database:create
+app/console doctrine:schema:create
+app/console doctrine:fixtures:load
 ```
