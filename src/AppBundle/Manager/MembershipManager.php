@@ -136,7 +136,7 @@ class MembershipManager
     {
         /** @var EntityManager $manager */
         $manager = $this->doctrine->getManager();
-        $existingUser = $manager->getRepository(UserInGroup::class)->findBy([
+        $existingUser = $manager->getRepository(UserInGroup::class)->findOneBy([
             'user' => $userInGroup->getUser(),
             'group' => $userInGroup->getGroup()
         ]);
