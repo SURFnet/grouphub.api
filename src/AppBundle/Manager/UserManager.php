@@ -3,6 +3,7 @@
 namespace AppBundle\Manager;
 
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserAnnotation;
 use AppBundle\Event\UserEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\Query\Expr;
@@ -66,6 +67,8 @@ class UserManager
         /** @var QueryBuilder $qb */
         $qb = $this->doctrine->getRepository('AppBundle:User')->createQueryBuilder('u');
 
+        $qb->leftJoin(UserAnnotation::class, 'a', Expr\Join::LEFT_JOIN, 'a.user = u.id');
+
         if ($sort === 'name') {
             $sort = new Expr\OrderBy('u.lastName');
             $sort->add('u.firstName');
@@ -83,6 +86,8 @@ class UserManager
             $qb->andWhere('u.loginName = :loginName')->setParameter('loginName', $loginName);
         }
 
+        $qb->setParameter('annotation_type_email', 'email');
+
         if (!empty($query)) {
             $terms = explode(' ', $query);
 
@@ -91,7 +96,11 @@ class UserManager
                     $qb->expr()->orX(
                         $qb->expr()->like('u.firstName', ':term' . $i),
                         $qb->expr()->like('u.lastName', ':term' . $i),
-                        $qb->expr()->like('u.loginName', ':term' . $i)
+                        $qb->expr()->like('u.loginName', ':term' . $i),
+                        $qb->expr()->andX(
+                            $qb->expr()->like('a.attribute', ':annotation_type_email'),
+                            $qb->expr()->like('a.value', ':term' . $i)
+                        )
                     )
                 );
 
