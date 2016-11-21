@@ -55,6 +55,8 @@ class UserManager
      * @param string $loginName
      *
      * @return User|User[]
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function findUsers(
         $query = null,
