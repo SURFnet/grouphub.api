@@ -86,10 +86,12 @@ class UserManager
             $qb->andWhere('u.loginName = :loginName')->setParameter('loginName', $loginName);
         }
 
-        $qb->setParameter('annotation_type_email', 'email');
-
         if (!empty($query)) {
             $terms = explode(' ', $query);
+
+            if (!empty($terms)) {
+                $qb->setParameter('annotation_type_email', 'email');
+            }
 
             foreach ($terms as $i => $term) {
                 $qb->andWhere(
