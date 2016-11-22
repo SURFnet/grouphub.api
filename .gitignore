@@ -6,6 +6,7 @@
 /vendor/
 /bin/
 /composer.phar
+/log/capistrano.log
 app/config/parameters.yml
 .vagrant
 .idea

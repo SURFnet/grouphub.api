@@ -3,6 +3,7 @@
 namespace AppBundle\Manager;
 
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserAnnotation;
 use AppBundle\Event\UserEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\Query\Expr;
@@ -54,6 +55,8 @@ class UserManager
      * @param string $loginName
      *
      * @return User|User[]
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function findUsers(
         $query = null,
@@ -65,6 +68,8 @@ class UserManager
     ) {
         /** @var QueryBuilder $qb */
         $qb = $this->doctrine->getRepository('AppBundle:User')->createQueryBuilder('u');
+
+        $qb->leftJoin(UserAnnotation::class, 'a', Expr\Join::LEFT_JOIN, 'a.user = u.id');
 
         if ($sort === 'name') {
             $sort = new Expr\OrderBy('u.lastName');
@@ -86,12 +91,20 @@ class UserManager
         if (!empty($query)) {
             $terms = explode(' ', $query);
 
+            if (!empty($terms)) {
+                $qb->setParameter('annotation_type_email', 'email');
+            }
+
             foreach ($terms as $i => $term) {
                 $qb->andWhere(
                     $qb->expr()->orX(
                         $qb->expr()->like('u.firstName', ':term' . $i),
                         $qb->expr()->like('u.lastName', ':term' . $i),
-                        $qb->expr()->like('u.loginName', ':term' . $i)
+                        $qb->expr()->like('u.loginName', ':term' . $i),
+                        $qb->expr()->andX(
+                            $qb->expr()->like('a.attribute', ':annotation_type_email'),
+                            $qb->expr()->like('a.value', ':term' . $i)
+                        )
                     )
                 );
 

@@ -2,9 +2,11 @@
 
 namespace AppBundle\Manager;
 
+use AppBundle\Entity\User;
 use AppBundle\Entity\UserInGroup;
 use AppBundle\Event\GroupEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -132,7 +134,17 @@ class MembershipManager
      */
     public function addMembership(UserInGroup $userInGroup, $message)
     {
+        /** @var EntityManager $manager */
         $manager = $this->doctrine->getManager();
+        $existingUser = $manager->getRepository(UserInGroup::class)->findOneBy([
+            'user' => $userInGroup->getUser(),
+            'group' => $userInGroup->getGroup()
+        ]);
+
+        if ($existingUser instanceof UserInGroup) {
+            return;
+        }
+
         $manager->persist($userInGroup);
         $manager->flush();
 

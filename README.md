@@ -52,7 +52,17 @@ Also make sure there is a directory `/project/dir/` available which is writable 
 
 If you want to deploy the app you will need capistrano-symfony:
 
-`gem install capistrano-symfony --pre-release`
+```
+gem install airbrussh
+gem install capistrano
+gem install capistrano-composer
+gem install capistrano-harrow
+gem install capistrano-symfony
+gem install i18n
+gem install net-scp
+gem install net-ssh
+gem install sshkit
+```
  
 ### Vhost
 
