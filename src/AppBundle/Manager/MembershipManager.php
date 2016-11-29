@@ -53,7 +53,7 @@ class MembershipManager
     /**
      * @param int    $groupId
      * @param string $query
-     * @param string $role
+     * @param array $roles
      * @param array  $users
      * @param string $sort
      * @param int    $offset
@@ -64,7 +64,7 @@ class MembershipManager
     public function findMemberships(
         $groupId,
         $query = null,
-        $role = null,
+        array $roles = null,
         array $users = [],
         $sort = 'reference',
         $offset = 0,
@@ -97,8 +97,8 @@ class MembershipManager
             $limit = count($users);
         }
 
-        if (!empty($role)) {
-            $qb->andWhere('ug.role = :role')->setParameter('role', $role);
+        if (!empty($roles)) {
+            $qb->andWhere($qb->expr()->in('ug.role', $roles));
         }
 
         if ($sort === 'name') {

@@ -260,7 +260,7 @@ class GroupController extends FOSRestController
      *      {"name"="sort", "dataType"="string", "required"=false, "description"="sort property, prefix with '-' to change the order"},
      *      {"name"="query", "dataType"="string", "required"=false, "description"="search filter"},
      *      {"name"="users", "dataType"="array", "required"=false, "description"="array with user ids"},
-     *      {"name"="role", "dataType"="string", "required"=false, "description"="role filter"}
+     *      {"name"="roles", "dataType"="array", "required"=false, "description"="role filter"}
      *  },
      *  output="ArrayCollection<AppBundle\Entity\User>",
      *  statusCodes = {
@@ -284,9 +284,9 @@ class GroupController extends FOSRestController
         $sort = $request->query->get('sort', 'reference');
         $query = $request->query->get('query');
         $users = (array)$request->query->get('users');
-        $role = $request->query->get('role');
+        $roles = $request->query->get('roles');
 
-        $result = $this->get('app.manager.membership')->findMemberships($id, $query, $role, $users, $sort, $offset, $limit);
+        $result = $this->get('app.manager.membership')->findMemberships($id, $query, $roles, $users, $sort, $offset, $limit);
 
         return $this->view($result);
     }
