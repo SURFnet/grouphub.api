@@ -116,6 +116,13 @@ class UserGroup
     protected $users;
 
     /**
+     * @var UserGroupInGroup[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserGroupInGroup", mappedBy="group", fetch="EXTRA_LAZY")
+     */
+    protected $groups;
+
+    /**
      * @var int
      */
     private $userCount;
