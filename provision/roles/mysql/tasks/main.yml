@@ -16,6 +16,13 @@
     - ::1
     - localhost
 
+- name: Create database "symfony"
+  mysql_db:
+    name: symfony
+    collation: utf8_unicode_ci
+    encoding: utf8
+    state: present
+
 - service: name=mysql state=stopped
 
 - template: src=my.cnf.j2 dest=/etc/mysql/my.cnf

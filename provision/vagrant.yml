@@ -96,3 +96,9 @@
       command: a2dissite default
 
     - service: name=apache2 state=restarted enabled=yes
+
+    - name: Create the database schema
+      command: /vagrant/app/console doctrine:schema:create
+
+    - name: Load fixtures
+      command: /vagrant/app/console doctrine:fixtures:load -n
