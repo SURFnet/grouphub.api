@@ -12,8 +12,7 @@ Zie de documentatie op [https://wiki.surfnet.nl/display/Grouphub/Systeemspecific
 
 ### Prerequisites
 
-- Virtualbox
-- [Vagrant](https://www.vagrantup.com/docs/installation/)
+- [Vagrant](https://www.vagrantup.com/docs/installation/) + [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
   - [vagrant-hostsupdater](https://github.com/cogitatio/vagrant-hostsupdater) >=(0.0.11)
   - vagrant-share >=(1.1.4, system)
   - vagrant-vbguest >=(0.10.1)
