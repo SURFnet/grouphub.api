@@ -27,7 +27,15 @@ Install dependencies using:
 composer install
 ```
 
-Start the Vagrant machine (don't forget to also start the Vagrant machine of the [GroupHub API](https://github.com/SURFnet/grouphub.api)!)
+When Composer asks for parameters, accept the default values with two exceptions:
+
+- `admin_uid` must be set to the User ID (`uid`) of the LDAP user
+- `admin_dn` must be set to the Distinguished Name (`dn`) of the LDAP user
+
+These values are used when populating the database, so make sure you set the correct values before continuing with the
+next step (which will run Doctrine Fixtures to populate the database).
+
+Start the Vagrant machine:
 
 ```
 vagrant up

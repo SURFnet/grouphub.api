@@ -18,4 +18,4 @@ parameters:
     admin_uid:         admin
     admin_dn:          cn=Admin Admin,ou=Users,ou=SURFuni,dc=surfuni,dc=org
 
-    url:               http://api.grouphub.surfuni.org
+    url:               http://dev.api.grouphub.org
