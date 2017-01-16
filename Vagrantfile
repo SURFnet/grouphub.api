@@ -54,7 +54,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision :ansible do |ansible|
       ansible.limit = 'all'
       ansible.inventory_path = "provision/vagrant"
-      ansible.playbook = "provision/provision.yml"
+      ansible.playbook = "provision/vagrant.yml"
       ansible.sudo = true
     end
   else

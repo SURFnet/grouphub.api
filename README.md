@@ -1,40 +1,54 @@
-# GroupHub API
-REST API based on Symfony and FOSRest bundle.
+# SURFnet GroupHub API
 
-Description of what this API is can be found at:
-<https://wiki.surfnet.nl/display/P3GFeI2015/3.+Management+laag>
+[![Build status](https://img.shields.io/travis/SURFnet/grouphub.api.svg)](https://travis-ci.org/SURFnet/grouphub.api)
 
-# Host machine requirements
+GroupHub is een groepsmanagementapplicatie voor het aanmaken en beheren van groepen binnen onderwijsinstellingen.
 
- - Virtualbox
- - Vagrant
- - Ansible
+Deze repository bevat GroupHub API, de webservice waar [GroupHub](https://github.com/SURFnet/grouphub) zijn data uit haalt.
 
-## Vagrant plugins
-Make sure you have the following vagrant plugins installed.
+Zie de documentatie op [https://wiki.surfnet.nl/display/Grouphub/Systeemspecificaties](https://wiki.surfnet.nl/display/Grouphub/Systeemspecificaties).
 
-    vagrant-hostsupdater >=(0.0.11)
-    vagrant-share >=(1.1.4, system)
-    vagrant-vbguest >=(0.10.1)
+## Getting started
 
-# Installation
-- Run `vagrant up` in order to get the vagrant machine running
-- Run `composer install` in order to load/install all required dependencies.
+### Prerequisites
 
-The `composer install` command will ask you about your database credentials. Make sure you have an empty MySQL database
-and MySQL user/pass available. The command will write the app/config/parameters.yml that is required by the Symfony framework.
+- [Vagrant](https://www.vagrantup.com/docs/installation/) + [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+  - [vagrant-hostsupdater](https://github.com/cogitatio/vagrant-hostsupdater) >=(0.0.11)
+  - vagrant-share >=(1.1.4, system)
+  - vagrant-vbguest >=(0.10.1)
+- [Ansible](https://docs.ansible.com/ansible/intro_installation.html)
 
-# Getting started
-After starting and provisioning your vagrant box you can go to:
-<http://dev.api.grouphub.org/app_dev.php>
+### Installing
+
+Install dependencies using:
+
+```
+composer install
+```
+
+When Composer asks for parameters, accept the default values with two exceptions:
+
+- `admin_uid` must be set to the User ID (`uid`) of the LDAP user
+- `admin_dn` must be set to the Distinguished Name (`dn`) of the LDAP user
+
+These values are used when populating the database, so make sure you set the correct values before continuing with the
+next step (which will run Doctrine Fixtures to populate the database).
+
+Start the Vagrant machine:
+
+```
+vagrant up
+```
+
+The API can now be accessed at [http://dev.api.grouphub.org/app_dev.php](http://dev.api.grouphub.org/app_dev.php).
 
 ## API Documentation
-Or when you have the vagrant box running you can go to <http://dev.api.grouphub.org/app_dev.php/api/doc> to see the
-runtime documentation version.
 
-# Deployment
+The API documentation can be found at <http://dev.api.grouphub.org/app_dev.php/api/doc>.
 
-## Requirements
+## Deployment
+
+### Requirements
 
  - sshd (with a configured 'deployment' user)
  - apache2 (vhost see below)
@@ -64,7 +78,7 @@ gem install net-ssh
 gem install sshkit
 ```
  
-### Vhost
+#### Vhost
 
 Minimum requirements:
 
@@ -85,7 +99,7 @@ Minimum requirements:
 
 Usage of HTTPS is highly recommended. Also consider the API to be only accessible by accepted IP addresses.
 
-## Process
+### Process
 
 To do an actual deployment, make sure a stage is available in app/config/deployment/stages/. Then run 
 
@@ -98,7 +112,7 @@ This script will ask the branch/tag of the software to deploy. The default will 
 The first time the script will most likely fail because the configuration is invalid, fix this manually as described below, 
 then run the script again.
 
-## Configuration
+### Configuration
 
 Configuration can be found in app/config/parameters.yml:
 
@@ -131,7 +145,8 @@ parameters:
     # The URL of this API, used to clear the cache after a new deployment
     url: http://api.grouphub.surfuni.org
 ```
-## Database setup
+
+### Database setup
 
 The very first time the site is deployed some initial data needs to be imported, 
 this can be done as follows (on the remote server):

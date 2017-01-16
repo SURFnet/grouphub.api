@@ -11,7 +11,6 @@
   roles:
     - { role: franklinkim.timezone }
     - { role: geerlingguy.ntp, ntp_timezone: "{{ timezone }}" }
-    - { role: geerlingguy.ruby, ruby_install_from_source: true}
     - { role: apache }
     - { role: php, enable_xdebug: true }
     - { role: mysql, mysql_root_password: "root", mysql_bind_address: "127.0.0.1" }
@@ -78,8 +77,6 @@
       replace: dest=/etc/exim4/update-exim4.conf.conf replace="dc_eximconfig_configtype='internet'" regexp="^dc_eximconfig_configtype.*$" backup=yes
     - service: name=exim4 state=restarted enabled=yes
 
-    - gem: name=capistrano-symfony pre_release=true
-
     - name: Configure virtualhost
       template: src="files/vhost.j2" dest="/etc/apache2/sites-available/{{ sitename }}"
 
@@ -96,3 +93,9 @@
       command: a2dissite default
 
     - service: name=apache2 state=restarted enabled=yes
+
+    - name: Create the database schema
+      command: /vagrant/app/console doctrine:schema:update --force
+
+    - name: Load fixtures
+      command: /vagrant/app/console doctrine:fixtures:load -n

@@ -9,18 +9,36 @@
     - python-selinux
     - python-mysqldb
 
-- mysql_user: name=root host={{ item }} password={{ mysql_root_password }} priv=*.*:ALL,GRANT
+- name: Set root password
+  mysql_user:
+    name: root
+    host: '{{ item }}'
+    password: '{{ mysql_root_password }}'
   with_items:
     - "%"
     - 127.0.0.1
     - ::1
     - localhost
 
-- service: name=mysql state=stopped
+- name: Create configuration file
+  template:
+    src: my.cnf.j2
+    dest: /etc/mysql/my.cnf
 
-- template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
-- template: src=_my.cnf.j2 dest=~/.my.cnf mode=0600
-#- template: src=_my.cnf.j2 dest=/home/{{ ansible_ssh_user }}/.my.cnf mode=0600 owner={{ ansible_ssh_user }}
+- name: Copy .my.cnf with root password credentials
+  template:
+    src: _my.cnf.j2
+    dest: ~/.my.cnf
+    mode: 0600
+
+- name: Create database "symfony"
+  mysql_db:
+    name: symfony
+    collation: utf8_unicode_ci
+    encoding: utf8
+    state: present
+
+- service: name=mysql state=stopped
 
 - file: path={{ item }} state=absent
   with_items:
