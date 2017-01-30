@@ -1,5 +1,5 @@
 {
-    "name": "grouphub api",
+    "name": "surfnet/grouphub-api",
     "license": "proprietary",
     "type": "project",
     "autoload": {
@@ -46,7 +46,10 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "platform": {
+            "php": "5.5.21"
+        }
     },
     "extra": {
         "symfony-app-dir": "app",
