@@ -10,6 +10,7 @@
         "php": ">=5.4.0",
         "doctrine/doctrine-bundle": "~1.4",
         "doctrine/doctrine-fixtures-bundle": "^2.3",
+        "doctrine/doctrine-migrations-bundle": "^1.2",
         "doctrine/orm": "^2.4.8",
         "friendsofsymfony/http-cache-bundle": "^1.0",
         "friendsofsymfony/rest-bundle": "^1.0",
