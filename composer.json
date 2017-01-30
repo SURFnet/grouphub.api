@@ -1,5 +1,5 @@
 {
-    "name": "grouphub api",
+    "name": "surfnet/grouphub-api",
     "license": "proprietary",
     "type": "project",
     "autoload": {
