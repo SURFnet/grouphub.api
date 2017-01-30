@@ -62,6 +62,8 @@ swiftmailer:
     spool:     { type: memory }
 
 fos_rest:
+    serializer:
+        serialize_null: true
     disable_csrf_role: ROLE_API
     param_fetcher_listener: true
     view:
