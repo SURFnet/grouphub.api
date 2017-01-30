@@ -146,13 +146,16 @@ parameters:
     url: http://api.grouphub.surfuni.org
 ```
 
-### Database setup
+### Database migrations and fixtures
 
-The very first time the site is deployed some initial data needs to be imported, 
-this can be done as follows (on the remote server):
+This project uses Doctrine Migrations to set up and update the database schema. To execute the migrations, run:
 
-```sh
-app/console doctrine:database:create
-app/console doctrine:schema:create
+```bash
+app/console doctrine:migrations:migrate
+```
+
+To populate the database with some test data, load the fixtures:
+
+```bash
 app/console doctrine:fixtures:load
 ```

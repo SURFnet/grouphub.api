@@ -70,7 +70,7 @@ namespace :symfony do
 
   desc "Execute migrations"
   task :migrate do
-    invoke 'symfony:console', 'doctrine:schema:update', '--no-interaction --force', 'db'
+    invoke 'symfony:console', 'doctrine:migrations:migrate', '--no-interaction', 'db'
   end
 end
 
