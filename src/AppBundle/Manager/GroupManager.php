@@ -3,9 +3,11 @@
 namespace AppBundle\Manager;
 
 use AppBundle\Entity\UserGroup;
+use AppBundle\Entity\UserGroupInGroup;
 use AppBundle\Event\GroupEvent;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -101,6 +103,59 @@ class GroupManager
 
         $query = $qb
             ->andWhere('g.active = 1')
+            ->orderBy('g.' . $sortColumn, $sortDir)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery();
+
+        $paginator = new Paginator($query);
+
+        $result = [
+            'count' => $paginator->count(),
+            'items' => $paginator->getIterator()->getArrayCopy(),
+        ];
+
+        return $result;
+    }
+
+    /**
+     * @param int    $groupId
+     * @param string $sortColumn
+     * @param string $sortDir
+     * @param int    $offset
+     * @param int    $limit
+     *
+     * @return UserGroup[]
+     */
+    public function findGroupsLinkableToGroup(
+        $groupId,
+        $sortColumn = 'reference',
+        $sortDir = 'ASC',
+        $offset = 0,
+        $limit = 100
+    ) {
+        /** @var QueryBuilder $qb */
+        $qb = $this->doctrine->getRepository('AppBundle:UserGroup')->createQueryBuilder('g');
+
+        // Exclude group itself
+        $qb->setParameter('groupId', $groupId);
+        $qb->where('g.id != :groupId');
+
+        // Exclude groups that have their own subgroups
+        $qb->leftJoin(UserGroupInGroup::class, 'has_child', Join::LEFT_JOIN, 'has_child.group = g.id');
+        $qb->andWhere($qb->expr()->isNull('has_child.group'));
+
+        // Exclude groups that have a parent
+        $qb->leftJoin(UserGroupInGroup::class, 'super_group', Join::LEFT_JOIN, 'super_group.groupInGroup = g.id');
+        $qb->andWhere($qb->expr()->isNull('super_group.group'));
+
+        $query = $qb
+            ->andWhere('g.active = 1')
+            ->andWhere($qb->expr()->in('g.type', [
+                UserGroup::TYPE_FORMAL,
+                UserGroup::TYPE_GROUPHUB
+            ]))
+            ->groupBy('g.id')
             ->orderBy('g.' . $sortColumn, $sortDir)
             ->setFirstResult($offset)
             ->setMaxResults($limit)

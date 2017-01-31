@@ -463,6 +463,39 @@ class GroupController extends FOSRestController
     }
 
     /**
+     * List linkable groups for a Group.
+     *
+     * @ApiDoc(
+     *  resource = true,
+     *  output="ArrayCollection<AppBundle\Entity\Group>",
+     *  requirements = {
+     *      {
+     *          "name" = "id",
+     *          "dataType" = "integer",
+     *          "requirement" = "\d+",
+     *          "description" = "GroupID"
+     *      }
+     *  },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      500 = "Returned when there is an internal server error"
+     *   }
+     * )
+     *
+     * @param int $groupId
+     *
+     * @return array
+     */
+    public function getGroupGroupsLinkableAction($groupId)
+    {
+        $this->getGroup($groupId);
+
+        $result = $this->get('app.manager.group')->findGroupsLinkableToGroup($groupId);
+
+        return $this->view($result);
+    }
+
+    /**
      * Remove a group from a group.
      *
      * @ApiDoc(
