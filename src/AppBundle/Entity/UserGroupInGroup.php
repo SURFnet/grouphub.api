@@ -29,7 +29,7 @@ class UserGroupInGroup
      * @var UserGroup
      *
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\UserGroup", inversedBy="groups")
      * @ORM\JoinColumn(name="UserGroupId", referencedColumnName="UserGroupId", onDelete="CASCADE")
      */
     protected $group;
