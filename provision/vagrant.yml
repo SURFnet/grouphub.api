@@ -95,7 +95,7 @@
     - service: name=apache2 state=restarted enabled=yes
 
     - name: Create the database schema
-      command: /vagrant/app/console doctrine:schema:update --force
+      command: /vagrant/app/console doctrine:migrations:migrate --no-interaction
 
     - name: Load fixtures
       command: /vagrant/app/console doctrine:fixtures:load -n

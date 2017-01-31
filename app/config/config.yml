@@ -49,6 +49,10 @@ doctrine:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
 
+doctrine_migrations:
+  dir_name: '%kernel.root_dir%/migrations'
+  namespace: Application\Migrations
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: %mailer_transport%
