@@ -19,7 +19,7 @@ class UserType extends AbstractType
             ->add('lastName', TextType::class)
             ->add('displayName', TextType::class)
             ->add('loginName', TextType::class, ['constraints' => new NotBlank()])
-            ->add('reference', TextType::class, ['constraints' => new NotBlank(),])
+            ->add('reference', TextType::class, ['constraints' => new NotBlank()])
             ->add(
                 'annotations',
                 CollectionType::class,
