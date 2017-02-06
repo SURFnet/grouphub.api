@@ -36,6 +36,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setId(1);
         $user->setFirstName('Ldap');
         $user->setLastName('User');
+        $user->setDisplayName('Ldap User');
         $user->setLoginName('LdapUser');
         $user->setTimeStamp(new \DateTime());
         $user->setReference('sys:ldap_user');
@@ -46,6 +47,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setId(2);
         $user->setFirstName('Admin');
         $user->setLastName('User');
+        $user->setDisplayName('Admin User');
         $user->setLoginName('AdminUser');
         $user->setTimeStamp(new \DateTime());
         $user->setReference('sys:admin_user');
@@ -58,6 +60,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setId(3);
         $user->setFirstName('Trash');
         $user->setLastName('User');
+        $user->setDisplayName('Trash User');
         $user->setLoginName('TrashUser');
         $user->setTimeStamp(new \DateTime());
         $user->setReference('sys:trash_user');
@@ -68,6 +71,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setId(4);
         $user->setFirstName('GroupHUB');
         $user->setLastName('Administrator');
+        $user->setDisplayName('GroupHUB Administrator');
         $user->setLoginName($this->container->getParameter('admin_uid'));
         $user->setTimeStamp(new \DateTime());
         $user->setReference($this->container->getParameter('admin_dn'));

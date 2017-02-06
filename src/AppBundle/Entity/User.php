@@ -55,6 +55,14 @@ class User
     /**
      * @var string
      *
+     * @ORM\Column(type="string", name="DisplayName", nullable=true)
+     * @Expose()
+     */
+    protected $displayName;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="string", name="UserLoginName", nullable=false)
      * @Expose()
      * @Required()
@@ -81,7 +89,13 @@ class User
     /**
      * @var UserAnnotation[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserAnnotation", mappedBy="user", orphanRemoval=true, cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\UserAnnotation",
+     *     mappedBy="user",
+     *     orphanRemoval=true,
+     *     cascade={"persist"},
+     *     fetch="EAGER"
+     * )
      *
      * @Expose()
      */
@@ -96,9 +110,17 @@ class User
     }
 
     /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Set id
      *
-     * @param integer $id
+     * @param int $id
      *
      * @return User
      */
@@ -110,18 +132,14 @@ class User
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * @return string
      */
-    public function getId()
+    public function getFirstName()
     {
-        return $this->id;
+        return $this->firstName;
     }
 
     /**
-     * Set firstName
-     *
      * @param string $firstName
      *
      * @return User
@@ -134,18 +152,14 @@ class User
     }
 
     /**
-     * Get firstName
-     *
      * @return string
      */
-    public function getFirstName()
+    public function getLastName()
     {
-        return $this->firstName;
+        return $this->lastName;
     }
 
     /**
-     * Set lastName
-     *
      * @param string $lastName
      *
      * @return User
@@ -158,18 +172,32 @@ class User
     }
 
     /**
-     * Get lastName
-     *
      * @return string
      */
-    public function getLastName()
+    public function getDisplayName()
     {
-        return $this->lastName;
+        return $this->displayName;
     }
 
     /**
-     * Set loginName
+     * @param string $displayName
      *
+     * @return void
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoginName()
+    {
+        return $this->loginName;
+    }
+
+    /**
      * @param string $loginName
      *
      * @return User
@@ -182,18 +210,14 @@ class User
     }
 
     /**
-     * Get loginName
-     *
-     * @return string
+     * @return \DateTime
      */
-    public function getLoginName()
+    public function getTimeStamp()
     {
-        return $this->loginName;
+        return $this->timeStamp;
     }
 
     /**
-     * Set timeStamp
-     *
      * @param \DateTime $timeStamp
      *
      * @return User
@@ -206,18 +230,14 @@ class User
     }
 
     /**
-     * Get timeStamp
-     *
-     * @return \DateTime
+     * @return string
      */
-    public function getTimeStamp()
+    public function getReference()
     {
-        return $this->timeStamp;
+        return $this->reference;
     }
 
     /**
-     * Set reference
-     *
      * @param string $reference
      *
      * @return User
@@ -227,16 +247,6 @@ class User
         $this->reference = $reference;
 
         return $this;
-    }
-
-    /**
-     * Get reference
-     *
-     * @return string
-     */
-    public function getReference()
-    {
-        return $this->reference;
     }
 
     /**
