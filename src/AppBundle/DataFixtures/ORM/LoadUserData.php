@@ -73,6 +73,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setLastName('Administrator');
         $user->setDisplayName('GroupHUB Administrator');
         $user->setLoginName($this->container->getParameter('admin_uid'));
+        $user->setAvatarUrl('https://avatars0.githubusercontent.com/u/1485353?v=3&s=200');
         $user->setTimeStamp(new \DateTime());
         $user->setReference($this->container->getParameter('admin_dn'));
         $user->setType('ldap');
