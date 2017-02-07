@@ -5,14 +5,14 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="User")
- * @ExclusionPolicy("all")
+ * @Serializer\ExclusionPolicy("all")
  * @UniqueEntity("reference")
  */
 class User
@@ -25,7 +25,7 @@ class User
      * @ORM\Id()
      * @ORM\Column(type="integer", name="UserId")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Expose()
+     * @Serializer\Expose()
      */
     protected $id;
 
@@ -40,7 +40,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", name="UserFirstName", nullable=true)
-     * @Expose()
+     * @Serializer\Expose()
      */
     protected $firstName;
 
@@ -48,7 +48,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", name="UserLastName", nullable=true)
-     * @Expose()
+     * @Serializer\Expose()
      */
     protected $lastName;
 
@@ -56,7 +56,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", name="DisplayName", nullable=true)
-     * @Expose()
+     * @Serializer\Expose()
      */
     protected $displayName;
 
@@ -64,16 +64,25 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", name="UserLoginName", nullable=false)
-     * @Expose()
+     * @Serializer\Expose()
      * @Required()
      */
     protected $loginName;
 
     /**
+     * @var string
+     *
+     * @Assert\Url()
+     * @ORM\Column(type="string", name="AvatarUrl", nullable=true)
+     * @Serializer\Expose()
+     */
+    protected $avatarUrl;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", name="UserTimestamp", nullable=true)
-     * @Expose()
+     * @Serializer\Expose()
      */
     protected $timeStamp;
 
@@ -82,7 +91,7 @@ class User
      *
      * @ORM\Column(type="string", name="Reference", unique=true, options={"collation":"utf8_unicode_ci"})
      *
-     * @Expose()
+     * @Serializer\Expose()
      */
     protected $reference;
 
@@ -97,7 +106,7 @@ class User
      *     fetch="EAGER"
      * )
      *
-     * @Expose()
+     * @Serializer\Expose()
      */
     protected $annotations;
 
@@ -207,6 +216,24 @@ class User
         $this->loginName = $loginName;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAvatarUrl()
+    {
+        return $this->avatarUrl;
+    }
+
+    /**
+     * @param string $avatarUrl
+     *
+     * @return void
+     */
+    public function setAvatarUrl($avatarUrl)
+    {
+        $this->avatarUrl = $avatarUrl;
     }
 
     /**
