@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -67,6 +68,15 @@ class User
      * @Required()
      */
     protected $loginName;
+
+    /**
+     * @var string
+     *
+     * @Assert\Url()
+     * @ORM\Column(type="string", name="AvatarUrl", nullable=true)
+     * @Serializer\Expose()
+     */
+    protected $avatarUrl;
 
     /**
      * @var \DateTime
@@ -206,6 +216,24 @@ class User
         $this->loginName = $loginName;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAvatarUrl()
+    {
+        return $this->avatarUrl;
+    }
+
+    /**
+     * @param string $avatarUrl
+     *
+     * @return void
+     */
+    public function setAvatarUrl($avatarUrl)
+    {
+        $this->avatarUrl = $avatarUrl;
     }
 
     /**
