@@ -38,6 +38,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setLastName('User');
         $user->setDisplayName('Ldap User');
         $user->setLoginName('LdapUser');
+        $user->setEmailAddress('ldap@example.com');
         $user->setTimeStamp(new \DateTime());
         $user->setReference('sys:ldap_user');
         $user->setType('system');
@@ -49,6 +50,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setLastName('User');
         $user->setDisplayName('Admin User');
         $user->setLoginName('AdminUser');
+        $user->setEmailAddress('admin@example.com');
         $user->setTimeStamp(new \DateTime());
         $user->setReference('sys:admin_user');
         $user->setType('system');
@@ -62,6 +64,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setLastName('User');
         $user->setDisplayName('Trash User');
         $user->setLoginName('TrashUser');
+        $user->setEmailAddress('trash@example.com');
         $user->setTimeStamp(new \DateTime());
         $user->setReference('sys:trash_user');
         $user->setType('system');
@@ -73,6 +76,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setLastName('Administrator');
         $user->setDisplayName('GroupHUB Administrator');
         $user->setLoginName($this->container->getParameter('admin_uid'));
+        $user->setEmailAddress('grouphub@example.com');
         $user->setAvatarUrl('https://avatars0.githubusercontent.com/u/1485353?v=3&s=200');
         $user->setTimeStamp(new \DateTime());
         $user->setReference($this->container->getParameter('admin_dn'));

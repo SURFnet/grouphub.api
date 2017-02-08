@@ -72,6 +72,15 @@ class User
     /**
      * @var string
      *
+     * @Assert\Email()
+     * @ORM\Column(type="string", name="EmailAddress", nullable=true)
+     * @Serializer\Expose()
+     */
+    protected $emailAddress;
+
+    /**
+     * @var string
+     *
      * @Assert\Url()
      * @ORM\Column(type="string", name="AvatarUrl", nullable=true)
      * @Serializer\Expose()
@@ -216,6 +225,24 @@ class User
         $this->loginName = $loginName;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailAddress()
+    {
+        return $this->emailAddress;
+    }
+
+    /**
+     * @param string $emailAddress
+     *
+     * @return void
+     */
+    public function setEmailAddress($emailAddress)
+    {
+        $this->emailAddress = $emailAddress;
     }
 
     /**
