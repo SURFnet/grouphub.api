@@ -24,7 +24,7 @@ class UserType extends AbstractType
                 'annotations',
                 CollectionType::class,
                 [
-                    'type' => new UserAnnotationType(),
+                    'type' => new UserExtraAttributeType(),
                     'allow_add' => true,
                     'allow_delete' => true,
                     'by_reference' => false,

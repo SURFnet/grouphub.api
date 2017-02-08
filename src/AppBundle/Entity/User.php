@@ -105,10 +105,10 @@ class User
     protected $reference;
 
     /**
-     * @var UserAnnotation[]
+     * @var UserExtraAttribute[]
      *
      * @ORM\OneToMany(
-     *     targetEntity="AppBundle\Entity\UserAnnotation",
+     *     targetEntity="AppBundle\Entity\UserExtraAttribute",
      *     mappedBy="user",
      *     orphanRemoval=true,
      *     cascade={"persist"},
@@ -117,14 +117,14 @@ class User
      *
      * @Serializer\Expose()
      */
-    protected $annotations;
+    protected $extraAttributes;
 
     /**
      *
      */
     public function __construct()
     {
-        $this->annotations = new ArrayCollection();
+        $this->extraAttributes = new ArrayCollection();
     }
 
     /**
@@ -320,28 +320,28 @@ class User
     }
 
     /**
-     * @return UserAnnotation[]
+     * @return UserExtraAttribute[]
      */
-    public function getAnnotations()
+    public function getExtraAttributes()
     {
-        return $this->annotations;
+        return $this->extraAttributes;
     }
 
     /**
-     * @param UserAnnotation $annotation
+     * @param UserExtraAttribute $attribute
      */
-    public function addAnnotation(UserAnnotation $annotation)
+    public function addExtraAttribute(UserExtraAttribute $attribute)
     {
-        $annotation->setUser($this);
+        $attribute->setUser($this);
 
-        $this->annotations->add($annotation);
+        $this->extraAttributes->add($attribute);
     }
 
     /**
-     * @param UserAnnotation $annotation
+     * @param UserExtraAttribute $attribute
      */
-    public function removeAnnotation(UserAnnotation $annotation)
+    public function removeExtraAttribute(UserExtraAttribute $attribute)
     {
-        $this->annotations->removeElement($annotation);
+        $this->extraAttributes->removeElement($attribute);
     }
 }

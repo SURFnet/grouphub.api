@@ -7,20 +7,18 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 
 /**
- * Class UserAnnotation
- *
  * @ORM\Entity
- * @ORM\Table(name="UserAnnotation")
+ * @ORM\Table(name="UserExtraAttribute")
  *
  * @ExclusionPolicy("all")
  */
-class UserAnnotation
+class UserExtraAttribute
 {
     /**
      * @var int
      *
      * @ORM\Id()
-     * @ORM\Column(name="AnnotationId", type="integer")
+     * @ORM\Column(name="Id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
@@ -28,7 +26,7 @@ class UserAnnotation
     /**
      * @var string
      *
-     * @ORM\Column(name="AnnotationAttribute", type="string", nullable=true)
+     * @ORM\Column(name="Attribute", type="string")
      *
      * @Expose()
      */
@@ -37,24 +35,17 @@ class UserAnnotation
     /**
      * @var string
      *
-     * @ORM\Column(name="AnnotationValue", type="string", nullable=true)
+     * @ORM\Column(name="Value", type="string")
      *
      * @Expose()
      */
     protected $value;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="AnnotationType", type="string", nullable=true)
-     */
-    protected $type;
-
-    /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="annotations")
-     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="extraAttributes")
+     * @ORM\JoinColumn(name="UserId", referencedColumnName="UserId", onDelete="CASCADE", nullable=false)
      */
     protected $user;
 
@@ -72,22 +63,6 @@ class UserAnnotation
     public function setUser(User $user)
     {
         $this->user = $user;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 
     /**

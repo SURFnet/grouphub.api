@@ -2,36 +2,27 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\UserExtraAttribute;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class UserAnnotationType extends AbstractType
+class UserExtraAttributeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'key',
-            'text',
-            [
-                'constraints'   => new NotBlank(),
-                'property_path' => 'attribute',
-            ]
-        )->add(
-            'value',
-            'text',
-            [
-                'constraints' => new NotBlank(),
-            ]
-        );
+        $builder
+            ->add('attribute', TextType::class, ['constraints' => new NotBlank()])
+            ->add('value', TextType::class, ['constraints' => new NotBlank()]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             [
-                'data_class' => 'AppBundle\Entity\UserAnnotation',
+                'data_class' => UserExtraAttribute::class,
             ]
         );
     }
