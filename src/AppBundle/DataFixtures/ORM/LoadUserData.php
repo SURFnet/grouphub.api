@@ -3,6 +3,7 @@
 namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserExtraAttribute;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -81,6 +82,12 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $user->setTimeStamp(new \DateTime());
         $user->setReference($this->container->getParameter('admin_dn'));
         $user->setType('ldap');
+
+        $attribute = new UserExtraAttribute();
+        $attribute->setAttribute('employeeNumber');
+        $attribute->setValue('1234');
+        $user->addExtraAttribute($attribute);
+
         $manager->persist($user);
 
         $this->addReference('admin-user', $user);

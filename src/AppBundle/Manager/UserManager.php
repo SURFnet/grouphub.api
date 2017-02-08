@@ -3,7 +3,7 @@
 namespace AppBundle\Manager;
 
 use AppBundle\Entity\User;
-use AppBundle\Entity\UserAnnotation;
+use AppBundle\Entity\UserExtraAttribute;
 use AppBundle\Event\UserEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\Query\Expr;
@@ -69,7 +69,7 @@ class UserManager
         /** @var QueryBuilder $qb */
         $qb = $this->doctrine->getRepository('AppBundle:User')->createQueryBuilder('u');
 
-        $qb->leftJoin(UserAnnotation::class, 'a', Expr\Join::LEFT_JOIN, 'a.user = u.id');
+        $qb->leftJoin(UserExtraAttribute::class, 'a', Expr\Join::LEFT_JOIN, 'a.user = u.id');
 
         if ($sort === 'name') {
             $sort = new Expr\OrderBy('u.lastName');
