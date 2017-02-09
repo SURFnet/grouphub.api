@@ -21,7 +21,7 @@ class UserType extends AbstractType
             ->add('loginName', TextType::class, ['constraints' => new NotBlank()])
             ->add('reference', TextType::class, ['constraints' => new NotBlank()])
             ->add(
-                'annotations',
+                'extraAttributes',
                 CollectionType::class,
                 [
                     'type' => new UserExtraAttributeType(),
