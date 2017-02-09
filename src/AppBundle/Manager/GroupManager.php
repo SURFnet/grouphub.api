@@ -145,8 +145,8 @@ class GroupManager
         $qb->leftJoin(UserGroupInGroup::class, 'has_child', Join::LEFT_JOIN, 'has_child.group = g.id');
         $qb->andWhere($qb->expr()->isNull('has_child.group'));
 
-        // Exclude groups that have a parent
-        $qb->leftJoin(UserGroupInGroup::class, 'super_group', Join::LEFT_JOIN, 'super_group.groupInGroup = g.id');
+        // Exclude groups that are already linked to this group
+        $qb->leftJoin(UserGroupInGroup::class, 'super_group', Join::LEFT_JOIN, 'super_group.groupInGroup = g.id AND super_group.group = :groupId');
         $qb->andWhere($qb->expr()->isNull('super_group.group'));
 
         $query = $qb
