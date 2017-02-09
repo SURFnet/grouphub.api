@@ -119,12 +119,12 @@ class GroupManager
     }
 
     /**
-     * @param int $groupId
+     * @param int    $groupId
      * @param string $sortColumn
      * @param string $sortDir
-     * @param int $offset
-     * @param int $limit
-     * @param array $ids
+     * @param int    $offset
+     * @param int    $limit
+     *
      * @return UserGroup[]
      */
     public function findGroupsLinkableToGroup(
