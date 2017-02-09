@@ -119,12 +119,12 @@ class GroupManager
     }
 
     /**
-     * @param int    $groupId
+     * @param int $groupId
      * @param string $sortColumn
      * @param string $sortDir
-     * @param int    $offset
-     * @param int    $limit
-     *
+     * @param int $offset
+     * @param int $limit
+     * @param array $ids
      * @return UserGroup[]
      */
     public function findGroupsLinkableToGroup(
@@ -144,10 +144,6 @@ class GroupManager
         // Exclude groups that have their own subgroups
         $qb->leftJoin(UserGroupInGroup::class, 'has_child', Join::LEFT_JOIN, 'has_child.group = g.id');
         $qb->andWhere($qb->expr()->isNull('has_child.group'));
-
-        // Exclude groups that have a parent
-        $qb->leftJoin(UserGroupInGroup::class, 'super_group', Join::LEFT_JOIN, 'super_group.groupInGroup = g.id');
-        $qb->andWhere($qb->expr()->isNull('super_group.group'));
 
         $query = $qb
             ->andWhere('g.active = 1')
