@@ -5,7 +5,9 @@ namespace AppBundle\Form;
 use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -20,8 +22,10 @@ class UserType extends AbstractType
             ->add('displayName', TextType::class)
             ->add('loginName', TextType::class, ['constraints' => new NotBlank()])
             ->add('reference', TextType::class, ['constraints' => new NotBlank()])
+            ->add('emailAddress', EmailType::class)
+            ->add('avatarUrl', UrlType::class)
             ->add(
-                'annotations',
+                'extraAttributes',
                 CollectionType::class,
                 [
                     'type' => new UserExtraAttributeType(),
