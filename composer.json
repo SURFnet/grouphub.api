@@ -28,9 +28,10 @@
         "willdurand/rest-extra-bundle": "^1.0"
     },
     "require-dev": {
+        "ibuildings/qa-tools": "^2.0",
+        "liip/rmt": "^1.2",
         "sensio/generator-bundle": "~3.0",
-        "symfony/phpunit-bridge": "~2.7",
-        "ibuildings/qa-tools": "^2.0"
+        "symfony/phpunit-bridge": "~2.7"
     },
     "scripts": {
         "post-install-cmd": [
