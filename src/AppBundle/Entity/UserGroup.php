@@ -295,4 +295,14 @@ class UserGroup
 
         return $this->userCount;
     }
+
+    /**
+     * @VirtualProperty
+     *
+     * @return int
+     */
+    public function getGroupCount()
+    {
+        return count($this->groups);
+    }
 }
