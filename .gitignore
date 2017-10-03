@@ -11,3 +11,4 @@ app/config/parameters.yml
 .vagrant
 .idea
 cache.properties
+.DS_Store
