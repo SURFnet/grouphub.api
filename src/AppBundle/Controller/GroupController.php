@@ -474,6 +474,23 @@ class GroupController extends FOSRestController
      *          "dataType" = "integer",
      *          "requirement" = "\d+",
      *          "description" = "GroupID"
+     *      },{
+     *          "name"="query",
+     *          "dataType"="string",
+     *          "required"=false,
+     *          "description"="search filter"
+     *      },
+     *      {
+     *          "name"="offset",
+     *          "dataType"="integer",
+     *          "required"=false,
+     *          "description"="offset for retrieving resources"
+     *      },
+     *      {
+     *          "name"="limit",
+     *          "dataType"="integer",
+     *          "required"=false,
+     *          "description"="limit for retrieving resources"
      *      }
      *  },
      *  statusCodes = {
@@ -483,14 +500,26 @@ class GroupController extends FOSRestController
      * )
      *
      * @param int $groupId
+     * @param Request $request
      *
      * @return array
      */
-    public function getGroupGroupsLinkableAction($groupId)
+    public function getGroupGroupsLinkableAction($groupId, Request $request)
     {
         $this->getGroup($groupId);
 
-        $result = $this->get('app.manager.group')->findGroupsLinkableToGroup($groupId);
+        $offset = $request->query->getInt('offset', 0);
+        $limit = $request->query->getInt('limit', 12);
+        $query = $request->query->get('query');
+
+        $result = $this->get('app.manager.group')->findGroupsLinkableToGroup(
+            $groupId,
+            $query,
+            'reference',
+            'ASC',
+            $offset,
+            $limit
+        );
 
         return $this->view($result);
     }
