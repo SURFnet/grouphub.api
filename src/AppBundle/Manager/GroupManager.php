@@ -119,16 +119,18 @@ class GroupManager
     }
 
     /**
-     * @param int    $groupId
+     * @param int $groupId
+     * @param null $query
      * @param string $sortColumn
      * @param string $sortDir
-     * @param int    $offset
-     * @param int    $limit
+     * @param int $offset
+     * @param int $limit
      *
-     * @return UserGroup[]
+     * @return \AppBundle\Entity\UserGroup[]
      */
     public function findGroupsLinkableToGroup(
         $groupId,
+        $query = null,
         $sortColumn = 'reference',
         $sortDir = 'ASC',
         $offset = 0,
@@ -148,6 +150,17 @@ class GroupManager
         // Exclude groups that are already linked to this group
         $qb->leftJoin(UserGroupInGroup::class, 'super_group', Join::LEFT_JOIN, 'super_group.groupInGroup = g.id AND super_group.group = :groupId');
         $qb->andWhere($qb->expr()->isNull('super_group.group'));
+
+        if (!empty($query)) {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like('g.name', ':query'),
+                    $qb->expr()->like('g.description', ':query')
+                )
+            );
+
+            $qb->setParameter('query', '%' . $query . '%');
+        }
 
         $query = $qb
             ->andWhere('g.active = 1')
